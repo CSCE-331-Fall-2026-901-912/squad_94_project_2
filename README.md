@@ -11,3 +11,4 @@ Squad 94 is comprised of:
 - Mariéad Finnerty
 - Sanjana Ram
 - Natalie Gonzalez
+- Asher Blevins
