@@ -8,7 +8,7 @@ This repo contains all assets and source code for Squad 94's Project 2 in Texas 
 
 Squad 94 is comprised of:
 - Rigo Chiti
-- Mariéad Finnerty
+- Mairead Finnerty
 - Sanjana Ram
 - Natalie Gonzalez
 - Asher Blevins
