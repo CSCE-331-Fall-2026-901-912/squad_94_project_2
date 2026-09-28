@@ -1,16 +1,18 @@
 import csv
 import random
-import time
+import datetime
 
 def gen_csv_orders():
     with open("orders.csv", 'w', newline='') as csvfile:
-        header = ["id_order", "completed", "time_created_at", "time_completed_at", "total_spent", "tip", "id_drink",
-                  "id_topping1", "id_topping2", "ice_level", "sugar_level", "hot_chosen", "non_caffeinated_chosen",
-                  "alternative_milk_chosen"]
+        header = ["id_order", "completed", "time_created_at", "time_completed_at", "total_spent", "id_employee", "tip",
+                  "id_drink", "id_topping1", "id_topping2", "ice_level", "sugar_level", "hot_chosen"]
         writer = csv.DictWriter(csvfile, fieldnames=header)
         writer.writeheader()
 
-    # 52 weeks of sales history (starting September 30 2025, ending September 30 2026)
+    # 52 weeks of sales history (starting September 30, 2025, then ending September 30, 2026)
+    start_date = datetime.date(2025, 9, 30)
+    end_date = datetime.date(2026, 9, 30)
+
     # We must have 3 peak days.
     # 1 million in sales.
 
@@ -115,50 +117,49 @@ def gen_csv_hardcode(csv_name):
                  "current_pay_rate": 10.0, "hours_worked_for_week": 15})
 
         if csv_name == "menu_drink":
-            header = ["id_drink", "name", "price", "hot_available", "non_caffeinated_available",
-                          "alternative_milk_available"]
+            header = ["id_drink", "name", "price", "hot_available", "is_non_caffeinated"]
             writer = csv.DictWriter(csvfile, fieldnames=header)
             writer.writeheader()
             writer.writerow({"id_drink": 1, "name": "Classic Pearl Milk Tea", "price": 5.8, "hot_available": True,
-                            "non_caffeinated_available": False, "alternative_milk_available": False})
+                            "is_non_caffeinated": False})
             writer.writerow({"id_drink": 2, "name": "Honey Pearl Milk Tea", "price": 6.0, "hot_available": True,
-                            "non_caffeinated_available": False, "alternative_milk_available": False})
+                            "is_non_caffeinated": False})
             writer.writerow({"id_drink": 3, "name": "Coffee Crema", "price": 6.5, "hot_available": True,
-                            "non_caffeinated_available": False, "alternative_milk_available": False})
+                            "is_non_caffeinated": False})
             writer.writerow({"id_drink": 4, "name": "Coffee Milk Tea w/ Coffee Jelly", "price": 6.25, "hot_available": True,
-                            "non_caffeinated_available": False, "alternative_milk_available": False})
+                            "is_non_caffeinated": False})
             writer.writerow({"id_drink": 5, "name": "Hokkaido Pearl Milk Tea", "price": 6.25, "hot_available": True,
-                            "non_caffeinated_available": False, "alternative_milk_available": False})
+                            "is_non_caffeinated": False})
             writer.writerow({"id_drink": 6, "name": "Thai Pearl Milk Tea", "price": 6.25, "hot_available": True,
-                            "non_caffeinated_available": False, "alternative_milk_available": False})
+                            "is_non_caffeinated": False})
             writer.writerow({"id_drink": 7, "name": "Taro Pearl Milk Tea", "price": 6.25, "hot_available": True,
-                            "non_caffeinated_available": False, "alternative_milk_available": False})
+                            "is_non_caffeinated": False})
             writer.writerow({"id_drink": 8, "name": "Mango Green Milk Tea", "price": 6.5, "hot_available": True,
-                            "non_caffeinated_available": False, "alternative_milk_available": False})
+                            "is_non_caffeinated": False})
             writer.writerow({"id_drink": 9, "name": "Golden Retriever", "price": 6.75, "hot_available": True,
-                            "non_caffeinated_available": False, "alternative_milk_available": False})
+                            "is_non_caffeinated": False})
             writer.writerow({"id_drink": 10, "name": "Coconut Pearl Milk Tea", "price": 6.75, "hot_available": True,
-                            "non_caffeinated_available": False, "alternative_milk_available": False})
+                            "is_non_caffeinated": False})
             writer.writerow({"id_drink": 11, "name": "Classic Tea", "price": 4.65, "hot_available": True,
-                            "non_caffeinated_available": False, "alternative_milk_available": False})
+                            "is_non_caffeinated": False})
             writer.writerow({"id_drink": 12, "name": "Honey Tea", "price": 4.85, "hot_available": True,
-                            "non_caffeinated_available": False, "alternative_milk_available": False})
+                            "is_non_caffeinated": False})
             writer.writerow({"id_drink": 13, "name": "Mango Green Tea", "price": 5.8, "hot_available": False,
-                            "non_caffeinated_available": False, "alternative_milk_available": False})
+                            "is_non_caffeinated": False})
             writer.writerow({"id_drink": 14, "name": "Passion Chess", "price": 6.25, "hot_available": False,
-                            "non_caffeinated_available": False, "alternative_milk_available": False})
+                            "is_non_caffeinated": False})
             writer.writerow({"id_drink": 15, "name": "Berry Lychee Burst", "price": 6.25, "hot_available": False,
-                            "non_caffeinated_available": False, "alternative_milk_available": False})
+                            "is_non_caffeinated": False})
             writer.writerow({"id_drink": 16, "name": "Peach Tea w/ Honey Jelly", "price": 6.25, "hot_available": False,
-                            "non_caffeinated_available": False, "alternative_milk_available": False})
+                            "is_non_caffeinated": False})
             writer.writerow({"id_drink": 17, "name": "Mango & Passion Fruit Tea", "price": 6.25, "hot_available": False,
-                            "non_caffeinated_available": False, "alternative_milk_available": False})
+                            "is_non_caffeinated": False})
             writer.writerow({"id_drink": 18, "name": "Honey Lemonade", "price": 5.2, "hot_available": False,
-                            "non_caffeinated_available": True, "alternative_milk_available": False})
+                            "is_non_caffeinated": True})
             writer.writerow({"id_drink": 19, "name": "Tiger Boba", "price": 6.5, "hot_available": False,
-                            "non_caffeinated_available": True, "alternative_milk_available": True})
+                            "is_non_caffeinated": True})
             writer.writerow({"id_drink": 20, "name": "Strawberry Coconut", "price": 6.5, "hot_available": True,
-                            "non_caffeinated_available": True, "alternative_milk_available": False})
+                            "is_non_caffeinated": True})
 
         if csv_name == "menu_toppings":
             header = ["id_topping", "name", "price"]
