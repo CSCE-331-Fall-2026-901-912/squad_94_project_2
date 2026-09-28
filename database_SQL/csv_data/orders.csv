@@ -1,1 +1,1 @@
-order_id,created_at,completed_at,order_id,order_name,topping1_id,topping1_name,topping2_id,topping2_name,ice_level,sugar_level,total_spent,percent_tip
+id_order,completed,time_created_at,time_completed_at,total_spent,tip,id_drink,id_topping1,id_topping2,ice_level,sugar_level,hot_chosen,non_caffeinated_chosen,alternative_milk_chosen

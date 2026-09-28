@@ -1,0 +1,15 @@
+id_employee,name,position,phone_number,current_pay_rate,hours_worked_for_week
+1,Carter Guzman,Barista,3052297164,11.6,12
+2,Robin Acosta,Barista,9206762586,11.6,15
+3,Mariana Davies,Barista,7694254933,11.6,9
+4,Trent Malone,Barista,4724646482,11.6,12
+5,Shayne Topp,Manager,4724446764,20.0,20
+6,Kristie Cole,Barista,3053864982,10.5,15
+7,Percy Jackson,Barista,7625999555,10.5,12
+8,Johanna Mason,Manager,3052514454,18.5,20
+9,Amy Santiago,Barista,5057617199,10.5,18
+10,Michael Scott,Manager,5056467984,22.5,20
+11,Eleanor Shelstrop,Barista,9838455494,10.0,0
+12,Sarika Ram,Barista,2485889939,10.0,6
+13,Asher Blevins,Barista,4722910725,10.0,12
+14,Paul Taele,Barista,5052358937,10.0,15
