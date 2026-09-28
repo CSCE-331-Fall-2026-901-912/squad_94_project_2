@@ -6,7 +6,7 @@ FROM orders
 WHERE strftime sales_week = '2026-01'
 GROUP BY sales_week;
 
--- Peak Sales Days
+-- Peak Sales Days v1 (calculate the top 10 sales days)
 SELECT
     date(created_at) AS sales_day,
     SUM(total_spent) AS total_sales
