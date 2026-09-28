@@ -11,9 +11,27 @@ def gen_csv_orders():
 
     # 52 weeks of sales history (starting September 30, 2025, then ending September 30, 2026)
     start_date = datetime.date(2025, 9, 30)
+    curr_date = start_date
     end_date = datetime.date(2026, 9, 30)
+    day_delta = datetime.timedelta(days=1)
 
-    # We must have 3 peak days.
+    # --We must have 3 peak days.--
+    # High traffic of students on the first day of the Texas A&M Semester.
+    peak1_date = datetime.date(2026, 8, 24)
+    # High traffic of students on Texas A&M finals day no. 1.
+    peak2_date = datetime.date(2026, 5, 4)
+    # High traffic of students on Texas A&M finals day no. 1.
+    peak3_date = datetime.date(2026, 5, 5)
+
+    double
+
+    # Iterate from September 30, 2025, to September 30, 2026.
+    while curr_date <= end_date:
+        curr_date += day_delta
+
+
+
+
     # 1 million in sales.
 
 def gen_csv_hardcode(csv_name):
