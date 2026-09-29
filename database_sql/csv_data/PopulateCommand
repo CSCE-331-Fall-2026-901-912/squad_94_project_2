@@ -1,0 +1,1 @@
+\copy TABLE from 'PATH' CSV HEADER

@@ -7,5 +7,5 @@ SELECT * FROM menu_drink
 WHERE hot_available is true; -- Gives drinks able to be hot
 
 SELECT * FROM menu_drink
-WHERE name LIKE '%' || 'Jelly' || '%';
--- Contains Jelly
+WHERE name LIKE '%' || 'Jelly' || '%'; -- Contains Jelly
+

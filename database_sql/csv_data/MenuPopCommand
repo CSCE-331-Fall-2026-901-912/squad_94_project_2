@@ -1,1 +1,0 @@
-\copy drink_menu from 'PATH' CSV HEADER
