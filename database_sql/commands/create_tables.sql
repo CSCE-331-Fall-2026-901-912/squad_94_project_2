@@ -22,7 +22,7 @@ CREATE TABLE inv_nonedible(
 
 
 
-CREATE TABLE menu_drink(
+CREATE TABLE menu_drinks(
     id_drink int PRIMARY KEY,
     name text,
     price numeric,
@@ -37,13 +37,13 @@ CREATE TABLE menu_toppings(
 );
 
 
-CREATE TABLE join_menu_drink_and_inv_edible(
+CREATE TABLE join_menu_drinks_and_inv_edible(
     id_join_menu_drink_and_inv_edible int PRIMARY KEY,
     id_drink int,
     id_edible int
 );
 
-CREATE TABLE join_menu_topping_and_inv_edible(
+CREATE TABLE join_menu_toppings_and_inv_edible(
     id_join_menu_topping_and_inv_edible int PRIMARY KEY,
     id_topping int,
     id_edible int
@@ -79,8 +79,8 @@ CREATE TABLE orders(
 \copy employees from '../csv_data/employees.csv' CSV HEADER
 \copy inv_edible from '../csv_data/inv_edible.csv' CSV HEADER
 \copy inv_nonedible from '../csv_data/inv_nonedible.csv' CSV HEADER
-\copy join_menu_drink_and_inv_edible from '../csv_data/join_menu_drink_and_inv_edible.csv' CSV HEADER
-\copy join_menu_topping_and_inv_edible from '../csv_data/join_menu_topping_and_inv_edible.csv' CSV HEADER
-\copy menu_drink from '../csv_data/menu_drink.csv' CSV HEADER
+\copy join_menu_drinks_and_inv_edible from '../csv_data/join_menu_drinks_and_inv_edible.csv' CSV HEADER
+\copy join_menu_toppings_and_inv_edible from '../csv_data/join_menu_toppings_and_inv_edible.csv' CSV HEADER
+\copy menu_drinks from '../csv_data/menu_drinks.csv' CSV HEADER
 \copy menu_toppings from '../csv_data/menu_toppings.csv' CSV HEADER
 \copy orders from '../csv_data/orders.csv' CSV HEADER
