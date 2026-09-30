@@ -55,7 +55,7 @@ CREATE TABLE employees(
     position text,
     phone_number text,
     current_pay_rate numeric,
-    hours__worked_for_week int
+    hours_worked_for_week int
     
 );
 
