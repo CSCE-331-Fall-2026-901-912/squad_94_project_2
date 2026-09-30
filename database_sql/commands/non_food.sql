@@ -6,9 +6,9 @@ SELECT
     id_nonedible,
     name,
     amount
-    AS [lowest inventory item(s)]
+    AS "lowest inventory item(s)"
 FROM inv_nonedible
-WHERE amount = (SELECT MIN(amount) FROM non_food);
+WHERE amount = (SELECT MIN(amount) FROM inv_nonedible);
 
 -- QUERY 2: Shows table by amount in ascending order 
 SELECT * FROM inv_nonedible
