@@ -61,11 +61,11 @@ CREATE TABLE employees(
 
 CREATE TABLE orders(
     id_order int PRIMARY KEY,
-    id_employee int,
     completed boolean,
     time_created_at timestamptz,
     time_completed_at timestamptz,
     total_spent numeric,
+	id_employee int,
     tip numeric,
     id_drink int,
     id_topping1 int,
