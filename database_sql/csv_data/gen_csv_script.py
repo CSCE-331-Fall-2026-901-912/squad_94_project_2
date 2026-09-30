@@ -1,4 +1,4 @@
-import hardcode
+import gen_csv_script_helper
 import random
 import argparse
 import datetime
@@ -15,8 +15,8 @@ class CSVData:
         self.df_join_menu_drinks_and_inv_edible     = None
         self.df_join_menu_toppings_and_inv_edible   = None
 
-        self.list_of_dict_orders = None
-        self.list_of_dict_orders_ids = None
+        self.list_of_dict_orders = []
+        self.order_num = 0
         self.sales_total = decimal.Decimal('0.00')
 
         # Store the time the store opens and time the store closes on a day.
@@ -48,6 +48,7 @@ class CSVData:
         self.df_menu_toppings                      = pd.read_csv("menu_toppings.csv")
         self.df_join_menu_drinks_and_inv_edible    = pd.read_csv("join_menu_drinks_and_inv_edible.csv")
         self.df_join_menu_toppings_and_inv_edible  = pd.read_csv("join_menu_toppings_and_inv_edible.csv")
+        # Debug prints
         # print(self.df_inv_edible)
         # print(self.df_inv_nonedible)
         # print(self.df_employees)
@@ -55,11 +56,9 @@ class CSVData:
         # print(self.df_menu_toppings)
         # print(self.df_join_menu_drinks_and_inv_edible)
         # print(self.df_join_menu_toppings_and_inv_edible)
-        # self.df_menu_toppings.to_csv("output.csv", index=False)
 
     def gen_orders_csv(self):
         curr_date = self.start_date
-
         # Iterate from start date to end date.
         while curr_date <= self.end_date:
             # Generate order entries within a day.
@@ -67,14 +66,18 @@ class CSVData:
 
             # Advance to next date.
             curr_date += self.day_delta
+
         # 1 million in sales.
+        print("There was a total of $" + str(self.sales_total) + " made in sales.")
+        orders_df = pd.DataFrame(self.list_of_dict_orders)
+        orders_df.to_csv("orders.csv", index=False)
 
     def gen_entries_today(self, curr_date):
         # Adjust the number of orders made today to be of a "higher" range if the current date is a peak date.
         if curr_date == self.peak1_date or curr_date == self.peak2_date or curr_date == self.peak3_date:
-            num_orders = random.randint(500, 700)
+            num_orders = random.randint(600, 700)
         else:
-            num_orders = random.randint(200, 400)
+            num_orders = random.randint(300, 400)
 
         # Create random numbers of seconds in a list num_orders.
         # Have the random numbers of seconds be restricted to the number of seconds the store is open.
@@ -90,13 +93,95 @@ class CSVData:
         random_today_times = [(today_time_open + datetime.timedelta(seconds=i)).time() for i in random_seconds]
 
         for time in random_today_times:
-            self.gen_entry()
+            full_time = datetime.datetime.combine(curr_date, time)
+            self.gen_entry(full_time)
 
-    def gen_entry(self):
+    def gen_entry(self, time):
+        self.order_num += 1
+        id_order = self.order_num
+        completed = True
+        time_created_at = time
+        time_completed_at = time
+        total_spent = decimal.Decimal('0.00')
 
+        # ignore_index is important than one might initially think. Because this is the first row,
+        # by default,
+        id_employee = self.df_employees["id_employee"].sample().iloc[0]
 
+        id_drink = self.df_menu_drinks["id_drink"].sample().iloc[0]
 
+        # Add price of drink to the total spent regarding the order
+        drink_price = decimal.Decimal(str(self.df_menu_drinks.loc[self.df_menu_drinks["id_drink"] == id_drink, "price"].iloc[0]))
+        total_spent += drink_price
 
+        id_topping1 = None
+        id_topping2 = None
+
+        # Choose between no, one, or two toppings.
+        top_choice = random.randint(0, 2)
+        if top_choice == 2:
+            # Retrieve two random toppings as a list (replace=False means they cannot be the same topping).
+            list_toppings = self.df_menu_toppings["id_topping"].sample(n=2, replace=False).to_list()
+            id_topping1 = int(list_toppings[0])
+            id_topping2 = int(list_toppings[1])
+
+            # Add price of both toppings to the total spent on the order
+            topping1_price = decimal.Decimal(str(self.df_menu_toppings.loc[self.df_menu_toppings["id_topping"] == id_topping1, "price"].iloc[0]))
+            topping2_price = decimal.Decimal(str(self.df_menu_toppings.loc[self.df_menu_toppings["id_topping"] == id_topping2, "price"].iloc[0]))
+            total_spent += topping1_price + topping2_price
+        elif top_choice == 1:
+            # Randomly retrieve one topping
+            id_topping1 = self.df_menu_toppings["id_topping"].sample().iloc[0]
+            id_topping2 = ""
+            topping1_price = decimal.Decimal(str(self.df_menu_toppings.loc[self.df_menu_toppings["id_topping"] == id_topping1, "price"].iloc[0]))
+            total_spent += topping1_price
+        else:
+            id_topping1 = ""
+            id_topping2 = ""
+
+        # Add the total spent to the all-time sales total.
+        self.sales_total += total_spent
+
+        # Calculate tip
+        order_tip = decimal.Decimal('0.00')
+        order_tip_percent = decimal.Decimal('0.00')
+        tip_choice = random.randint(0, 5)
+        if tip_choice == 5:
+            order_tip_percent = decimal.Decimal('0.25')
+            order_tip = total_spent * order_tip_percent
+        elif tip_choice == 4:
+            order_tip_percent = decimal.Decimal('0.20')
+            order_tip = total_spent * order_tip_percent
+        elif tip_choice == 3:
+            order_tip_percent = decimal.Decimal('0.15')
+            order_tip = total_spent * order_tip_percent
+        elif tip_choice == 2:
+            order_tip_percent = decimal.Decimal('0.10')
+            order_tip = total_spent * order_tip_percent
+        elif tip_choice == 1:
+            order_tip_percent = decimal.Decimal('0.05')
+            order_tip = total_spent * order_tip_percent
+
+        order_tip = decimal.Decimal.quantize(order_tip, decimal.Decimal('.01'), rounding=decimal.ROUND_DOWN)
+        total_spent += order_tip
+        self.sales_total += order_tip
+
+        ice_level = random.randint(0, 2)
+        sugar_level = random.randint(0, 4)
+
+        hot_chosen = False
+
+        if bool(self.df_menu_drinks.loc[self.df_menu_drinks["id_drink"] == id_drink, "hot_available"].iloc[0]):
+            coinflip = random.randint(0, 1)
+            if coinflip == 1:
+                hot_chosen = True
+
+        self.list_of_dict_orders.append({"id_order": id_order, "completed": completed,
+                                         "time_created_at": time_created_at, "time_completed_at": time_completed_at,
+                                         "total_spent": total_spent, "id_employee": id_employee,
+                                         "tip": order_tip_percent, "id_drink": id_drink, "id_topping1": id_topping1,
+                                         "id_topping2": id_topping2, "ice_level": ice_level, "sugar_level": sugar_level,
+                                         "hot_chosen": hot_chosen})
 
 def main():
     # Parse arguments
@@ -113,7 +198,7 @@ def main():
     args = parser.parse_args()
 
     # Generate hardcoded CSV files.
-    hardcode.gen_csv_all()
+    gen_csv_script_helper.gen_hardcoded_csv_all()
     print("Generated all hardcoded CSV files.")
 
     # Only fill orders.csv with fictional data if --seed_orders_csv flag is present.
@@ -126,6 +211,7 @@ def main():
 
         # Generate the orders.csv with seeded entires.
         dynamic.gen_orders_csv()
+        print("Generated randomly (seeded) a year's worth of orders for order.csv.")
 
 
 if __name__ == "__main__":
