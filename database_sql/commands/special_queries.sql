@@ -3,8 +3,8 @@ SELECT
     to_char(time_created_at, 'YYYY-WW') AS sales_week,
     COUNT(DISTINCT id_order) AS order_count
 FROM orders
-WHERE to_char(time_created_at, 'YYYY-WW') = '2026-01'
-GROUP BY sales_week;
+GROUP BY to_char(time_created_at, 'YYYY-WW')
+ORDER BY sales_week;
 
 -- Peak Sales Days v1 (calculate the top 10 sales days)
 SELECT
