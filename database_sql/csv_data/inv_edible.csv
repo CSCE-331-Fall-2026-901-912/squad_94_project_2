@@ -1,4 +1,4 @@
-id_edible,name,num_servings
+id_edible,name,amount_servings
 1,Black Tea,2000
 2,Green Tea,1600
 3,Creamer,650

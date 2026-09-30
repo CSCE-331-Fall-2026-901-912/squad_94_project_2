@@ -38,13 +38,13 @@ CREATE TABLE menu_toppings(
 
 
 CREATE TABLE join_menu_drinks_and_inv_edible(
-    id_join_menu_drink_and_inv_edible int PRIMARY KEY,
+    id_join_menu_drinks_and_inv_edible int PRIMARY KEY,
     id_drink int,
     id_edible int
 );
 
 CREATE TABLE join_menu_toppings_and_inv_edible(
-    id_join_menu_topping_and_inv_edible int PRIMARY KEY,
+    id_join_menu_toppings_and_inv_edible int PRIMARY KEY,
     id_topping int,
     id_edible int
 );
@@ -54,8 +54,8 @@ CREATE TABLE employees(
     name text,
     position text,
     phone_number text,
-    pay_rate_hourly numeric,
-    hours_scheduled int
+    current_pay_rate numeric,
+    hours__worked_for_week int
     
 );
 
@@ -72,7 +72,7 @@ CREATE TABLE orders(
     id_topping2 int,
     ice_level int,
     sugar_level int,
-    hot_choosen boolean
+    hot_chosen boolean
     
 );
 
