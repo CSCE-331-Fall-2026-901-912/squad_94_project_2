@@ -15,3 +15,18 @@ FROM (
 	GROUP BY 1
 ) t
 WHERE sale_hour = 20;
+
+--Display the top 10 most ordered drinks from most to least
+SELECT
+    md.id_drink,
+    md.name AS drink_name,
+    COUNT(o.id_order) AS times_ordered
+FROM orders AS o
+JOIN menu_drinks AS md
+    ON o.id_drink = md.id_drink
+GROUP BY
+    md.id_drink,
+    md.name
+ORDER BY
+    times_ordered DESC
+LIMIT 10;
