@@ -31,8 +31,8 @@ SELECT
     COUNT(DISTINCT id_order) AS order_count,
     SUM(total_spent) AS total_sales
 FROM orders
-WHERE EXTRACT(HOUR FROM time_completed_at) = 12
-GROUP BY sale_hour;
+GROUP BY sale_hour
+ORDER BY sale_hour;
 
 -- Menu Item Inventory
 SELECT
