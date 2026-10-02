@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
+  All rights reserved. Use is subject to license terms.
+
+  This file is available and licensed under the following license:
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the distribution.
+  - Neither the name of Oracle Corporation nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="446.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ScrollPane layoutX="252.0" layoutY="58.0" prefHeight="172.0" prefWidth="314.0">
+         <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="150.0" prefWidth="316.0">
+               <children>
+                  <Label layoutX="102.0" layoutY="14.0" prefHeight="33.0" prefWidth="112.0" text="Processing Orders">
+                     <font>
+                        <Font name="Calibri" size="14.0" />
+                     </font>
+                  </Label>
+                  <ListView layoutX="19.0" layoutY="47.0" prefHeight="90.0" prefWidth="280.0" />
+               </children>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
+      <ScrollPane layoutX="252.0" layoutY="253.0" prefHeight="172.0" prefWidth="314.0">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="150.0" prefWidth="316.0">
+               <children>
+                  <Label layoutX="94.0" layoutY="14.0" prefHeight="34.0" prefWidth="127.0" text="Today's Order History">
+                     <font>
+                        <Font name="Calibri" size="14.0" />
+                     </font>
+                  </Label>
+                  <ListView layoutX="19.0" layoutY="47.0" prefHeight="90.0" prefWidth="280.0" />
+               </children>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
+      <AnchorPane layoutX="29.0" layoutY="53.0" prefHeight="181.0" prefWidth="196.0">
+         <children>
+            <Label layoutX="66.0" layoutY="1.0" prefHeight="26.0" prefWidth="62.0" text="Inventory">
+               <font>
+                  <Font name="Calibri" size="14.0" />
+               </font>
+            </Label>
+            <ListView layoutX="13.0" layoutY="53.0" prefHeight="46.0" prefWidth="167.0" />
+            <Label layoutX="13.0" layoutY="27.0" prefHeight="26.0" prefWidth="70.0" text="Out Of Stock">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Label>
+            <ListView layoutX="13.0" layoutY="125.0" prefHeight="46.0" prefWidth="167.0" />
+            <Label layoutX="13.0" layoutY="99.0" prefHeight="26.0" prefWidth="70.0" text="Running Low">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <Label layoutX="29.0" layoutY="17.0" prefHeight="36.0" prefWidth="78.0" text="Manager">
+         <font>
+            <Font name="Calibri" size="18.0" />
+         </font>
+      </Label>
+      <AnchorPane layoutX="29.0" layoutY="248.0" prefHeight="181.0" prefWidth="196.0">
+         <children>
+            <Label layoutX="80.0" layoutY="1.0" prefHeight="26.0" prefWidth="35.0" text="Sales">
+               <font>
+                  <Font name="Calibri" size="14.0" />
+               </font>
+            </Label>
+            <ListView layoutX="13.0" layoutY="53.0" prefHeight="46.0" prefWidth="167.0" />
+            <Label layoutX="13.0" layoutY="27.0" prefHeight="26.0" prefWidth="70.0" text="Today's Sales">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Label>
+            <ListView layoutX="13.0" layoutY="125.0" prefHeight="46.0" prefWidth="167.0" />
+            <Label layoutX="13.0" layoutY="99.0" prefHeight="26.0" prefWidth="70.0" text="Total Sales">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
