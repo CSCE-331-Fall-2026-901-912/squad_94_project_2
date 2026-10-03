@@ -1,0 +1,85 @@
+package controller;
+
+import model.BaseMenu;
+import model.CancellationPopUp;
+import model.OrderMenu;
+import model.TipPopUp;
+
+import javafx.fxml.FXML;
+// import javafx.scene.control.Button;
+// import javafx.scene.control.TextField;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.Label;
+// import javafx.scene.text.Text;
+
+public class CustomerController {
+
+    
+    private BaseMenu base_menu;
+    private CancellationPopUp cancel_pop_up;
+    private OrderMenu order_menu;
+    private TipPopUp tip_pop_up;
+    
+
+
+
+    // BASEMENU TEXTS & BUTTONS
+    @FXML private TextArea current_order;
+    @FXML private Label order_total;
+    
+    @FXML public void add_drink(){
+        base_menu.add_drink(this);
+    }
+    @FXML public void clear_order(){
+        base_menu.clear_order(this);
+    }
+    @FXML public void finish_order(){
+        base_menu.finish_order(this);
+    }
+    @FXML public void manager_view(){
+        base_menu.manager_view(this);
+    }
+
+    // CANCELLATION POP UP BUTTONS
+    @FXML public void confirm_cancel(){
+        cancel_pop_up.confirm_cancel();
+        // TODO: clear current_order
+    }
+    @FXML public void deny_cancel(){
+        cancel_pop_up.deny_cancel();
+        // TODO: close popup
+    }
+
+    // ORDER MENU BUTTONS
+    // TODO: add buttons
+
+    // TIP POP UP BUTTONS
+    @FXML private Label tip_total;
+
+    @FXML public void tip0(){
+        // TODO: Update tip_total
+    }
+    @FXML public void tip10(){
+        // TODO: Update tip_total
+    }
+    @FXML public void tip15(){
+        // TODO: Update tip_total
+    }
+    @FXML public void tip20(){
+        // TODO: Update tip_total
+    }
+    @FXML public void tip25(){
+        // TODO: Update tip_total
+    }
+    @FXML public void tipdone(){
+        // TODO: update PSQL database, reset current_order data 
+        // TODO: close window
+    }
+
+
+    public void initialize(BaseMenu base_menu){
+        this.base_menu = base_menu;
+        current_order.textProperty().bind(base_menu.get_current_order());
+        
+    }
+}

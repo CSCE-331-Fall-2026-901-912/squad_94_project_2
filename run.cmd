@@ -1,0 +1,2 @@
+javac --module-path ".\javafx-sdk-26\lib" --add-modules javafx.controls,javafx.base,javafx.fxml,javafx.graphics,javafx.media,javafx.web,javafx.swing backend/src/model/*.java backend/src/controller/*.java backend/src/App.java
+java --module-path ".\javafx-sdk-26\lib" --add-modules javafx.controls,javafx.base,javafx.fxml,javafx.graphics,javafx.media,javafx.web,javafx.swing backend/src/App.java
