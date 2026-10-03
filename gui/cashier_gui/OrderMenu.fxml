@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -24,8 +25,10 @@
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <ComboBox id="milkTeaBox" prefWidth="150.0" promptText="Milk Teas" />
-                  <ComboBox id="fruitTeaBox" prefWidth="150.0" promptText="Fruit Teas" />
+                  <ComboBox id="milkTeaBox" prefWidth="150.0" promptText="Milk Teas">
+                  </ComboBox>
+                  <ComboBox id="fruitTeaBox" prefWidth="150.0" promptText="Fruit Teas">
+                  </ComboBox>
                </children>
             </VBox>
          </content>
@@ -52,52 +55,52 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Mango Boba" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="3">
+                        <Button id="mangoBobaButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Mango Boba" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="3">
                            <font>
                               <Font size="10.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Coffee Jelly" textAlignment="CENTER" GridPane.columnIndex="1">
+                        <Button id="coffeeJellyButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Coffee Jelly" textAlignment="CENTER" GridPane.columnIndex="1">
                            <font>
                               <Font size="10.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Pudding" textAlignment="CENTER" GridPane.rowIndex="1">
+                        <Button id="puddingButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Pudding" textAlignment="CENTER" GridPane.rowIndex="1">
                            <font>
                               <Font size="10.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Lychee Jelly" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <Button id="lycheeJellyButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Lychee Jelly" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <font>
                               <Font size="10.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Honey Jelly" textAlignment="CENTER" GridPane.rowIndex="2">
+                        <Button id="honeyJellyButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Honey Jelly" textAlignment="CENTER" GridPane.rowIndex="2">
                            <font>
                               <Font size="10.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Crystal Boba" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Button id="crystalBobaButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Crystal Boba" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <font>
                               <Font size="10.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Ice Cream" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <Button id="iceCreamButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Ice Cream" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3">
                            <font>
                               <Font size="10.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Boba Pearls" textAlignment="CENTER">
+                        <Button id="bobaPearlsButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Boba Pearls" textAlignment="CENTER">
                            <font>
                               <Font size="10.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Strawberry Boba" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="4">
+                        <Button id="strawberryBobaButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Strawberry Boba" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="4">
                            <font>
                               <Font size="10.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Creama" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                        <Button id="creamaButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Creama" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="4">
                            <font>
                               <Font size="10.0" />
                            </font>
@@ -127,10 +130,10 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="None" />
-                        <Button mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="Light" GridPane.columnIndex="1" />
-                        <Button mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="Regular" GridPane.rowIndex="1" />
-                        <Button mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="Hot" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Button id="noIceButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="None" />
+                        <Button id="lightIceButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="Light" GridPane.columnIndex="1" />
+                        <Button id="regularIceButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="Regular" GridPane.rowIndex="1" />
+                        <Button id="hotIceButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="Hot" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                </children>
@@ -142,13 +145,13 @@
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <Slider showTickLabels="true" showTickMarks="true" value="100.0" />
+                  <Slider id="sugarSlider" showTickLabels="true" showTickMarks="true" value="100.0" />
                </children>
             </VBox>
             <VBox alignment="CENTER" prefHeight="122.0" prefWidth="187.0" style="-fx-padding: 20; -fx-spacing: 20;">
                <children>
-                  <Button mnemonicParsing="false" text="Cancel" />
-                  <Button mnemonicParsing="false" text="Finish Selection" />
+                  <Button id="cancelButton" mnemonicParsing="false" text="Cancel" />
+                  <Button id="finishSelectionButton" mnemonicParsing="false" text="Finish Selection" />
                </children>
             </VBox>
          </children>
