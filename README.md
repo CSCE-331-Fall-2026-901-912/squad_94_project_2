@@ -22,7 +22,9 @@ May 5th, 2026 -- Second day of finals of Spring 2026 semester.
 
 # Running the Application
 
-To run the application from terminal, you need to cd into where you downloaded the squad_94_project_2 directory, open the run.cmd file, and fill in the path with your local installation of a JavaFX sdk.
+To run the application from terminal, you need to cd into where you downloaded the squad_94_project_2 directory.
+Copy the "MODIFY_ME.cmd" file. Rename the copy to "run.cmd".
+Open the run.cmd file, and fill in the path (--module-path) with your local installation of a JavaFX sdk. 
 
 After this, simply type in your terminal: 
 
