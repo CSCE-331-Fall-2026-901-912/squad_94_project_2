@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
@@ -15,19 +15,15 @@
             <Font name="Calibri" size="18.0" />
          </font>
       </Label>
-      <ChoiceBox layoutX="27.0" layoutY="98.0" prefHeight="26.0" prefWidth="106.0" />
-      <ChoiceBox layoutX="143.0" layoutY="98.0" prefHeight="26.0" prefWidth="106.0" />
-      <TextField layoutX="269.0" layoutY="98.0" prefHeight="26.0" prefWidth="303.0" />
-      <ListView layoutX="27.0" layoutY="138.0" prefHeight="226.0" prefWidth="546.0" />
-      <Label layoutX="27.0" layoutY="74.0" text="Sort By">
-         <font>
-            <Font name="Calibri" size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="143.0" layoutY="74.0" text="Time Period">
-         <font>
-            <Font name="Calibri" size="14.0" />
-         </font>
-      </Label>
+      <TextField layoutX="27.0" layoutY="95.0" prefHeight="26.0" prefWidth="303.0" text="Search" />
+      <TableView layoutX="27.0" layoutY="139.0" prefHeight="236.0" prefWidth="546.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="ID" />
+          <TableColumn prefWidth="364.0000228881836" text="Order" />
+            <TableColumn minWidth="0.0" prefWidth="106.39999389648438" text="Total" />
+        </columns>
+      </TableView>
+      <ComboBox layoutX="350.0" layoutY="95.0" prefHeight="26.0" prefWidth="106.0" promptText="Sort By" />
+      <ComboBox layoutX="466.0" layoutY="95.0" prefHeight="26.0" prefWidth="106.0" promptText="Time Period" />
    </children>
 </AnchorPane>
