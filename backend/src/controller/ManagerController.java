@@ -18,6 +18,11 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
+import javafx.scene.layout.AnchorPane;
+
+
 
 public class ManagerController {
     private ItemDetailsPopUp item_details_pop_up;
@@ -103,4 +108,110 @@ public class ManagerController {
 
     }
 
+
+
+    // MAIN SCREEN
+    @FXML
+    private AnchorPane InventoryBox;
+
+    @FXML
+    private Label InventoryLabel;
+
+    @FXML
+    private Label ManagerLabel;
+
+    @FXML
+    private TableColumn<?, ?> OOSAmount;
+
+    @FXML
+    private Label OOSLabel;
+
+    @FXML
+    private TableColumn<?, ?> OOSName;
+
+    @FXML
+    private TableView<?> OOSTable;
+
+    @FXML
+    private AnchorPane ProcOrderBox;
+
+    @FXML
+    private TableColumn<?, ?> ProcOrderID;
+
+    @FXML
+    private TableView<?> ProcOrderTable;
+
+    @FXML
+    private TableColumn<?, ?> ProcOrderTotal;
+
+    @FXML
+    private TableColumn<?, ?> ProcOrders;
+
+    @FXML
+    private TableColumn<?, ?> RLAmount;
+
+    @FXML
+    private TableColumn<?, ?> RLName;
+
+    @FXML
+    private TableView<?> RLTable;
+
+    @FXML
+    private AnchorPane SalesBox;
+
+    @FXML
+    private Label SalesLabel;
+
+    @FXML
+    private AnchorPane TodayOHBox;
+
+    @FXML
+    private TableColumn<?, ?> TodayOHID;
+
+    @FXML
+    private TableColumn<?, ?> TodayOHOrder;
+
+    @FXML
+    private TableView<?> TodayOHTable;
+
+    @FXML
+    private TableColumn<?, ?> TodayOHTotal;
+
+    @FXML
+    private SplitPane TodaysSales;
+
+    @FXML
+    private Label TodaysSalesAmount;
+
+    @FXML
+    private Label TodaysSalesLabel;
+
+    @FXML
+    private SplitPane TotalSales;
+
+    @FXML
+    private Label TotalSalesAmount;
+
+    @FXML
+    private Label TotalSalesLabel;
+
+    @FXML
+    void InventoryOpen(MouseEvent event) {
+
+    }
+
+    @FXML
+    void OHOpen(MouseEvent event) {
+
+    }
+
+    @FXML
+    void ProcOrdersOpen(MouseEvent event) {
+
+    }
+
+    @FXML
+    void SalesEntered(MouseEvent event) {
+
+    }
 }

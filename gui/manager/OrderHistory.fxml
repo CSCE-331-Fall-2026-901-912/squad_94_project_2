@@ -15,15 +15,15 @@
             <Font name="Calibri" size="18.0" />
          </font>
       </Label>
-      <TextField layoutX="27.0" layoutY="95.0" prefHeight="26.0" prefWidth="303.0" text="Search" />
+      <TextField id="OHSearch" layoutX="27.0" layoutY="95.0" prefHeight="26.0" prefWidth="303.0" text="Search" />
       <TableView layoutX="27.0" layoutY="139.0" prefHeight="236.0" prefWidth="546.0">
         <columns>
-          <TableColumn prefWidth="75.0" text="ID" />
-          <TableColumn prefWidth="364.0000228881836" text="Order" />
-            <TableColumn minWidth="0.0" prefWidth="106.39999389648438" text="Total" />
+          <TableColumn id="OHID" prefWidth="75.0" text="ID" />
+          <TableColumn id="OHOrder" prefWidth="364.0000228881836" text="Order" />
+            <TableColumn id="OHTotal" minWidth="0.0" prefWidth="106.39999389648438" text="Total" />
         </columns>
       </TableView>
-      <ComboBox layoutX="350.0" layoutY="95.0" prefHeight="26.0" prefWidth="106.0" promptText="Sort By" />
-      <ComboBox layoutX="466.0" layoutY="95.0" prefHeight="26.0" prefWidth="106.0" promptText="Time Period" />
+      <ComboBox id="OHSortBy" layoutX="350.0" layoutY="95.0" prefHeight="26.0" prefWidth="106.0" promptText="Sort By" />
+      <ComboBox id="OHTimePeriod" layoutX="466.0" layoutY="95.0" prefHeight="26.0" prefWidth="106.0" promptText="Time Period" />
    </children>
 </AnchorPane>

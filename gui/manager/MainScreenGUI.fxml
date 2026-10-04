@@ -40,22 +40,22 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="446.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="446.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainScreenManager">
    <children>
       <ScrollPane layoutX="252.0" layoutY="58.0" prefHeight="172.0" prefWidth="314.0">
          <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="150.0" prefWidth="316.0">
+          <AnchorPane fx:id="ProcOrderBox" minHeight="0.0" minWidth="0.0" onMouseClicked="#ProcOrdersOpen" prefHeight="150.0" prefWidth="316.0">
                <children>
                   <Label layoutX="102.0" layoutY="14.0" prefHeight="33.0" prefWidth="112.0" text="Processing Orders">
                      <font>
                         <Font name="Calibri" size="14.0" />
                      </font>
                   </Label>
-                  <TableView layoutX="19.0" layoutY="47.0" prefHeight="94.0" prefWidth="282.0">
+                  <TableView fx:id="ProcOrderTable" layoutX="19.0" layoutY="47.0" prefHeight="94.0" prefWidth="282.0">
                     <columns>
-                      <TableColumn prefWidth="57.599971771240234" text="ID" />
-                      <TableColumn prefWidth="149.60003662109375" text="Order" />
-                        <TableColumn prefWidth="75.99999084472654" text="Total" />
+                      <TableColumn fx:id="ProcOrderID" prefWidth="57.599971771240234" text="ID" />
+                      <TableColumn fx:id="ProcOrders" prefWidth="149.60003662109375" text="Order" />
+                        <TableColumn fx:id="ProcOrderTotal" prefWidth="75.99999084472654" text="Total" />
                     </columns>
                   </TableView>
                </children>
@@ -64,13 +64,13 @@
       </ScrollPane>
       <ScrollPane layoutX="252.0" layoutY="253.0" prefHeight="172.0" prefWidth="314.0">
          <content>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="150.0" prefWidth="316.0">
+            <AnchorPane fx:id="TodayOHBox" minHeight="0.0" minWidth="0.0" onMouseClicked="#OHOpen" prefHeight="150.0" prefWidth="316.0">
                <children>
-                  <TableView layoutX="17.0" layoutY="48.0" prefHeight="94.0" prefWidth="282.0">
+                  <TableView fx:id="TodayOHTable" layoutX="17.0" layoutY="48.0" prefHeight="94.0" prefWidth="282.0">
                      <columns>
-                        <TableColumn prefWidth="57.599971771240234" text="ID" />
-                        <TableColumn prefWidth="149.60003662109375" text="Order" />
-                        <TableColumn prefWidth="75.99999084472654" text="Total" />
+                        <TableColumn fx:id="TodayOHID" prefWidth="57.599971771240234" text="ID" />
+                        <TableColumn fx:id="TodayOHOrder" prefWidth="149.60003662109375" text="Order" />
+                        <TableColumn fx:id="TodayOHTotal" prefWidth="75.99999084472654" text="Total" />
                      </columns>
                   </TableView>
                   <Label layoutX="94.0" layoutY="14.0" prefHeight="34.0" prefWidth="127.0" text="Today's Order History">
@@ -82,28 +82,28 @@
             </AnchorPane>
          </content>
       </ScrollPane>
-      <AnchorPane layoutX="29.0" layoutY="53.0" prefHeight="181.0" prefWidth="196.0">
+      <AnchorPane fx:id="InventoryBox" layoutX="29.0" layoutY="53.0" onMouseClicked="#InventoryOpen" prefHeight="181.0" prefWidth="196.0">
          <children>
-            <Label layoutX="66.0" layoutY="1.0" prefHeight="26.0" prefWidth="62.0" text="Inventory">
+            <Label fx:id="InventoryLabel" layoutX="66.0" layoutY="1.0" prefHeight="26.0" prefWidth="62.0" text="Inventory">
                <font>
                   <Font name="Calibri" size="14.0" />
                </font>
             </Label>
-            <TableView layoutX="13.0" layoutY="54.0" prefHeight="46.0" prefWidth="167.0">
+            <TableView id="OOSTable" fx:id="OOSTable" layoutX="13.0" layoutY="54.0" prefHeight="46.0" prefWidth="167.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="Name" />
-                <TableColumn prefWidth="91.19999999999999" text="Amount" />
+                <TableColumn fx:id="OOSName" prefWidth="75.0" text="Name" />
+                <TableColumn fx:id="OOSAmount" prefWidth="91.19999999999999" text="Amount" />
               </columns>
             </TableView>
-            <Label layoutX="13.0" layoutY="27.0" prefHeight="26.0" prefWidth="70.0" text="Out Of Stock">
+            <Label fx:id="OOSLabel" layoutX="13.0" layoutY="27.0" prefHeight="26.0" prefWidth="70.0" text="Out Of Stock">
                <font>
                   <Font size="11.0" />
                </font>
             </Label>
-            <TableView layoutX="14.0" layoutY="125.0" prefHeight="46.0" prefWidth="167.0">
+            <TableView id="RLTable" fx:id="RLTable" layoutX="14.0" layoutY="125.0" prefHeight="46.0" prefWidth="167.0">
                <columns>
-                  <TableColumn prefWidth="75.0" text="Name" />
-                  <TableColumn prefWidth="91.19999999999999" text="Amount" />
+                  <TableColumn fx:id="RLName" prefWidth="75.0" text="Name" />
+                  <TableColumn fx:id="RLAmount" prefWidth="91.19999999999999" text="Amount" />
                </columns>
             </TableView>
             <Label layoutX="13.0" layoutY="99.0" prefHeight="26.0" prefWidth="70.0" text="Running Low">
@@ -113,40 +113,40 @@
             </Label>
          </children>
       </AnchorPane>
-      <Label layoutX="29.0" layoutY="17.0" prefHeight="36.0" prefWidth="78.0" text="Manager">
+      <Label fx:id="ManagerLabel" layoutX="29.0" layoutY="17.0" prefHeight="36.0" prefWidth="78.0" text="Manager">
          <font>
             <Font name="Calibri" size="18.0" />
          </font>
       </Label>
-      <AnchorPane layoutX="29.0" layoutY="248.0" prefHeight="181.0" prefWidth="196.0">
+      <AnchorPane fx:id="SalesBox" layoutX="29.0" layoutY="248.0" onMouseClicked="#SalesEntered" prefHeight="181.0" prefWidth="196.0">
          <children>
-            <SplitPane dividerPositions="0.5" layoutX="14.0" layoutY="31.0" orientation="VERTICAL" prefHeight="62.0" prefWidth="167.0">
+            <SplitPane fx:id="TodaysSales" dividerPositions="0.5" layoutX="14.0" layoutY="31.0" orientation="VERTICAL" prefHeight="62.0" prefWidth="167.0">
               <items>
-                  <Label prefHeight="26.0" prefWidth="70.0" text="Today's Sales" textAlignment="CENTER">
+                  <Label fx:id="TodaysSalesLabel" prefHeight="26.0" prefWidth="70.0" text="Today's Sales" textAlignment="CENTER">
                      <font>
                         <Font size="11.0" />
                      </font>
                   </Label>
-                  <Label layoutX="10.0" layoutY="10.0" prefHeight="26.0" prefWidth="70.0" text="\$$$">
+                  <Label fx:id="TodaysSalesAmount" layoutX="10.0" layoutY="10.0" prefHeight="26.0" prefWidth="70.0" text="\$$$">
                      <font>
                         <Font size="11.0" />
                      </font>
                   </Label>
               </items>
             </SplitPane>
-            <Label layoutX="83.0" layoutY="5.0" text="Sales">
+            <Label fx:id="SalesLabel" layoutX="83.0" layoutY="5.0" text="Sales">
                <font>
                   <Font name="Calibri" size="14.0" />
                </font>
             </Label>
-            <SplitPane dividerPositions="0.5" layoutX="14.0" layoutY="106.0" orientation="VERTICAL" prefHeight="61.0" prefWidth="167.0">
+            <SplitPane fx:id="TotalSales" dividerPositions="0.5" layoutX="14.0" layoutY="106.0" orientation="VERTICAL" prefHeight="61.0" prefWidth="167.0">
                <items>
-                  <Label prefHeight="26.0" prefWidth="70.0" text="Total Sales" textAlignment="CENTER">
+                  <Label fx:id="TotalSalesLabel" prefHeight="26.0" prefWidth="70.0" text="Total Sales" textAlignment="CENTER">
                      <font>
                         <Font size="11.0" />
                      </font>
                   </Label>
-                  <Label layoutX="10.0" layoutY="10.0" prefHeight="26.0" prefWidth="70.0" text="\$$$">
+                  <Label fx:id="TotalSalesAmount" layoutX="10.0" layoutY="10.0" prefHeight="26.0" prefWidth="70.0" text="\$$$">
                      <font>
                         <Font size="11.0" />
                      </font>
