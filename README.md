@@ -19,3 +19,15 @@ There are three peak days of notably higher numbers of orders made. These days a
 August 24th, 2026 -- First day of Texas A&M semester.
 May 4th, 2026 -- First day of finals of Spring 2026 semester.
 May 5th, 2026 -- Second day of finals of Spring 2026 semester.
+
+# Running the Application
+
+To run the application from terminal, you need to cd into where you downloaded the squad_94_project_2 directory, open the run.cmd file, and fill in the path with your local installation of a JavaFX sdk.
+
+After this, simply type in your terminal: 
+
+### .\run.cmd
+###
+This should immediately boot the application and all of its dependencies. To exit the application, simply click the red X in the upper right corner of each currently open window.
+
+Do not expect perfect performance for the application if you have X'd out of any of the dependant windows, as this may break the logic in the backend.
