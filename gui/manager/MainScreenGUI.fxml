@@ -33,8 +33,8 @@
 -->
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -89,13 +89,23 @@
                   <Font name="Calibri" size="14.0" />
                </font>
             </Label>
-            <ListView layoutX="13.0" layoutY="53.0" prefHeight="46.0" prefWidth="167.0" />
+            <TableView layoutX="13.0" layoutY="54.0" prefHeight="46.0" prefWidth="167.0">
+              <columns>
+                <TableColumn prefWidth="75.0" text="Name" />
+                <TableColumn prefWidth="91.19999999999999" text="Amount" />
+              </columns>
+            </TableView>
             <Label layoutX="13.0" layoutY="27.0" prefHeight="26.0" prefWidth="70.0" text="Out Of Stock">
                <font>
                   <Font size="11.0" />
                </font>
             </Label>
-            <ListView layoutX="13.0" layoutY="125.0" prefHeight="46.0" prefWidth="167.0" />
+            <TableView layoutX="14.0" layoutY="125.0" prefHeight="46.0" prefWidth="167.0">
+               <columns>
+                  <TableColumn prefWidth="75.0" text="Name" />
+                  <TableColumn prefWidth="91.19999999999999" text="Amount" />
+               </columns>
+            </TableView>
             <Label layoutX="13.0" layoutY="99.0" prefHeight="26.0" prefWidth="70.0" text="Running Low">
                <font>
                   <Font size="11.0" />
@@ -110,23 +120,39 @@
       </Label>
       <AnchorPane layoutX="29.0" layoutY="248.0" prefHeight="181.0" prefWidth="196.0">
          <children>
-            <Label layoutX="80.0" layoutY="1.0" prefHeight="26.0" prefWidth="35.0" text="Sales">
+            <SplitPane dividerPositions="0.5" layoutX="14.0" layoutY="31.0" orientation="VERTICAL" prefHeight="62.0" prefWidth="167.0">
+              <items>
+                  <Label prefHeight="26.0" prefWidth="70.0" text="Today's Sales" textAlignment="CENTER">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="10.0" layoutY="10.0" prefHeight="26.0" prefWidth="70.0" text="\$$$">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Label>
+              </items>
+            </SplitPane>
+            <Label layoutX="83.0" layoutY="5.0" text="Sales">
                <font>
                   <Font name="Calibri" size="14.0" />
                </font>
             </Label>
-            <ListView layoutX="13.0" layoutY="53.0" prefHeight="46.0" prefWidth="167.0" />
-            <Label layoutX="13.0" layoutY="27.0" prefHeight="26.0" prefWidth="70.0" text="Today's Sales">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </Label>
-            <ListView layoutX="13.0" layoutY="125.0" prefHeight="46.0" prefWidth="167.0" />
-            <Label layoutX="13.0" layoutY="99.0" prefHeight="26.0" prefWidth="70.0" text="Total Sales">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </Label>
+            <SplitPane dividerPositions="0.5" layoutX="14.0" layoutY="106.0" orientation="VERTICAL" prefHeight="61.0" prefWidth="167.0">
+               <items>
+                  <Label prefHeight="26.0" prefWidth="70.0" text="Total Sales" textAlignment="CENTER">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="10.0" layoutY="10.0" prefHeight="26.0" prefWidth="70.0" text="\$$$">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Label>
+               </items>
+            </SplitPane>
          </children>
       </AnchorPane>
    </children>
