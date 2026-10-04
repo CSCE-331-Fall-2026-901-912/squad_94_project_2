@@ -23,7 +23,7 @@ public class BaseMenu {
     public FloatProperty getLastScoreChange(){return order_total;}
 
     // SETTERS
-    @FXML public void add_drink(CustomerController customer_controller){
+    @FXML public OrderMenu add_drink(CustomerController customer_controller){
         try {
             Stage stage_order = new Stage();
             FXMLLoader order_menu = new FXMLLoader(getClass().getResource("/gui/cashier/OrderMenu.fxml"));
@@ -35,11 +35,14 @@ public class BaseMenu {
             
             stage_order.setScene(scene);
             stage_order.show();
+            return order_menu_model;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return new OrderMenu();
+        
     }
-    @FXML public void clear_order(CustomerController customer_controller){
+    @FXML public CancellationPopUp clear_order(CustomerController customer_controller){
         try {
             Stage stage_cancel = new Stage();
             FXMLLoader cancellation_pop_up = new FXMLLoader(getClass().getResource("/gui/cashier/Cancellation.fxml"));
@@ -51,12 +54,14 @@ public class BaseMenu {
 
             stage_cancel.setScene(scene);
             stage_cancel.show();
+            return cancellation_pop_up_model;
         }
         catch (Exception e) {
             e.printStackTrace();
         }
+        return new CancellationPopUp();
     }
-    @FXML public void finish_order(CustomerController customer_controller){
+    @FXML public TipPopUp finish_order(CustomerController customer_controller){
         try {
             
             Stage stage_tip = new Stage();
@@ -69,9 +74,11 @@ public class BaseMenu {
 
             stage_tip.setScene(scene);
             stage_tip.show();
+            return tip_pop_up_model;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return new TipPopUp();
     }
     @FXML public void manager_view(CustomerController manager_controller){
         try {
@@ -85,9 +92,11 @@ public class BaseMenu {
 
             // manager_stage.setScene(scene);
             // manager_stage.show();
+            // return manager_view_model;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // return new ManagerView();
     }
 
     // CONSTRUCTOR

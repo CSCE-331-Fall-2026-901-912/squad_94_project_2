@@ -19,8 +19,6 @@ public class CustomerController {
     private CancellationPopUp cancel_pop_up;
     private OrderMenu order_menu;
     private TipPopUp tip_pop_up;
-    
-
 
 
     // BASEMENU TEXTS & BUTTONS
@@ -28,13 +26,13 @@ public class CustomerController {
     @FXML private Label order_total;
     
     @FXML public void add_drink(){
-        base_menu.add_drink(this);
+        order_menu = base_menu.add_drink(this);
     }
     @FXML public void clear_order(){
-        base_menu.clear_order(this);
+        cancel_pop_up = base_menu.clear_order(this);
     }
     @FXML public void finish_order(){
-        base_menu.finish_order(this);
+        tip_pop_up = base_menu.finish_order(this);
     }
     @FXML public void manager_view(){
         base_menu.manager_view(this);
