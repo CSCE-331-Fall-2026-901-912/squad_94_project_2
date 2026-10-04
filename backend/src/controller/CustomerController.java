@@ -57,21 +57,22 @@ public class CustomerController {
     @FXML private Label tip_total;
 
     @FXML public void tip0(){
-        // TODO: Update tip_total
+        tip_pop_up.tip0();
     }
     @FXML public void tip10(){
-        // TODO: Update tip_total
+        tip_pop_up.tip10();
     }
     @FXML public void tip15(){
-        // TODO: Update tip_total
+        tip_pop_up.tip15();
     }
     @FXML public void tip20(){
-        // TODO: Update tip_total
+        tip_pop_up.tip20();
     }
     @FXML public void tip25(){
-        // TODO: Update tip_total
+        tip_pop_up.tip25();
     }
     @FXML public void tipdone(){
+        tip_pop_up.tipdone();
         // TODO: update PSQL database, reset current_order data 
         // TODO: close window
     }
