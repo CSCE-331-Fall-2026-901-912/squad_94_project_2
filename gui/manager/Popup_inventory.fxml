@@ -4,6 +4,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -30,30 +32,15 @@
             </VBox>
             <VBox prefHeight="155.0" prefWidth="304.0">
                <children>
-                  <Label prefHeight="49.0" prefWidth="295.0" text="Item 1">
+                  <TableView prefHeight="200.0" prefWidth="200.0">
+                    <columns>
+                      <TableColumn prefWidth="178.7999633550644" text="Name" />
+                      <TableColumn prefWidth="85.60003662109375" text="Amount" />
+                    </columns>
                      <VBox.margin>
-                        <Insets left="30.0" />
+                        <Insets right="5.0" />
                      </VBox.margin>
-                     <font>
-                        <Font size="17.0" />
-                     </font>
-                  </Label>
-                  <Label prefHeight="53.0" prefWidth="295.0" text="Item 2">
-                     <VBox.margin>
-                        <Insets left="30.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font size="17.0" />
-                     </font>
-                  </Label>
-                  <Label prefHeight="52.0" prefWidth="295.0" text="Item 3">
-                     <VBox.margin>
-                        <Insets left="30.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font size="17.0" />
-                     </font>
-                  </Label>
+                  </TableView>
                </children>
             </VBox>
             <VBox prefHeight="51.0" prefWidth="304.0">
@@ -70,30 +57,15 @@
             </VBox>
             <VBox prefHeight="166.0" prefWidth="304.0">
                <children>
-                  <Label prefHeight="49.0" prefWidth="295.0" text="Item 1">
-                     <font>
-                        <Font size="17.0" />
-                     </font>
+                  <TableView prefHeight="200.0" prefWidth="200.0">
+                     <columns>
+                        <TableColumn prefWidth="178.7999633550644" text="Name" />
+                        <TableColumn prefWidth="85.60003662109375" text="Amount" />
+                     </columns>
                      <VBox.margin>
-                        <Insets left="30.0" />
+                        <Insets right="5.0" />
                      </VBox.margin>
-                  </Label>
-                  <Label prefHeight="53.0" prefWidth="295.0" text="Item 2">
-                     <font>
-                        <Font size="17.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets left="30.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Label prefHeight="52.0" prefWidth="295.0" text="Item 3">
-                     <font>
-                        <Font size="17.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets left="30.0" />
-                     </VBox.margin>
-                  </Label>
+                  </TableView>
                </children>
             </VBox>
          </children>
@@ -130,7 +102,7 @@
             </HBox>
             <VBox prefHeight="295.0" prefWidth="236.0">
                <children>
-                  <ScrollPane prefHeight="285.0" prefWidth="333.0">
+                  <ScrollPane fitToWidth="true" prefHeight="285.0" prefWidth="333.0">
                      <content>
                         <GridPane prefHeight="456.0" prefWidth="300.0">
                           <columnConstraints>
@@ -150,30 +122,93 @@
                            <children>
                               <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button">
                                  <GridPane.margin>
-                                    <Insets right="5.0" />
+                                    <Insets left="5.0" />
                                  </GridPane.margin>
                               </Button>
-                              <Button layoutX="15.0" layoutY="29.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.rowIndex="1" />
-                              <Button layoutX="15.0" layoutY="29.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <Button layoutX="15.0" layoutY="29.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="1" />
-                              <Button layoutX="15.0" layoutY="29.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="2" />
-                              <Button layoutX="15.0" layoutY="29.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.rowIndex="2" />
-                              <Button layoutX="110.0" layoutY="29.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.rowIndex="2" />
-                              <Button layoutX="210.0" layoutY="29.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.rowIndex="2" />
-                              <Button layoutX="110.0" layoutY="116.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                              <Button layoutX="10.0" layoutY="211.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                              <Button layoutX="110.0" layoutY="211.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                              <Button layoutX="10.0" layoutY="144.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.rowIndex="3" />
-                              <Button layoutX="15.0" layoutY="15.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                              <Button layoutX="15.0" layoutY="15.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                              <Button layoutX="110.0" layoutY="204.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.rowIndex="4" />
-                              <Button layoutX="10.0" layoutY="248.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                              <Button layoutX="15.0" layoutY="15.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                              <Button layoutX="15.0" layoutY="15.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.rowIndex="5" />
-                              <Button layoutX="10.0" layoutY="270.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                              <Button layoutX="110.0" layoutY="270.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                              <Button layoutX="110.0" layoutY="270.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.rowIndex="6" />
-                              <Button layoutX="15.0" layoutY="15.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                              <Button layoutX="15.0" layoutY="29.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin></Button>
+                              <Button layoutX="15.0" layoutY="29.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin></Button>
+                              <Button layoutX="15.0" layoutY="29.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="1">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin></Button>
+                              <Button layoutX="15.0" layoutY="29.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="2">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin></Button>
+                              <Button layoutX="15.0" layoutY="29.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin></Button>
+                              <Button layoutX="110.0" layoutY="29.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin></Button>
+                              <Button layoutX="210.0" layoutY="29.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin></Button>
+                              <Button layoutX="110.0" layoutY="116.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin></Button>
+                              <Button layoutX="10.0" layoutY="211.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin></Button>
+                              <Button layoutX="110.0" layoutY="211.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin></Button>
+                              <Button layoutX="10.0" layoutY="144.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.rowIndex="3">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin></Button>
+                              <Button layoutX="15.0" layoutY="15.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin></Button>
+                              <Button layoutX="15.0" layoutY="15.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin></Button>
+                              <Button layoutX="110.0" layoutY="204.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.rowIndex="4">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin></Button>
+                              <Button layoutX="10.0" layoutY="248.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin></Button>
+                              <Button layoutX="15.0" layoutY="15.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin></Button>
+                              <Button layoutX="15.0" layoutY="15.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.rowIndex="5">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin></Button>
+                              <Button layoutX="10.0" layoutY="270.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin></Button>
+                              <Button layoutX="110.0" layoutY="270.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin></Button>
+                              <Button layoutX="110.0" layoutY="270.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.rowIndex="6">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin></Button>
+                              <Button layoutX="15.0" layoutY="15.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="95.0" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin></Button>
                            </children>
                         </GridPane>
                      </content>
