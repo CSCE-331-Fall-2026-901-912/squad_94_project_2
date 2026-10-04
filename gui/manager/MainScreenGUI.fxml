@@ -35,9 +35,10 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="446.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
@@ -50,7 +51,13 @@
                         <Font name="Calibri" size="14.0" />
                      </font>
                   </Label>
-                  <ListView layoutX="19.0" layoutY="47.0" prefHeight="90.0" prefWidth="280.0" />
+                  <TableView layoutX="19.0" layoutY="47.0" prefHeight="94.0" prefWidth="282.0">
+                    <columns>
+                      <TableColumn prefWidth="57.599971771240234" text="ID" />
+                      <TableColumn prefWidth="149.60003662109375" text="Order" />
+                        <TableColumn prefWidth="75.99999084472654" text="Total" />
+                    </columns>
+                  </TableView>
                </children>
             </AnchorPane>
          </content>
@@ -59,12 +66,18 @@
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="150.0" prefWidth="316.0">
                <children>
+                  <TableView layoutX="17.0" layoutY="48.0" prefHeight="94.0" prefWidth="282.0">
+                     <columns>
+                        <TableColumn prefWidth="57.599971771240234" text="ID" />
+                        <TableColumn prefWidth="149.60003662109375" text="Order" />
+                        <TableColumn prefWidth="75.99999084472654" text="Total" />
+                     </columns>
+                  </TableView>
                   <Label layoutX="94.0" layoutY="14.0" prefHeight="34.0" prefWidth="127.0" text="Today's Order History">
                      <font>
                         <Font name="Calibri" size="14.0" />
                      </font>
                   </Label>
-                  <ListView layoutX="19.0" layoutY="47.0" prefHeight="90.0" prefWidth="280.0" />
                </children>
             </AnchorPane>
          </content>
