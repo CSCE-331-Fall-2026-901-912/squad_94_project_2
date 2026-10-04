@@ -21,6 +21,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.input.KeyEvent;
 
 
 
@@ -212,6 +213,54 @@ public class ManagerController {
 
     @FXML
     void SalesEntered(MouseEvent event) {
+
+    }
+
+    // ORDER HISTORY
+    @FXML
+    private Button OHExit;
+
+    @FXML
+    private TableColumn<?, ?> OHID;
+
+    @FXML
+    private Label OHLabel;
+
+    @FXML
+    private TableColumn<?, ?> OHOrder;
+
+    @FXML
+    private TextField OHSearch;
+
+    @FXML
+    private ComboBox<?> OHSortBy;
+
+    @FXML
+    private TableView<?> OHTable;
+
+    @FXML
+    private ComboBox<?> OHTimePeriod;
+
+    @FXML
+    private TableColumn<?, ?> OHTotal;
+
+    @FXML
+    void OHExitPressed(ActionEvent event) {
+
+    }
+
+    @FXML
+    void OHSearchEnter(KeyEvent event) {
+
+    }
+
+    @FXML
+    void OHSortByPick(ActionEvent event) {
+
+    }
+
+    @FXML
+    void OHTimePeriodPick(ActionEvent event) {
 
     }
 }
