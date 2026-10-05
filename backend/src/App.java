@@ -1,4 +1,3 @@
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -6,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.BaseMenu;
 import controller.CustomerController;
+import database.PGComms;
 // import controller.ManagerController;
 
 public class App extends Application {
@@ -57,6 +57,9 @@ public class App extends Application {
         }
     }
     public static void main(String[] args) {
+
+        // Identify and establish a reference to the PostgreSQL database.
+        PGComms.initialize_database("csce-315-db.engr.tamu.edu", "squad_94_db", "squad_94", "password");
         launch(args);
     }
 }
