@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 import model.BaseMenu;
 import controller.CustomerController;
 // import controller.ManagerController;
+import database.PGComms;
 
 public class App extends Application {
 
@@ -57,6 +58,22 @@ public class App extends Application {
         }
     }
     public static void main(String[] args) {
+        if (args.length != 1) {
+            return;
+        }
+
+        // Identify and establish a reference to the PostgreSQL database.
+        PGComms.initialize_database("csce-315-db.engr.tamu.edu", "squad_94_db", "squad_94", args[0]);
+
+        // Ensure the connection works. Determine if it can be opened or closed.
+        boolean connection_operational = PGComms.test_connection();
+
+        // If test_connection() returns true, the database can be opened and closed normally. If this is not the case, false is returned.
+        if (!connection_operational) {
+            return;
+        }
+
+        // Launch the application fully (launch JavaFX components).
         launch(args);
     }
 }
