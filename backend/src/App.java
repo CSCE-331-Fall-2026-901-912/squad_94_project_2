@@ -57,9 +57,11 @@ public class App extends Application {
         }
     }
     public static void main(String[] args) {
-
+        if (args.length != 1) {
+            return;
+        }
         // Identify and establish a reference to the PostgreSQL database.
-        PGComms.initialize_database("csce-315-db.engr.tamu.edu", "squad_94_db", "squad_94", "password");
+        PGComms.initialize_database("csce-315-db.engr.tamu.edu", "squad_94_db", "squad_94", args[0]);
         launch(args);
     }
 }

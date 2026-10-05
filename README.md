@@ -23,8 +23,10 @@ May 5th, 2026 -- Second day of finals of Spring 2026 semester.
 # Running the Application
 
 To run the application from terminal, you need to cd into where you downloaded the squad_94_project_2 directory.
-Copy the "MODIFY_ME.cmd" file. Rename the copy to "run.cmd".
-Open the run.cmd file, and fill in the path (--module-path) with your local installation of a JavaFX sdk. 
+Copy the "COPY_THEN_MODIFY_ME.cmd" file. Rename the copy to "run.cmd".
+Open the run.cmd file, and fill in the path argument for each occurrence of the --module-path parameter with your local installation of a JavaFX sdk version 26.
+(Replace each instance of ".YOUR\OWN\PATH\TO\javafx-sdk-26\lib" with a path to the JavaFX sdk 26.)
+Locate DATABASE_PASSWORD_HERE at the end of run.cmd. Change this to the database password for the database this program connects to.
 
 After this, simply type in your terminal: 
 
