@@ -6,6 +6,7 @@ import model.OrderMenu;
 import model.TipPopUp;
 
 import javafx.fxml.FXML;
+// import java.sql.*;
 // import javafx.scene.control.Button;
 // import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
@@ -14,7 +15,7 @@ import javafx.scene.control.Label;
 
 public class CustomerController {
 
-    
+    // private DataSource dataSource;
     private BaseMenu base_menu;
     private CancellationPopUp cancel_pop_up;
     private OrderMenu order_menu;
@@ -41,10 +42,12 @@ public class CustomerController {
     // CANCELLATION POP UP BUTTONS
     @FXML public void confirm_cancel(){
         cancel_pop_up.confirm_cancel();
+
         // TODO: clear current_order
     }
     @FXML public void deny_cancel(){
         cancel_pop_up.deny_cancel();
+
         // TODO: close popup
     }
 
@@ -55,22 +58,25 @@ public class CustomerController {
     @FXML private Label tip_total;
 
     @FXML public void tip0(){
-        tip_pop_up.tip0();
+        tip_pop_up.tip(1.0);
     }
     @FXML public void tip10(){
-        tip_pop_up.tip10();
+        tip_pop_up.tip(1.10);
     }
     @FXML public void tip15(){
-        tip_pop_up.tip15();
+        tip_pop_up.tip(1.15);
     }
     @FXML public void tip20(){
-        tip_pop_up.tip20();
+        tip_pop_up.tip(1.2);
     }
     @FXML public void tip25(){
-        tip_pop_up.tip25();
+        tip_pop_up.tip(1.25);
     }
     @FXML public void tipdone(){
-        tip_pop_up.tipdone();
+        if (tip_pop_up.tipdone(order_total.toString())){
+            base_menu.set_current_order("Item1: ");
+            base_menu.set_order_total("Total: 0.00");
+        }
         // TODO: update PSQL database, reset current_order data 
         // TODO: close window
     }
@@ -79,6 +85,10 @@ public class CustomerController {
     public void initialize(BaseMenu base_menu){
         this.base_menu = base_menu;
         current_order.textProperty().bind(base_menu.get_current_order());
-        
+        order_total.textProperty().bind(base_menu.get_order_total());
+    }
+    public void initialize(TipPopUp tip_pop_up){
+        this.tip_pop_up = tip_pop_up;
+        tip_total.textProperty().bind(tip_pop_up.get_tip_total());
     }
 }

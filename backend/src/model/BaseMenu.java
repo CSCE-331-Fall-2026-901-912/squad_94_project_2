@@ -13,14 +13,19 @@ import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.SimpleFloatProperty;
 
+import javafx.scene.control.Label;
+
 public class BaseMenu {
 
     private StringProperty current_order;
-    private FloatProperty order_total;
+    private StringProperty order_total;
 
     // GETTERS
     public StringProperty get_current_order(){return current_order;}
-    public FloatProperty getLastScoreChange(){return order_total;}
+    public StringProperty get_order_total(){return order_total;}
+
+    public void set_current_order(String current_order2){current_order.set(current_order2);}
+    public void set_order_total(String order_total2){order_total.set(order_total2);}
 
     // SETTERS
     @FXML public OrderMenu add_drink(CustomerController customer_controller){
@@ -66,7 +71,6 @@ public class BaseMenu {
             
             Stage stage_tip = new Stage();
             FXMLLoader tip_pop_up = new FXMLLoader(getClass().getResource("/gui/cashier/TotalPopUp.fxml"));
-            TipPopUp tip_pop_up_model = new TipPopUp(); 
             tip_pop_up.setController(customer_controller);
             
             Parent root = tip_pop_up.load();
@@ -74,13 +78,16 @@ public class BaseMenu {
 
             stage_tip.setScene(scene);
             stage_tip.show();
+            TipPopUp tip_pop_up_model = new TipPopUp(order_total.getValue(), stage_tip); 
+            customer_controller.initialize(tip_pop_up_model);
             return tip_pop_up_model;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new TipPopUp();
+        return new TipPopUp(null,null);
     }
     @FXML public void manager_view(CustomerController manager_controller){
+        order_total.set("null");
         try {
             // Stage manager_stage = new Stage();
             // FXMLLoader manager_view = new FXMLLoader(getClass().getResource("/gui/cashier/TipPopUp.fxml"));
@@ -101,7 +108,7 @@ public class BaseMenu {
 
     // CONSTRUCTOR
     public BaseMenu(){
-        current_order = new SimpleStringProperty("");
-        order_total = new SimpleFloatProperty(0.0f);
+        current_order = new SimpleStringProperty("Item1: ");
+        order_total = new SimpleStringProperty("Total: 0.00");
     }
 }
