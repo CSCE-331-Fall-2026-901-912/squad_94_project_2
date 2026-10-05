@@ -21,23 +21,61 @@ public class PGComms {
         source.setPassword(password);
     }
 
+    // Test if the database can be opened and closed before it is regularly used.
+    // If it cannot be opened, return false. If it can be opened, return true.
+    public static boolean test_connection() {
+        boolean can_open = false;
+        can_open = open_connection();
+        if (!can_open) {
+            return false;
+        }
+        boolean can_close = false;
+        can_close = close_connection();
+        if (!can_close) {
+            return false;
+        }
+        return true;
+    }
+
     // Private helper function to open the connection to the database.
-    private static void open_connection() throws SQLException {
+    private static boolean open_connection() {
 
         // If a connection to the database has not yet been opened, open it.
         if (conn == null) {
-            conn = source.getConnection();
+            try {
+                conn = source.getConnection();
+            }
+            catch (SQLException e) {
+
+                // Return false if the connection was not successfully opened.
+                System.out.println(e.getMessage());
+                return false;
+            }
         }
+
+        // Return true if the connection was successfully opened.
+        return true;
     }
 
     // Private helper function to close the connection to the database.
-    private static void close_connection() throws SQLException {
+    private static boolean close_connection() {
 
         // If a connection to the database is currently open, close it.
         if (conn != null) {
-            conn.close();
-            conn = null;
+            try {
+                conn.close();
+                conn = null;
+            }
+            catch (SQLException e) {
+
+                // Return false if the connection was not successfully closed.
+                System.out.println(e.getMessage());
+                return false;
+            }
         }
+
+        // Return true if the connection was successfully closed.
+        return true;
     }
 
 }
