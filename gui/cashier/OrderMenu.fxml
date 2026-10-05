@@ -25,9 +25,13 @@
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <ComboBox id="milkTeaBox" prefWidth="150.0" promptText="Milk Teas">
+                  <ComboBox fx:id="milk_tea_box" prefWidth="150.0" promptText="Milk Teas">
                   </ComboBox>
-                  <ComboBox id="fruitTeaBox" prefWidth="150.0" promptText="Fruit Teas">
+                  <ComboBox fx:id="fresh_tea_box" prefWidth="150.0" promptText="Fresh Teas">
+                  </ComboBox>
+                  <ComboBox fx:id="fruit_tea_box" prefWidth="150.0" promptText="Fruit Teas">
+                  </ComboBox>
+                  <ComboBox fx:id="no_caff_box" prefWidth="150.0" promptText="Non Caffeine Teas">
                   </ComboBox>
                </children>
             </VBox>
@@ -42,70 +46,11 @@
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <GridPane prefHeight="398.0" prefWidth="149.0" style="-fx-hgap: 20; -fx-vgap: 30;">
+                  <GridPane fx:id = "topping_grid" prefHeight="398.0" prefWidth="149.0" style="-fx-hgap: 20; -fx-vgap: 30;">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <Button id="mangoBobaButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Mango Boba" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="3">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                        <Button id="coffeeJellyButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Coffee Jelly" textAlignment="CENTER" GridPane.columnIndex="1">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                        <Button id="puddingButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Pudding" textAlignment="CENTER" GridPane.rowIndex="1">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                        <Button id="lycheeJellyButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Lychee Jelly" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                        <Button id="honeyJellyButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Honey Jelly" textAlignment="CENTER" GridPane.rowIndex="2">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                        <Button id="crystalBobaButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Crystal Boba" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                        <Button id="iceCreamButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Ice Cream" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                        <Button id="bobaPearlsButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Boba Pearls" textAlignment="CENTER">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                        <Button id="strawberryBobaButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Strawberry Boba" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="4">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                        <Button id="creamaButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Creama" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                     </children>
                   </GridPane>
                </children>
             </VBox>
@@ -140,12 +85,14 @@
             </VBox>
             <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-padding: 20; -fx-spacing: 20;">
                <children>
-                  <Label text="Sugar %">
+                  <Label fx:id = "sugar_label" text="Sugar %">
                      <font>
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <Slider id="sugarSlider" showTickLabels="true" showTickMarks="true" value="100.0" />
+                  <Slider fx:id="sugar_slider" min="0" max="100" value="100.0"
+                     majorTickUnit="25" minorTickCount="0" blockIncrement="25"
+                     snapToTicks="true" showTickMarks="true" showTickLabels="true" />
                </children>
             </VBox>
             <VBox alignment="CENTER" prefHeight="122.0" prefWidth="187.0" style="-fx-padding: 20; -fx-spacing: 20;">

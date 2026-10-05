@@ -3,6 +3,8 @@ package database;
 import java.sql.*;
 import javax.sql.*;
 import org.postgresql.ds.PGSimpleDataSource;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PGComms {
 
@@ -78,4 +80,51 @@ public class PGComms {
         return true;
     }
 
+    // Return the names of all drinks in menu_drinks whose "type" column equals the given type,
+    // ordered by id_drink. Returns an empty list if the database can't be reached or the query fails.
+    public static List<String> get_drink_names_by_type(String type) {
+        List<String> names = new ArrayList<>();
+        if (!open_connection()) {
+            return names;
+        }
+
+        String sql = "SELECT name FROM menu_drinks WHERE type = ? ORDER BY id_drink";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, type);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    names.add(rs.getString("name"));
+                }
+            }
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        close_connection();
+        return names;
+    }
+    
+    // Return the name of every topping in menu_toppings, ordered by id_topping.
+    public static List<String> get_topping_names() {
+        List<String> names = new ArrayList<>();
+
+        if (!open_connection()) {
+            return names;
+        }
+
+        String sql = "SELECT name FROM menu_toppings ORDER BY id_topping";
+        try (Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                names.add(rs.getString("name"));
+            }
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        close_connection();
+        return names;
+    }
 }

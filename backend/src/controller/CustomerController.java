@@ -7,11 +7,20 @@ import model.TipPopUp;
 
 import javafx.fxml.FXML;
 // import java.sql.*;
-// import javafx.scene.control.Button;
+import javafx.scene.control.Button;
 // import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Label;
 // import javafx.scene.text.Text;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
+import java.util.List;
+import javafx.beans.binding.Bindings;
+import javafx.scene.control.Slider;
+
+import javafx.collections.FXCollections;
+import javafx.scene.control.ComboBox;
+import database.PGComms;
 
 public class CustomerController {
 
@@ -51,9 +60,64 @@ public class CustomerController {
         // TODO: close popup
     }
 
-    // ORDER MENU BUTTONS
-    // TODO: add buttons
+    // ORDER MENU BUTTONS AND SLIDER
+    @FXML private ComboBox<String> milk_tea_box;
+    @FXML private ComboBox<String> fresh_tea_box;
+    @FXML private ComboBox<String> fruit_tea_box;
+    @FXML private ComboBox<String> no_caff_box;
 
+    // Fill each combo box with the menu_drinks rows of the matching type (dynamic adding)
+    public void populate_drink_boxes(){
+        fill_box(milk_tea_box, "milk tea");
+        fill_box(fresh_tea_box, "fresh tea");
+        fill_box(fruit_tea_box, "fruit tea");
+        fill_box(no_caff_box, "no caff tea");
+    }
+    private void fill_box(ComboBox<String> box, String type){
+        if (box == null) return;
+        box.setItems(FXCollections.observableArrayList(PGComms.get_drink_names_by_type(type)));
+    }
+    
+    @FXML private GridPane topping_grid;
+    //allows for dynamic adding of toppings
+    public void populate_topping_buttons(){
+        if (topping_grid == null) return;          // not the OrderMenu view
+        topping_grid.getChildren().clear();
+
+        List<String> toppings = PGComms.get_topping_names();
+        for (int i = 0; i < toppings.size(); i++) {
+            String name = toppings.get(i);
+
+            Button b = new Button(name);
+            b.setPrefSize(95.0, 45.0);
+            b.setWrapText(true);
+            b.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+            b.setFont(new Font(10.0));
+            b.setOnAction(e -> topping_selected(name));
+
+            topping_grid.add(b, i % 2, i / 2);     // column = i % 2, row = i / 2
+        }
+    }
+
+    private void topping_selected(String topping_name){
+        // TODO: add this topping to the current drink (max 2, since orders has id_topping1 and id_topping2)
+    }
+    @FXML private Slider sugar_slider;
+    @FXML private Label sugar_label;
+
+    public void setup_sugar_slider(){
+        if (sugar_slider == null || sugar_label == null) return;   // not the OrderMenu view
+        sugar_label.textProperty().bind(
+            Bindings.createStringBinding(
+                () -> "Sugar: " + (int) Math.round(sugar_slider.getValue()) + "%",
+                sugar_slider.valueProperty()));
+    }
+
+    // Use this when you save the order. It is always 0, 25, 50, 75 or 100.
+    public int get_sugar_level(){
+        return (int) Math.round(sugar_slider.getValue());
+    }
+    
     // TIP POP UP BUTTONS
     @FXML private Label tip_total;
 
