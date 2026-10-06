@@ -8,3 +8,4 @@ unused/
 .venv/
 *.pyc
 *.class
+run.cmd
