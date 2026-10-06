@@ -4,6 +4,14 @@ import java.sql.*;
 import javax.sql.*;
 import java.time.*;
 import org.postgresql.ds.PGSimpleDataSource;
+import dto.InvEdibleRowDTO;
+import dto.InvNonEdibleRowDTO;
+import dto.EmployeesRowDTO;
+import dto.MenuDrinksRowDTO;
+import dto.MenuToppingsRowDTO;
+import dto.JoinMenuDrinksAndInvEdibleRowDTO;
+import dto.JoinMenuToppingsAndInvEdibleRowDTO;
+import dto.OrdersRowDTO;
 
 
 public class PGComms {

@@ -6,6 +6,14 @@ import model.MainScreenGUI;
 import model.OrderHistory;
 import model.SalesAnalytics;
 
+import dto.InvEdibleRowDTO;
+import dto.InvNonEdibleRowDTO;
+import dto.EmployeesRowDTO;
+import dto.MenuDrinksRowDTO;
+import dto.MenuToppingsRowDTO;
+import dto.JoinMenuDrinksAndInvEdibleRowDTO;
+import dto.JoinMenuToppingsAndInvEdibleRowDTO;
+import dto.OrdersRowDTO;
 
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableView;
