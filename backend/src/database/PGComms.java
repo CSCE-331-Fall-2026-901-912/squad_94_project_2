@@ -6,6 +6,7 @@ import org.postgresql.ds.PGSimpleDataSource;
 import java.util.ArrayList;
 import java.util.List;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class PGComms {
 
@@ -184,5 +185,40 @@ public class PGComms {
 
     public static BigDecimal get_topping_price(String name) {
         return get_price("SELECT price FROM menu_toppings WHERE name = ?", name);
+    }
+
+    public static void insert_order_item(int order_id, double order_total, double tip, int id_drink, int id_topping1, int id_topping2, int ice_level, int sugar_level, boolean hot_chosen) {
+        if (!open_connection()) {
+            return;
+        }
+        // int:1, boolean, timestamptz, timestamptz, numeric, int:employee_id, numeric, int:id_drink, int:id_topping1, int:id_topping2, int:ice_level (0,1,2), int:sugar_level (0,1,2,3,4), boolean:hot_chosen
+        String sql = "INSERT INTO order_items (id_order, completed, time_created_at, time_completed_at, total_spent, id_employee, tip, id_drink, id_topping1, id_topping2, ice_level, sugar_level, hot_chosen) VALUES (?, ?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            BigDecimal price;
+            BigDecimal tip_amount;
+            price = BigDecimal.valueOf(order_total);
+            tip_amount = BigDecimal.valueOf(tip);
+
+            stmt.setInt(1, order_id);
+            stmt.setBoolean(2, false);
+            stmt.setTimestamp(3, null); //created time
+            stmt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now())); // time completed
+            stmt.setBigDecimal(5, price);
+            // stmt.setInt(6, id_employee); // GET CURRENT EMPLOYEE ID
+            stmt.setBigDecimal(7, tip_amount);
+            stmt.setInt(8, id_drink);
+            stmt.setInt(9, id_topping1);
+            stmt.setInt(10, id_topping2);
+            stmt.setInt(8, ice_level);
+            stmt.setInt(9, sugar_level);
+            stmt.setBoolean(10, hot_chosen);
+
+            stmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        close_connection();
     }
 }

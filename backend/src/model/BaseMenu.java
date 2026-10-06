@@ -43,7 +43,7 @@ public class BaseMenu {
         if (item_count == 1) {
             set_current_order(line);                      // replaces the "Item1: " placeholder
         } else {
-            set_current_order(get_current_order() + "\n" + line);
+            set_current_order(get_current_order().getValue() + "\n" + line);
         }
         set_order_total("Total: " + String.format("%.2f", running_total));
     }
@@ -113,13 +113,13 @@ public class BaseMenu {
             stage_tip.setScene(scene);
             stage_tip.show();
 
-            TipPopUp tip_pop_up_model = new TipPopUp(order_total.getValue(), stage_tip); 
+            TipPopUp tip_pop_up_model = new TipPopUp(order_total.getValue(), current_order.getValue(), stage_tip); 
             customer_controller.initialize(tip_pop_up_model);
             return tip_pop_up_model;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new TipPopUp(null,null);
+        return new TipPopUp(null,null,null);
     }
     @FXML public void manager_view(CustomerController manager_controller){
         order_total.set("null");
