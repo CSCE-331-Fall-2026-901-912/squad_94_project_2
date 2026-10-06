@@ -60,7 +60,7 @@ public class CustomerController {
         tip_pop_up = base_menu.finish_order(this);
     }
     @FXML public void manager_view(){
-        base_menu.manager_view(this);
+        base_menu.manager_view(new ManagerController());
     }
 
     // CANCELLATION POP UP BUTTONS
