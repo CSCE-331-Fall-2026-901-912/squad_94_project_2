@@ -81,6 +81,7 @@ public class Menu {
         }
     }
 
+    // Sets up a double-click event on the rows of the drinks table to open the edit form for the selected drink
     private void setup_drink_row_click() {
         menu_drinks_table.setRowFactory(table -> {
             TableRow<MenuDrinksRowDTO> row = new TableRow<>();

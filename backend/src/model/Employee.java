@@ -71,6 +71,7 @@ public class Employee {
         }
     }
 
+    // Set up double-click on a row to open the edit form
     private void setup_row_click(){
         employee_table.setRowFactory(tv -> {
             TableRow <EmployeesRowDTO> row = new TableRow<>();

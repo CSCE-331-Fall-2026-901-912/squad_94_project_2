@@ -404,6 +404,9 @@ public class PGComms {
         return items;
     }
 
+    // A lot of these SQL queries were created before the generic query functions were implemented, so they are not using the generic functions
+    // They will eventually be refactored to use the generic functions at a later date
+    
     // Return the names of all drinks in menu_drinks whose "type" column equals the given type,
     // ordered by id_drink. Returns an empty list if the database can't be reached or the query fails.
     public static List<String> get_drink_names_by_type(String type) {
