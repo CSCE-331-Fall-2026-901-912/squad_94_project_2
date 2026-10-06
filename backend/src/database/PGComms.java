@@ -3,6 +3,9 @@ package database;
 import java.sql.*;
 import javax.sql.*;
 import java.time.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.math.BigDecimal;
 import org.postgresql.ds.PGSimpleDataSource;
 import dto.InvEdibleRowDTO;
 import dto.InvNonEdibleRowDTO;
@@ -12,7 +15,6 @@ import dto.MenuToppingsRowDTO;
 import dto.JoinMenuDrinksAndInvEdibleRowDTO;
 import dto.JoinMenuToppingsAndInvEdibleRowDTO;
 import dto.OrdersRowDTO;
-
 
 public class PGComms {
 
@@ -108,8 +110,8 @@ public class PGComms {
         return true;
     }
 
-    // Helper function to close the connection to the database.
-    public static boolean close_connection() {
+    // Private helper function to close the connection to the database.
+    private static boolean close_connection() {
 
         // If a connection to the database is currently open, close it.
         if (conn != null) {
@@ -129,4 +131,108 @@ public class PGComms {
         return true;
     }
 
+    // Return the names of all drinks in menu_drinks whose "type" column equals the given type,
+    // ordered by id_drink. Returns an empty list if the database can't be reached or the query fails.
+    public static List<String> get_drink_names_by_type(String type) {
+        List<String> names = new ArrayList<>();
+        if (!open_connection()) {
+            return names;
+        }
+
+        String sql = "SELECT name FROM menu_drinks WHERE type = ? ORDER BY id_drink";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, type);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    names.add(rs.getString("name"));
+                }
+            }
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        close_connection();
+        return names;
+    }
+
+    // Return the name of every topping in menu_toppings, ordered by id_topping.
+    public static List<String> get_topping_names() {
+        List<String> names = new ArrayList<>();
+
+        if (!open_connection()) {
+            return names;
+        }
+
+        String sql = "SELECT name FROM menu_toppings ORDER BY id_topping";
+        try (Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                names.add(rs.getString("name"));
+            }
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        close_connection();
+        return names;
+    }
+
+    // Return true if the named drink has hot_available = true in menu_drinks.
+    public static boolean is_hot_available(String drink_name) {
+        boolean hot = false;
+
+        if (!open_connection()) {
+            return hot;
+        }
+
+        String sql = "SELECT hot_available FROM menu_drinks WHERE name = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, drink_name);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    hot = rs.getBoolean("hot_available");
+                }
+            }
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        close_connection();
+        return hot;
+    }
+
+    private static BigDecimal get_price(String sql, String name) {
+        BigDecimal price = BigDecimal.ZERO;
+
+        if (!open_connection()) {
+            return price;
+        }
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, name);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    BigDecimal p = rs.getBigDecimal("price");
+                    if (p != null) price = p;
+                }
+            }
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        close_connection();
+        return price;
+    }
+
+    public static BigDecimal get_drink_price(String name) {
+        return get_price("SELECT price FROM menu_drinks WHERE name = ?", name);
+    }
+
+    public static BigDecimal get_topping_price(String name) {
+        return get_price("SELECT price FROM menu_toppings WHERE name = ?", name);
+    }
 }
