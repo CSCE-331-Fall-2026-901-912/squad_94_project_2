@@ -41,20 +41,21 @@ public class BaseMenu {
 
         String line = "Item " + item_count + ": " + description + " : " + String.format("%.2f", price);
         if (item_count == 1) {
-            current_order.set(line);                         // replaces the "Item1: " placeholder
+            set_current_order(line);                      // replaces the "Item1: " placeholder
         } else {
-            current_order.set(current_order.get() + "\n" + line);
+            set_current_order(get_current_order() + "\n" + line);
         }
-        order_total.set("Total: " + String.format("%.2f", running_total));
+        set_order_total("Total: " + String.format("%.2f", running_total));
     }
 
     // Call this after the order is paid or cancelled.
     public void reset_order(){
         item_count = 0;
         running_total = BigDecimal.ZERO;
-        current_order.set("Item1: ");
-        order_total.set("Total: 0.00");
+        set_current_order("Item1: ");
+        set_order_total("Total: 0.00");
     }
+    
     @FXML public OrderMenu add_drink(CustomerController customer_controller){
         try {
             Stage stage_order = new Stage();
