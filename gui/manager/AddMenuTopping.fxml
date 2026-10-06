@@ -9,14 +9,14 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="247.0" prefWidth="257.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label fx:id="titleLabel" layoutX="14.0" layoutY="23.0" text="Add New Topping">
+      <Label fx:id="title_label" layoutX="14.0" layoutY="23.0" text="Add New Topping">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <TextField fx:id="nameField" layoutX="25.0" layoutY="85.0" promptText="name" />
-      <TextField fx:id="priceField" layoutX="25.0" layoutY="136.0" promptText="price" />
-      <Button fx:id="submitButton" layoutX="25.0" layoutY="193.0"
+      <TextField fx:id="name_field" layoutX="25.0" layoutY="85.0" promptText="name" />
+      <TextField fx:id="price_field" layoutX="25.0" layoutY="136.0" promptText="price" />
+      <Button fx:id="submit_button" layoutX="25.0" layoutY="193.0"
               mnemonicParsing="false" onAction="#submit" text="Submit" />
    </children>
 </AnchorPane>

@@ -9,16 +9,16 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="290.0" prefWidth="433.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label fx:id = "titleLabel" layoutX="29.0" layoutY="33.0" text="Add New Employee">
+      <Label fx:id="title_label" layoutX="29.0" layoutY="33.0" text="Add New Employee">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <TextField fx:id="nameField"     layoutX="25.0"  layoutY="95.0"  promptText="name" />
-      <TextField fx:id="positionField" layoutX="26.0"  layoutY="157.0" promptText="position" />
-      <TextField fx:id="phoneField"    layoutX="26.0"  layoutY="217.0" promptText="phone number" />
-      <TextField fx:id="payField"      layoutX="223.0" layoutY="94.0"  promptText="starting pay" />
-      <TextField fx:id="hoursField"    layoutX="220.0" layoutY="158.0" promptText="hours for week" />
-      <Button fx:id = "submitButton" layoutX="273.0" layoutY="218.0" mnemonicParsing="false" onAction="#submit" text="Submit" />
+      <TextField fx:id="name_field" layoutX="25.0" layoutY="95.0" promptText="name" />
+      <TextField fx:id="position_field" layoutX="26.0" layoutY="157.0" promptText="position" />
+      <TextField fx:id="phone_field" layoutX="26.0" layoutY="217.0" promptText="phone number" />
+      <TextField fx:id="pay_field" layoutX="223.0" layoutY="94.0" promptText="starting pay" />
+      <TextField fx:id="hours_field" layoutX="220.0" layoutY="158.0" promptText="hours for week" />
+      <Button fx:id="submit_button" layoutX="273.0" layoutY="218.0" mnemonicParsing="false" onAction="#submit" text="Submit" />
    </children>
 </AnchorPane>

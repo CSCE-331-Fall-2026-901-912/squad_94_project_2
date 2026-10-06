@@ -15,19 +15,19 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <TableView fx:id = "MenuDrinksTable" layoutX="14.0" layoutY="48.0" prefHeight="254.0" prefWidth="525.0">
+      <TableView fx:id="menu_drinks_table" layoutX="14.0" layoutY="48.0" prefHeight="254.0" prefWidth="525.0">
         <columns>
-          <TableColumn fx:id = "DrinkName" prefWidth="180.0" text="Name" />
-          <TableColumn fx:id = "DrinkPrice" prefWidth="75.0" text="Price" />
-            <TableColumn fx:id = "DrinkType" prefWidth="75.0" text="Type" />
-            <TableColumn fx:id = "DrinkHotAvailable" prefWidth="75.0" text="Hot Option" />
-            <TableColumn fx:id = "DrinkNonCaffeinated" prefWidth="120.0" text="No Caffeine Option" />
+          <TableColumn fx:id="drink_name" prefWidth="180.0" text="Name" />
+          <TableColumn fx:id="drink_price" prefWidth="75.0" text="Price" />
+            <TableColumn fx:id="drink_type" prefWidth="75.0" text="Type" />
+            <TableColumn fx:id="drink_hot_available" prefWidth="75.0" text="Hot Option" />
+            <TableColumn fx:id="drink_non_caffeinated" prefWidth="120.0" text="No Caffeine Option" />
         </columns>
       </TableView>
-      <TableView fx:id = "MenuToppingsTable" layoutX="539.0" layoutY="48.0" prefHeight="254.0" prefWidth="152.0">
+      <TableView fx:id="menu_toppings_table" layoutX="539.0" layoutY="48.0" prefHeight="254.0" prefWidth="152.0">
         <columns>
-          <TableColumn fx:id = "ToppingName" prefWidth="75.0" text="Name"/>
-          <TableColumn fx:id = "ToppingPrice" prefWidth="75.0" text="Price"/>
+          <TableColumn fx:id="topping_name" prefWidth="75.0" text="Name"/>
+          <TableColumn fx:id="topping_price" prefWidth="75.0" text="Price"/>
         </columns>
       </TableView>
       <Label layoutX="539.0" layoutY="25.0" text="Topping Menu">

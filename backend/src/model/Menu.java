@@ -3,10 +3,8 @@ package model;
 import java.math.BigDecimal;
 
 import database.PGComms;
-import dto.EmployeesRowDTO;
 import dto.MenuDrinksRowDTO;
 import dto.MenuToppingsRowDTO;
-import model.AddMenuDrink;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -23,32 +21,32 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 
 public class Menu {
-    @FXML private TableView <MenuDrinksRowDTO> MenuDrinksTable;
-    @FXML private TableColumn <MenuDrinksRowDTO, String> DrinkName;
-    @FXML private TableColumn <MenuDrinksRowDTO, BigDecimal> DrinkPrice;
-    @FXML private TableColumn <MenuDrinksRowDTO, String> DrinkType;
-    @FXML private TableColumn <MenuDrinksRowDTO, Boolean> DrinkHotAvailable;
-    @FXML private TableColumn <MenuDrinksRowDTO, Boolean> DrinkNonCaffeinated;
+    @FXML private TableView <MenuDrinksRowDTO> menu_drinks_table;
+    @FXML private TableColumn <MenuDrinksRowDTO, String> drink_name;
+    @FXML private TableColumn <MenuDrinksRowDTO, BigDecimal> drink_price;
+    @FXML private TableColumn <MenuDrinksRowDTO, String> drink_type;
+    @FXML private TableColumn <MenuDrinksRowDTO, Boolean> drink_hot_available;
+    @FXML private TableColumn <MenuDrinksRowDTO, Boolean> drink_non_caffeinated;
 
-    @FXML private TableView <MenuToppingsRowDTO> MenuToppingsTable;
-    @FXML private TableColumn <MenuToppingsRowDTO, String> ToppingName;
-    @FXML private TableColumn <MenuToppingsRowDTO, BigDecimal> ToppingPrice;
+    @FXML private TableView <MenuToppingsRowDTO> menu_toppings_table;
+    @FXML private TableColumn <MenuToppingsRowDTO, String> topping_name;
+    @FXML private TableColumn <MenuToppingsRowDTO, BigDecimal> topping_price;
 
     public void load_menu() {
-        DrinkName.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().name()));
-        DrinkPrice.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().price()));
-        DrinkType.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().type()));
-        DrinkHotAvailable.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().hot_available()));
-        DrinkNonCaffeinated.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().is_non_caffeinated()));
+        drink_name.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().name()));
+        drink_price.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().price()));
+        drink_type.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().type()));
+        drink_hot_available.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().hot_available()));
+        drink_non_caffeinated.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().is_non_caffeinated()));
 
-        ToppingName.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().name()));
-        ToppingPrice.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().price()));
+        topping_name.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().name()));
+        topping_price.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().price()));
 
-        MenuDrinksTable.setItems(FXCollections.observableArrayList(PGComms.issue_query_type_rows_MenuDrinks(
+        menu_drinks_table.setItems(FXCollections.observableArrayList(PGComms.issue_query_type_rows_MenuDrinks(
             "SELECT id_drink, name, price, type, hot_available, is_non_caffeinated "
             + "FROM menu_drinks ORDER BY id_drink")));
 
-        MenuToppingsTable.setItems(FXCollections.observableArrayList(PGComms.issue_query_type_rows_MenuToppings(
+        menu_toppings_table.setItems(FXCollections.observableArrayList(PGComms.issue_query_type_rows_MenuToppings(
             "SELECT id_topping, name, price "
             + "FROM menu_toppings ORDER BY id_topping")));
 
@@ -84,7 +82,7 @@ public class Menu {
     }
 
     private void setup_drink_row_click() {
-        MenuDrinksTable.setRowFactory(table -> {
+        menu_drinks_table.setRowFactory(table -> {
             TableRow<MenuDrinksRowDTO> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {
@@ -124,7 +122,7 @@ public class Menu {
     }
 
     private void setup_topping_row_click() {
-        MenuToppingsTable.setRowFactory(table -> {
+        menu_toppings_table.setRowFactory(table -> {
             TableRow<MenuToppingsRowDTO> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {

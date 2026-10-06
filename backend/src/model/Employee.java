@@ -21,24 +21,24 @@ import javafx.stage.Window;
 
 public class Employee {
 
-    @FXML private TableView<EmployeesRowDTO> EmployeeTable;
-    @FXML private TableColumn<EmployeesRowDTO, Integer>    EmpID;
-    @FXML private TableColumn<EmployeesRowDTO, String>     EmpName;
-    @FXML private TableColumn<EmployeesRowDTO, String>     EmpPos;
-    @FXML private TableColumn<EmployeesRowDTO, String>     EmpPhone;
-    @FXML private TableColumn<EmployeesRowDTO, BigDecimal> EmpPay;
-    @FXML private TableColumn<EmployeesRowDTO, Integer>    EmpHours;
+    @FXML private TableView<EmployeesRowDTO> employee_table;
+    @FXML private TableColumn<EmployeesRowDTO, Integer>    emp_id;
+    @FXML private TableColumn<EmployeesRowDTO, String>     emp_name;
+    @FXML private TableColumn<EmployeesRowDTO, String>     emp_pos;
+    @FXML private TableColumn<EmployeesRowDTO, String>     emp_phone;
+    @FXML private TableColumn<EmployeesRowDTO, BigDecimal> emp_pay;
+    @FXML private TableColumn<EmployeesRowDTO, Integer>    emp_hours;
 
     public void load_employees(){
-        EmpID.setCellValueFactory(d    -> new ReadOnlyObjectWrapper<>(d.getValue().id_employee()));
-        EmpName.setCellValueFactory(d  -> new ReadOnlyObjectWrapper<>(d.getValue().name()));
-        EmpPos.setCellValueFactory(d   -> new ReadOnlyObjectWrapper<>(d.getValue().position()));
-        EmpPhone.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().phone_number()));
-        EmpPay.setCellValueFactory(d   -> new ReadOnlyObjectWrapper<>(d.getValue().current_pay_rate()));
-        EmpHours.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().hours_worked_for_week()));
+        emp_id.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().id_employee()));
+        emp_name.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().name()));
+        emp_pos.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().position()));
+        emp_phone.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().phone_number()));
+        emp_pay.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().current_pay_rate()));
+        emp_hours.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().hours_worked_for_week()));
         setup_row_click();
         
-        EmployeeTable.setItems(FXCollections.observableArrayList(
+        employee_table.setItems(FXCollections.observableArrayList(
         PGComms.issue_query_type_rows_Employees(
             "SELECT id_employee, name, position, phone_number, current_pay_rate, hours_worked_for_week "
         + "FROM employees ORDER BY id_employee")));
@@ -72,7 +72,7 @@ public class Employee {
     }
 
     private void setup_row_click(){
-        EmployeeTable.setRowFactory(tv -> {
+        employee_table.setRowFactory(tv -> {
             TableRow <EmployeesRowDTO> row = new TableRow<>();
             row.setOnMouseClicked(e -> {
                 if (e.getClickCount() == 2 && !row.isEmpty()) {          // double-click on a real row

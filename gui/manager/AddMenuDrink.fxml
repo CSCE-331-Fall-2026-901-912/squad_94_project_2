@@ -15,7 +15,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="469.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label fx:id = "titleLabel" layoutX="29.0" layoutY="26.0" text="Add Drink">
+      <Label fx:id="title_label" layoutX="29.0" layoutY="26.0" text="Add Drink">
          <font>
             <Font size="24.0" />
          </font>
@@ -50,6 +50,6 @@
             </GridPane>
          </content>
       </ScrollPane>
-      <Button fx:id = "submitButton" layoutX="273.0" layoutY="320.0" mnemonicParsing="false" onAction="#submit" text="Submit" />
+      <Button fx:id="submit_button" layoutX="273.0" layoutY="320.0" mnemonicParsing="false" onAction="#submit" text="Submit" />
    </children>
 </AnchorPane>

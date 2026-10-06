@@ -24,13 +24,13 @@ public class AddMenuDrink {
     private static final String SELECTED_STYLE =
         "-fx-background-color: #2e9e5b; -fx-text-fill: white; -fx-font-weight: bold;";
 
-    @FXML private Label titleLabel;
+    @FXML private Label title_label;
     @FXML private TextField name_field;
     @FXML private TextField price_field;
     @FXML private ComboBox<String> type_box;
     @FXML private RadioButton hot_button;
     @FXML private RadioButton caff_button;
-    @FXML private Button submitButton;
+    @FXML private Button submit_button;
     @FXML private GridPane ingredient_grid;
 
     private final Runnable on_added;  
@@ -52,8 +52,8 @@ public class AddMenuDrink {
         type_box.setItems(FXCollections.observableArrayList(
                 "milk tea", "fresh tea", "fruit tea", "no caff tea"));
         if (existing != null) {
-            titleLabel.setText("Edit Drink");
-            submitButton.setText("Save");
+            title_label.setText("Edit Drink");
+            submit_button.setText("Save");
             name_field.setText(existing.name());
             price_field.setText(existing.price().toPlainString());
             type_box.setValue(existing.type());
@@ -156,7 +156,7 @@ public class AddMenuDrink {
         }
 
         on_added.run();
-        ((Node) submitButton).getScene().getWindow().hide();
+        ((Node) submit_button).getScene().getWindow().hide();
     }
 
     private void show_error(String message) {
