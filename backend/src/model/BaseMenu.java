@@ -14,12 +14,17 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.SimpleFloatProperty;
 
 import javafx.scene.control.Label;
+import java.math.BigDecimal;
+
 
 public class BaseMenu {
 
     private StringProperty current_order;
     private StringProperty order_total;
 
+    private int item_count = 0;
+    private BigDecimal running_total = BigDecimal.ZERO;
+    
     // GETTERS
     public StringProperty get_current_order(){return current_order;}
     public StringProperty get_order_total(){return order_total;}
@@ -28,6 +33,28 @@ public class BaseMenu {
     public void set_order_total(String order_total2){order_total.set(order_total2);}
 
     // SETTERS
+
+    // Append one finished drink to the order text area and update the total.
+    public void add_item(String description, BigDecimal price){
+        item_count++;
+        running_total = running_total.add(price);
+
+        String line = "Item " + item_count + ": " + description + " : " + String.format("%.2f", price);
+        if (item_count == 1) {
+            current_order.set(line);                         // replaces the "Item1: " placeholder
+        } else {
+            current_order.set(current_order.get() + "\n" + line);
+        }
+        order_total.set("Total: " + String.format("%.2f", running_total));
+    }
+
+    // Call this after the order is paid or cancelled.
+    public void reset_order(){
+        item_count = 0;
+        running_total = BigDecimal.ZERO;
+        current_order.set("Item1: ");
+        order_total.set("Total: 0.00");
+    }
     @FXML public OrderMenu add_drink(CustomerController customer_controller){
         try {
             Stage stage_order = new Stage();

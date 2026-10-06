@@ -14,9 +14,15 @@ import javafx.scene.control.Label;
 // import javafx.scene.text.Text;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
+import javafx.event.ActionEvent;
+import javafx.scene.control.Alert;
+
+import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.Slider;
+import javafx.scene.Node;
+import java.math.BigDecimal;
 
 import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
@@ -79,9 +85,15 @@ public class CustomerController {
     }
     
     @FXML private GridPane topping_grid;
+    private static final int MAX_TOPPINGS = 2;
+    private static final String SELECTED_STYLE =
+        "-fx-background-color: #2e9e5b; -fx-text-fill: white; -fx-font-weight: bold;";
+    private final List<String> selected_toppings = new ArrayList<>();
+
     //allows for dynamic adding of toppings
     public void populate_topping_buttons(){
-        if (topping_grid == null) return;          
+        if (topping_grid == null) return;  
+        selected_toppings.clear();         
         topping_grid.getChildren().clear();
 
         List<String> toppings = PGComms.get_topping_names();
@@ -99,9 +111,33 @@ public class CustomerController {
         }
     }
 
-    private void topping_selected(String topping_name){
-        // TODO: add this topping to the current drink (max 2, since orders has id_topping1 and id_topping2)
+    private void topping_selected(String name){
+        if (selected_toppings.contains(name)) {
+            selected_toppings.remove(name);               
+        } else if (selected_toppings.size() < MAX_TOPPINGS) {
+            selected_toppings.add(name);
+        }
+        refresh_topping_buttons();
     }
+
+    // Color the chosen buttons, and once the max is reached, grey out the rest.
+    private void refresh_topping_buttons(){
+        boolean full = selected_toppings.size() >= MAX_TOPPINGS;
+        for (Node n : topping_grid.getChildren()) {
+            Button b = (Button) n;
+            boolean picked = selected_toppings.contains(b.getText());
+            if(picked){
+                b.setStyle(SELECTED_STYLE);
+            }
+            b.setDisable(full && !picked);
+        }
+    }
+
+    // For saving the order later: 0, 1 or 2 topping names, in the order they were picked.
+    public List<String> get_selected_toppings(){
+        return List.copyOf(selected_toppings);
+    }
+
     @FXML private Slider sugar_slider;
     @FXML private Label sugar_label;
 
@@ -119,7 +155,11 @@ public class CustomerController {
     }
 
     @FXML private Label selected_drink_label;
+    @FXML private Button no_ice_button;
+    @FXML private Button light_ice_button;
+    @FXML private Button regular_ice_button;
     @FXML private Button hot_button;
+    private String selected_drink;
 
     private List<ComboBox<String>> drink_boxes(){
         return List.of(milk_tea_box, fresh_tea_box, fruit_tea_box, no_caff_box);
@@ -127,6 +167,8 @@ public class CustomerController {
 
     // Wire all four combo boxes to the same handler.
     public void setup_drink_selection(){
+           selected_drink = null;
+            selected_ice = null;
         if (milk_tea_box == null) return;           
         for (ComboBox<String> box : drink_boxes()) {
             box.setOnAction(e -> drink_picked(box));
@@ -142,13 +184,48 @@ public class CustomerController {
             if (box != source) box.setValue(null);
         }
 
+        selected_drink = name;
         selected_drink_label.setText("Selected: " + name);
 
         boolean hot = PGComms.is_hot_available(name);
         hot_button.setVisible(hot);
         hot_button.setManaged(hot);
     }
-        
+
+    private String selected_ice;
+
+    @FXML public void ice_selected(ActionEvent event){
+        Button clicked = (Button) event.getSource();
+        selected_ice = clicked.getText();                    // "None", "Light", "Regular" or "Hot"
+        for (Button b : List.of(no_ice_button, light_ice_button, regular_ice_button, hot_button)) {
+            b.setStyle(b == clicked ? SELECTED_STYLE : "");  // reuse the green from the toppings
+        }
+    }
+    
+    @FXML public void finish_selection(ActionEvent event){
+        System.out.println("drink=" + selected_drink + ", ice=" + selected_ice);
+        if (selected_drink == null || selected_ice == null) {
+            new Alert(Alert.AlertType.WARNING, "Please choose a drink and an ice level.").showAndWait();
+            return;
+        }
+
+        String topping1 = selected_toppings.size() > 0 ? selected_toppings.get(0) : "No topping";
+        String topping2 = selected_toppings.size() > 1 ? selected_toppings.get(1) : "No topping";
+
+        BigDecimal price = PGComms.get_drink_price(selected_drink);
+        for (String t : selected_toppings) {
+            price = price.add(PGComms.get_topping_price(t));
+        }
+
+        base_menu.add_item(
+            selected_drink + ", " + topping1 + ", " + topping2 + ", "
+            + selected_ice + ", " + get_sugar_level() + "%",
+            price);
+
+        // Close the order menu window.
+        ((Node) event.getSource()).getScene().getWindow().hide();
+    }
+
     // TIP POP UP BUTTONS
     @FXML private Label tip_total;
 
@@ -169,8 +246,7 @@ public class CustomerController {
     }
     @FXML public void tipdone(){
         if (tip_pop_up.tipdone(order_total.toString())){
-            base_menu.set_current_order("Item1: ");
-            base_menu.set_order_total("Total: 0.00");
+            base_menu.reset_order();
         }
         // TODO: update PSQL database, reset current_order data 
         // TODO: close window

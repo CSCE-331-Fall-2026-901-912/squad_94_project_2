@@ -76,10 +76,10 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button id="no_ice_button" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="None" />
-                        <Button id="light_ice_button" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="Light" GridPane.columnIndex="1" />
-                        <Button id="regular_ice_button" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="Regular" GridPane.rowIndex="1" />
-                        <Button fx:id="hot_button" visible="false" managed="false" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="Hot" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Button fx:id="no_ice_button" onAction = "#ice_selected" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="None" />
+                        <Button fx:id="light_ice_button" onAction = "#ice_selected" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="Light" GridPane.columnIndex="1" />
+                        <Button fx:id="regular_ice_button" onAction = "#ice_selected" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="Regular" GridPane.rowIndex="1" />
+                        <Button fx:id="hot_button" visible="false" managed="false" onAction = "#ice_selected" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="Hot" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                </children>
@@ -99,7 +99,7 @@
             <VBox alignment="CENTER" prefHeight="122.0" prefWidth="187.0" style="-fx-padding: 20; -fx-spacing: 20;">
                <children>
                   <Button id="cancelButton" mnemonicParsing="false" text="Cancel" />
-                  <Button id="finishSelectionButton" mnemonicParsing="false" text="Finish Selection" />
+                  <Button id="finish_selection_button" onAction="#finish_selection" mnemonicParsing="false" text="Finish Selection" />
                </children>
             </VBox>
          </children>

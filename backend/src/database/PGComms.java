@@ -5,6 +5,7 @@ import javax.sql.*;
 import org.postgresql.ds.PGSimpleDataSource;
 import java.util.ArrayList;
 import java.util.List;
+import java.math.BigDecimal;
 
 public class PGComms {
 
@@ -151,5 +152,37 @@ public class PGComms {
 
         close_connection();
         return hot;
+    }
+
+    private static BigDecimal get_price(String sql, String name) {
+        BigDecimal price = BigDecimal.ZERO;
+
+        if (!open_connection()) {
+            return price;
+        }
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, name);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    BigDecimal p = rs.getBigDecimal("price");
+                    if (p != null) price = p;
+                }
+            }
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        close_connection();
+        return price;
+    }
+    
+    public static BigDecimal get_drink_price(String name) {
+        return get_price("SELECT price FROM menu_drinks WHERE name = ?", name);
+    }
+
+    public static BigDecimal get_topping_price(String name) {
+        return get_price("SELECT price FROM menu_toppings WHERE name = ?", name);
     }
 }
