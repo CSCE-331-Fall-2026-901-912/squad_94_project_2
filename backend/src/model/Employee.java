@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import java.math.BigDecimal;
 import dto.EmployeesRowDTO;
@@ -23,6 +24,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 public class Employee {
 
@@ -41,30 +43,46 @@ public class Employee {
         EmpPhone.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().phone_number()));
         EmpPay.setCellValueFactory(d   -> new ReadOnlyObjectWrapper<>(d.getValue().current_pay_rate()));
         EmpHours.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().hours_worked_for_week()));
-
+        setup_row_click();
         EmployeeTable.setItems(FXCollections.observableArrayList(PGComms.get_employees()));
     }
     
     @FXML public void open_add_employee(ActionEvent event){
+        show_employee_form(((Node) event.getSource()).getScene().getWindow(), null);
+    }
+
+    private void show_employee_form(Window owner, EmployeesRowDTO existing){
         try {
-            java.net.URL url = getClass().getResource("/gui/manager/AddNewEmployee.fxml");   // use your file name
+            java.net.URL url = getClass().getResource("/gui/manager/AddNewEmployee.fxml");
             if (url == null) {
                 System.out.println("AddNewEmployee.fxml not found");
                 return;
             }
 
             FXMLLoader loader = new FXMLLoader(url);
-            loader.setController(new AddEmployee(this::load_employees));
+            loader.setController(new AddEmployee(this::load_employees, existing));
             Parent root = loader.load();
 
             Stage stage = new Stage();
-            stage.setTitle("Add New Employee");
-            stage.initOwner(((Node) event.getSource()).getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);       // blocks the employee window until this closes
+            stage.setTitle(existing == null ? "Add New Employee" : "Edit Employee");
+            stage.initOwner(owner);
+            stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(new Scene(root));
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void setup_row_click(){
+        EmployeeTable.setRowFactory(tv -> {
+            TableRow <EmployeesRowDTO> row = new TableRow<>();
+            row.setOnMouseClicked(e -> {
+                if (e.getClickCount() == 2 && !row.isEmpty()) {          // double-click on a real row
+                    show_employee_form(tv.getScene().getWindow(), row.getItem());
+                }
+            });
+            return row;
+        });
     }
 }

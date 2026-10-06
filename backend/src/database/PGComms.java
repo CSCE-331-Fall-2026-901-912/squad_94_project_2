@@ -509,6 +509,7 @@ public class PGComms {
         return get_price("SELECT price FROM menu_toppings WHERE name = ?", name);
     }
 
+    //Querys for the employee view
     public static List<EmployeesRowDTO> get_employees() {
         List<EmployeesRowDTO> list = new ArrayList<>();
 
@@ -563,4 +564,31 @@ public class PGComms {
         close_connection();
         return saved;
     }
+
+    public static boolean update_employee(int id, String name, String position, String phone,
+                                      BigDecimal pay, int hours) {
+        if (!open_connection()) {
+            return false;
+        }
+
+        String sql = "UPDATE employees SET name = ?, position = ?, phone_number = ?, "
+                + "current_pay_rate = ?, hours_worked_for_week = ? WHERE id_employee = ?";
+        boolean ok = false;
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, name);
+            stmt.setString(2, position);
+            stmt.setString(3, phone);
+            stmt.setBigDecimal(4, pay);
+            stmt.setInt(5, hours);
+            stmt.setInt(6, id);
+            ok = stmt.executeUpdate() == 1;
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        close_connection();
+        return ok;
+    }
+
 }
