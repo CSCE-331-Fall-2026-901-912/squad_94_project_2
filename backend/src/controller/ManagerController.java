@@ -23,45 +23,56 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyEvent;
 
+import javafx.scene.control.Button;
+import javafx.event.ActionEvent;
+
+
 
 
 public class ManagerController {
-    private ItemDetailsPopUp item_details_pop_up;
+    
     private InventoryScreen inventory_screen;
     private MainScreenGUI main_screen_gui;
     private OrderHistory order_history;
     private SalesAnalytics sales_analytics;
 
 //    //INVENTORYSCREEN
-//    @FXML
-//    private TableColumn<Item, Integer> amountOutOfStockCol;
-//
-//    @FXML
-//    private TableColumn<Item, Integer> amountRunningLowCol;
-//
-//    @FXML
-//    private Button edibleButton;
-//
-//    @FXML
-//    private Button inedibleButton;
-//
-//    @FXML
-//    private GridPane inventoryGrid;
-//
-//    @FXML
-//    private TextField inventorySearchBar;
-//
-//    @FXML
-//    private TableColumn<Item, String> nameOutOfStockCol;
-//
-//    @FXML
-//    private TableColumn<Item, String> nameRunningLowCol;
-//
-//    @FXML
-//    private TableView<Item> outOfStockTable;
-//
-//    @FXML
-//    private TableView<Item> runningLowTable;
+    @FXML
+    private Button edible_button;
+
+    @FXML
+    private Button inedible_button;
+
+    @FXML
+    private GridPane inventory_grid;
+
+    @FXML
+    private TextField inventory_search_bar;
+
+    @FXML
+    private TextArea out_of_stock_text_area;
+
+    @FXML
+    private TextArea running_low_text_area;
+
+    @FXML
+    void filter_edible() {
+
+    }
+
+    @FXML
+    void filter_inedible() {
+
+    }
+
+    private ItemDetailsPopUp item_details_pop_up;
+
+    @FXML
+    void item_click(ActionEvent event) {
+        Button but = (Button) event.getSource();
+        item_details_pop_up = inventory_screen.item_click(this, but.getText());
+    }
+
 //
 //    //ITEMDETAILSPOPUP
 //    @FXML
