@@ -1,0 +1,2 @@
+javac --module-path "\Users\marie\Downloads\javafx-27_windows-x64_bin-sdk\javafx-sdk-27\lib" --add-modules javafx.controls,javafx.base,javafx.fxml,javafx.graphics,javafx.media,javafx.web,javafx.swing backend/src/model/*.java backend/src/controller/*.java backend/src/App.java
+java --module-path "\Users\marie\Downloads\javafx-27_windows-x64_bin-sdk\javafx-sdk-27\lib" --add-modules javafx.controls,javafx.base,javafx.fxml,javafx.graphics,javafx.media,javafx.web,javafx.swing backend/src/App.java
