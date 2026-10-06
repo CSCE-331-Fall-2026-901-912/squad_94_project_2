@@ -55,7 +55,7 @@ public class PGComms {
         return true;
     }
 
-    /**
+     /**
      * THIS FUNCTION DOES NOT SANITIZE QUERIES!<br>
      * Issues the query specified as a parameter to the database.
      * Queries here are "updates." These queries *change* data within the database.
@@ -64,7 +64,7 @@ public class PGComms {
      * @param query The "update" query (String) to be sent to the database.
      * @return true if the update query was successfully processed. false if it was not.
      */
-    public static boolean issue_query_type_retrieve_row(String query) {
+    public static boolean issue_query_type_update(String query) {
         boolean query_success = false;
         try {
             open_connection();
