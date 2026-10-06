@@ -13,16 +13,49 @@ import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.SimpleFloatProperty;
 
+import javafx.scene.control.Label;
+import java.math.BigDecimal;
+
+
 public class BaseMenu {
 
     private StringProperty current_order;
-    private FloatProperty order_total;
+    private StringProperty order_total;
 
+    private int item_count = 0;
+    private BigDecimal running_total = BigDecimal.ZERO;
+    
     // GETTERS
     public StringProperty get_current_order(){return current_order;}
-    public FloatProperty getLastScoreChange(){return order_total;}
+    public StringProperty get_order_total(){return order_total;}
+
+    public void set_current_order(String current_order2){current_order.set(current_order2);}
+    public void set_order_total(String order_total2){order_total.set(order_total2);}
 
     // SETTERS
+
+    // Append one finished drink to the order text area and update the total.
+    public void add_item(String description, BigDecimal price){
+        item_count++;
+        running_total = running_total.add(price);
+
+        String line = "Item " + item_count + ": " + description + " : " + String.format("%.2f", price);
+        if (item_count == 1) {
+            set_current_order(line);                      // replaces the "Item1: " placeholder
+        } else {
+            set_current_order(get_current_order() + "\n" + line);
+        }
+        set_order_total("Total: " + String.format("%.2f", running_total));
+    }
+
+    // Call this after the order is paid or cancelled.
+    public void reset_order(){
+        item_count = 0;
+        running_total = BigDecimal.ZERO;
+        set_current_order("Item1: ");
+        set_order_total("Total: 0.00");
+    }
+    
     @FXML public OrderMenu add_drink(CustomerController customer_controller){
         try {
             Stage stage_order = new Stage();
@@ -31,6 +64,10 @@ public class BaseMenu {
             order_menu.setController(customer_controller);
 
             Parent root = order_menu.load();
+            customer_controller.populate_drink_boxes();
+            customer_controller.populate_topping_buttons();  
+            customer_controller.setup_sugar_slider();
+            customer_controller.setup_drink_selection();
             Scene scene = new Scene(root);
             
             stage_order.setScene(scene);
@@ -46,7 +83,6 @@ public class BaseMenu {
         try {
             Stage stage_cancel = new Stage();
             FXMLLoader cancellation_pop_up = new FXMLLoader(getClass().getResource("/gui/cashier/Cancellation.fxml"));
-            CancellationPopUp cancellation_pop_up_model = new CancellationPopUp();
             cancellation_pop_up.setController(customer_controller);
 
             Parent root = cancellation_pop_up.load();
@@ -54,19 +90,21 @@ public class BaseMenu {
 
             stage_cancel.setScene(scene);
             stage_cancel.show();
+
+            CancellationPopUp cancellation_pop_up_model = new CancellationPopUp(stage_cancel);
+            customer_controller.initialize(cancellation_pop_up_model);
             return cancellation_pop_up_model;
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-        return new CancellationPopUp();
+        return new CancellationPopUp(null);
     }
     @FXML public TipPopUp finish_order(CustomerController customer_controller){
         try {
             
             Stage stage_tip = new Stage();
             FXMLLoader tip_pop_up = new FXMLLoader(getClass().getResource("/gui/cashier/TotalPopUp.fxml"));
-            TipPopUp tip_pop_up_model = new TipPopUp(); 
             tip_pop_up.setController(customer_controller);
             
             Parent root = tip_pop_up.load();
@@ -74,13 +112,17 @@ public class BaseMenu {
 
             stage_tip.setScene(scene);
             stage_tip.show();
+
+            TipPopUp tip_pop_up_model = new TipPopUp(order_total.getValue(), stage_tip); 
+            customer_controller.initialize(tip_pop_up_model);
             return tip_pop_up_model;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new TipPopUp();
+        return new TipPopUp(null,null);
     }
     @FXML public void manager_view(CustomerController manager_controller){
+        order_total.set("null");
         try {
             // Stage manager_stage = new Stage();
             // FXMLLoader manager_view = new FXMLLoader(getClass().getResource("/gui/cashier/TipPopUp.fxml"));
@@ -101,7 +143,7 @@ public class BaseMenu {
 
     // CONSTRUCTOR
     public BaseMenu(){
-        current_order = new SimpleStringProperty("");
-        order_total = new SimpleFloatProperty(0.0f);
+        current_order = new SimpleStringProperty("Item1: ");
+        order_total = new SimpleStringProperty("Total: 0.00");
     }
 }

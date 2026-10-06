@@ -26,6 +26,7 @@ CREATE TABLE menu_drinks(
     id_drink int PRIMARY KEY,
     name text,
     price numeric,
+    type text,
     hot_available boolean,
     is_non_caffeinated boolean
 );

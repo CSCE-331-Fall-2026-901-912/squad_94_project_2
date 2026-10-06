@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -13,7 +12,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="400.0" prefWidth="211.0">
@@ -25,10 +23,15 @@
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <ComboBox id="milkTeaBox" prefWidth="150.0" promptText="Milk Teas">
+                  <ComboBox fx:id="milk_tea_box" prefWidth="150.0" promptText="Milk Teas">
                   </ComboBox>
-                  <ComboBox id="fruitTeaBox" prefWidth="150.0" promptText="Fruit Teas">
+                  <ComboBox fx:id="fresh_tea_box" prefWidth="150.0" promptText="Fresh Teas">
                   </ComboBox>
+                  <ComboBox fx:id="fruit_tea_box" prefWidth="150.0" promptText="Fruit Teas">
+                  </ComboBox>
+                  <ComboBox fx:id="no_caff_box" prefWidth="150.0" promptText="Non Caffeine Teas">
+                  </ComboBox>
+                  <Label fx:id="selected_drink_label" text="No drink selected" wrapText="true" />
                </children>
             </VBox>
          </content>
@@ -42,70 +45,11 @@
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <GridPane prefHeight="398.0" prefWidth="149.0" style="-fx-hgap: 20; -fx-vgap: 30;">
+                  <GridPane fx:id="topping_grid" prefHeight="398.0" prefWidth="149.0" style="-fx-hgap: 20; -fx-vgap: 30;">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <Button id="mangoBobaButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Mango Boba" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="3">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                        <Button id="coffeeJellyButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Coffee Jelly" textAlignment="CENTER" GridPane.columnIndex="1">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                        <Button id="puddingButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Pudding" textAlignment="CENTER" GridPane.rowIndex="1">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                        <Button id="lycheeJellyButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Lychee Jelly" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                        <Button id="honeyJellyButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Honey Jelly" textAlignment="CENTER" GridPane.rowIndex="2">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                        <Button id="crystalBobaButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Crystal Boba" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                        <Button id="iceCreamButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Ice Cream" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                        <Button id="bobaPearlsButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Boba Pearls" textAlignment="CENTER">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                        <Button id="strawberryBobaButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Strawberry Boba" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="4">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                        <Button id="creamaButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="190.0" text="Creama" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Button>
-                     </children>
                   </GridPane>
                </children>
             </VBox>
@@ -130,28 +74,28 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button id="noIceButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="None" />
-                        <Button id="lightIceButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="Light" GridPane.columnIndex="1" />
-                        <Button id="regularIceButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="Regular" GridPane.rowIndex="1" />
-                        <Button id="hotIceButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="Hot" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Button fx:id="no_ice_button" mnemonicParsing="false" onAction="#ice_selected" prefHeight="180.0" prefWidth="160.0" text="None" />
+                        <Button fx:id="light_ice_button" mnemonicParsing="false" onAction="#ice_selected" prefHeight="180.0" prefWidth="160.0" text="Light" GridPane.columnIndex="1" />
+                        <Button fx:id="regular_ice_button" mnemonicParsing="false" onAction="#ice_selected" prefHeight="180.0" prefWidth="160.0" text="Regular" GridPane.rowIndex="1" />
+                        <Button fx:id="hot_button" managed="false" mnemonicParsing="false" onAction="#ice_selected" prefHeight="180.0" prefWidth="160.0" text="Hot" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                </children>
             </VBox>
             <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-padding: 20; -fx-spacing: 20;">
                <children>
-                  <Label text="Sugar %">
+                  <Label fx:id="sugar_label" text="Sugar %">
                      <font>
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <Slider id="sugarSlider" showTickLabels="true" showTickMarks="true" value="100.0" />
+                  <Slider fx:id="sugar_slider" blockIncrement="25" majorTickUnit="25" max="100" min="0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="100.0" />
                </children>
             </VBox>
             <VBox alignment="CENTER" prefHeight="122.0" prefWidth="187.0" style="-fx-padding: 20; -fx-spacing: 20;">
                <children>
-                  <Button id="cancelButton" mnemonicParsing="false" text="Cancel" />
-                  <Button id="finishSelectionButton" mnemonicParsing="false" text="Finish Selection" />
+                  <Button id="cancelButton" mnemonicParsing="false" onAction="#cancel_order" text="Cancel" />
+                  <Button id="finish_selection_button" mnemonicParsing="false" onAction="#finish_selection" text="Finish Selection" />
                </children>
             </VBox>
          </children>
