@@ -2,10 +2,11 @@ package database;
 
 import java.sql.*;
 import javax.sql.*;
+import java.time.*;
 import org.postgresql.ds.PGSimpleDataSource;
 
-public class PGComms {
 
+public class PGComms {
 
     // Define the unique database source this class allows one to refer to.
     private static PGSimpleDataSource source = null;
@@ -47,16 +48,36 @@ public class PGComms {
     }
 
     /**
-     * THIS FUNCTION DOES NOT SANITIZE QUERIES!
+     * THIS FUNCTION DOES NOT SANITIZE QUERIES!<br>
      * Issues the query specified as a parameter to the database.
      * Queries here are "updates." These queries *change* data within the database.
-     * A boolean is returned which indicates the success status of the query.
+     * A boolean is returned which indicates the success status of the query.<br>
      * Update Queries include: INSERT, UPDATE, DELETE.
-     * @param query_type_update The "update" query (String) to be sent to the database.
+     * @param query The "update" query (String) to be sent to the database.
      * @return true if the update query was successfully processed. false if it was not.
      */
-    public static boolean issue_query_type_update(String query_type_update) {
-        return true;
+    public static boolean issue_query_type_retrieve_row(String query) {
+        boolean query_success = false;
+        try {
+            open_connection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.executeUpdate();
+            query_success = true;
+            ps.close();
+        }
+        catch (SQLException e) {
+
+            // Return false if the query was not successfully issued.
+            System.out.println(e.getMessage());
+        }
+        finally {
+
+            // Always ensure the connection is closed.
+            close_connection();
+        }
+
+        // Return query success/failure status.
+        return query_success;
     }
 
     // Private helper function to open the connection to the database.
@@ -79,8 +100,8 @@ public class PGComms {
         return true;
     }
 
-    // Private helper function to close the connection to the database.
-    private static boolean close_connection() {
+    // Helper function to close the connection to the database.
+    public static boolean close_connection() {
 
         // If a connection to the database is currently open, close it.
         if (conn != null) {
