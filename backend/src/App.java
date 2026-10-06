@@ -1,4 +1,4 @@
-
+import dto.MenuDrinksRowDTO;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -6,8 +6,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.BaseMenu;
 import controller.CustomerController;
-// import controller.ManagerController;
 import database.PGComms;
+import java.util.ArrayList;
+// import controller.ManagerController;
 
 public class App extends Application {
 
@@ -41,14 +42,13 @@ public class App extends Application {
         // Identify and establish a reference to the PostgreSQL database.
         PGComms.initialize_database("csce-315-db.engr.tamu.edu", "squad_94_db", "squad_94", args[0]);
 
-        // Ensure the connection works. Determine if it can be opened or closed.
-        boolean connection_operational = PGComms.test_connection();
-
-        // If test_connection() returns true, the database can be opened and closed normally. If this is not the case, false is returned.
-        if (!connection_operational) {
+        // Test if the database can be opened and closed normally. Terminate the program if this is not the case.
+        if (!PGComms.test_connection()) {
             return;
         }
 
+        ArrayList<MenuDrinksRowDTO> items = PGComms.issue_query_type_rows_MenuDrinks("SELECT * FROM menu_drinks");
+        System.out.println(items);
         // Launch the application fully (launch JavaFX components).
         launch(args);
     }

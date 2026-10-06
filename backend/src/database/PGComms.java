@@ -2,11 +2,20 @@ package database;
 
 import java.sql.*;
 import javax.sql.*;
-import org.postgresql.ds.PGSimpleDataSource;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import org.postgresql.ds.PGSimpleDataSource;
+import dto.InvEdibleRowDTO;
+import dto.InvNonEdibleRowDTO;
+import dto.EmployeesRowDTO;
+import dto.MenuDrinksRowDTO;
+import dto.MenuToppingsRowDTO;
+import dto.JoinMenuDrinksAndInvEdibleRowDTO;
+import dto.JoinMenuToppingsAndInvEdibleRowDTO;
+import dto.OrdersRowDTO;
 
 public class PGComms {
 
@@ -16,7 +25,13 @@ public class PGComms {
     // Define a variable to hold the database connection.
     private static Connection conn = null;
 
-    // Set all properties of the database stored in 'source.'
+    /**
+     * Set all required attributes necessary for PGComms to manage connections to a database.
+     * @param server_name The name of the server hosting the database, likely an IP or similar alias.
+     * @param database_name The name of the database that PGComms should enable one to connect to.
+     * @param user The name of the user PGComms will manage the database connection for.
+     * @param password The password to the database.
+     */
     public static void initialize_database(String server_name, String database_name, String user, String password) {
         source = new PGSimpleDataSource();
         source.setServerNames(new String[]{server_name});
@@ -25,8 +40,10 @@ public class PGComms {
         source.setPassword(password);
     }
 
-    // Test if the database can be opened and closed before it is regularly used.
-    // If it cannot be opened, return false. If it can be opened, return true.
+    /**
+     * Returns a boolean which indicates if a successful connection was opened, then closed, to the stored database.
+     * @return true if the connection was opened, then closed. false if the connection could not be opened and/or closed.
+     */
     public static boolean test_connection() {
         boolean can_open = false;
         can_open = open_connection();
@@ -80,6 +97,311 @@ public class PGComms {
 
         // Return true if the connection was successfully closed.
         return true;
+    }
+
+     /**
+     * THIS FUNCTION DOES NOT SANITIZE QUERIES!<br>
+     * Issues the query specified as a parameter to the database.
+     * Queries here are "updates." These queries *change* data within the database.
+     * A boolean is returned which indicates the success status of the query.<br>
+     * Update Queries include: INSERT, UPDATE, DELETE.
+     * @param query The "update" query (String) to be sent to the database.
+     * @return true if the update query was successfully processed. false if it was not.
+     */
+    public static boolean issue_query_type_update(String query) {
+        boolean query_success = false;
+        try {
+            open_connection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.executeUpdate();
+            query_success = true;
+            ps.close();
+        }
+        catch (SQLException e) {
+
+            // Return false if the query was not successfully issued.
+            System.out.println(e.getMessage());
+        }
+        finally {
+
+            // Always ensure the connection is closed.
+            close_connection();
+        }
+
+        // Return query success/failure status.
+        return query_success;
+    }
+
+    /**
+     * THIS FUNCTION DOES NOT SANITIZE QUERIES!<br>
+     * Issues the query specified as a parameter to the database.
+     * Queries here are ones which return results. These queries *fetch* data within the database.
+     * This function assumes that the resulting query will see entire row(s) returned from the inv_edible table.
+     * @param query The query (String) to be sent to the database.
+     * @return An array list of InvEdibleRowDTOs, where each element corresponds to an entire row from inv_edible.
+     */
+    public static ArrayList<InvEdibleRowDTO> issue_query_type_rows_InvEdible(String query) {
+        ArrayList<InvEdibleRowDTO> items = new ArrayList<>();
+        try {
+            open_connection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                items.add(new InvEdibleRowDTO(rs.getInt(1), rs.getString(2), rs.getInt(3)));
+            }
+            ps.close();
+        }
+        catch (SQLException e) {
+
+            // Return false if the query was not successfully issued.
+            System.out.println(e.getMessage());
+        }
+        finally {
+
+            // Always ensure the connection is closed.
+            close_connection();
+        }
+
+        // Return the constructed ArrayList.
+        return items;
+    }
+
+    /**
+     * THIS FUNCTION DOES NOT SANITIZE QUERIES!<br>
+     * Issues the query specified as a parameter to the database.
+     * Queries here are ones which return results. These queries *fetch* data within the database.
+     * This function assumes that the resulting query will see entire row(s) returned from the inv_nonedible table.
+     * @param query The query (String) to be sent to the database.
+     * @return An array list of InvNonEdibleRowDTOs, where each element corresponds to an entire row from inv_nonedible.
+     */
+    public static ArrayList<InvNonEdibleRowDTO> issue_query_type_rows_InvNonEdible(String query) {
+        ArrayList<InvNonEdibleRowDTO> items = new ArrayList<>();
+        try {
+            open_connection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                items.add(new InvNonEdibleRowDTO(rs.getInt(1), rs.getString(2), rs.getInt(3)));
+            }
+            ps.close();
+        }
+        catch (SQLException e) {
+
+            // Return false if the query was not successfully issued.
+            System.out.println(e.getMessage());
+        }
+        finally {
+
+            // Always ensure the connection is closed.
+            close_connection();
+        }
+
+        // Return the constructed ArrayList.
+        return items;
+    }
+
+    /**
+     * THIS FUNCTION DOES NOT SANITIZE QUERIES!<br>
+     * Issues the query specified as a parameter to the database.
+     * Queries here are ones which return results. These queries *fetch* data within the database.
+     * This function assumes that the resulting query will see entire row(s) returned from the employees table.
+     * @param query The query (String) to be sent to the database.
+     * @return An array list of EmployeesRowDTOs, where each element corresponds to an entire row from employees.
+     */
+    public static ArrayList<EmployeesRowDTO> issue_query_type_rows_Employees(String query) {
+        ArrayList<EmployeesRowDTO> items = new ArrayList<>();
+        try {
+            open_connection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                items.add(new EmployeesRowDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getBigDecimal(5), rs.getInt(6)));
+            }
+            ps.close();
+        }
+        catch (SQLException e) {
+
+            // Return false if the query was not successfully issued.
+            System.out.println(e.getMessage());
+        }
+        finally {
+
+            // Always ensure the connection is closed.
+            close_connection();
+        }
+
+        // Return the constructed ArrayList.
+        return items;
+    }
+
+    /**
+     * THIS FUNCTION DOES NOT SANITIZE QUERIES!<br>
+     * Issues the query specified as a parameter to the database.
+     * Queries here are ones which return results. These queries *fetch* data within the database.
+     * This function assumes that the resulting query will see entire row(s) returned from the menu_drinks table.
+     * @param query The query (String) to be sent to the database.
+     * @return An array list of MenuDrinksRowDTOs, where each element corresponds to an entire row from menu_drinks.
+     */
+    public static ArrayList<MenuDrinksRowDTO> issue_query_type_rows_MenuDrinks(String query) {
+        ArrayList<MenuDrinksRowDTO> items = new ArrayList<>();
+        try {
+            open_connection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                items.add(new MenuDrinksRowDTO(rs.getInt(1), rs.getString(2), rs.getBigDecimal(3), rs.getString(4), rs.getBoolean(5), rs.getBoolean(6)));
+            }
+            ps.close();
+        }
+        catch (SQLException e) {
+
+            // Return false if the query was not successfully issued.
+            System.out.println(e.getMessage());
+        }
+        finally {
+
+            // Always ensure the connection is closed.
+            close_connection();
+        }
+
+        // Return the constructed ArrayList.
+        return items;
+    }
+
+    /**
+     * THIS FUNCTION DOES NOT SANITIZE QUERIES!<br>
+     * Issues the query specified as a parameter to the database.
+     * Queries here are ones which return results. These queries *fetch* data within the database.
+     * This function assumes that the resulting query will see entire row(s) returned from the menu_toppings table.
+     * @param query The query (String) to be sent to the database.
+     * @return An array list of MenuToppingsRowDTOs, where each element corresponds to an entire row from menu_toppings.
+     */
+    public static ArrayList<MenuToppingsRowDTO> issue_query_type_rows_MenuToppings(String query) {
+        ArrayList<MenuToppingsRowDTO> items = new ArrayList<>();
+        try {
+            open_connection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                items.add(new MenuToppingsRowDTO(rs.getInt(1), rs.getString(2), rs.getBigDecimal(3)));
+            }
+            ps.close();
+        }
+        catch (SQLException e) {
+
+            // Return false if the query was not successfully issued.
+            System.out.println(e.getMessage());
+        }
+        finally {
+
+            // Always ensure the connection is closed.
+            close_connection();
+        }
+
+        // Return the constructed ArrayList.
+        return items;
+    }
+
+    /**
+     * THIS FUNCTION DOES NOT SANITIZE QUERIES!<br>
+     * Issues the query specified as a parameter to the database.
+     * Queries here are ones which return results. These queries *fetch* data within the database.
+     * This function assumes that the resulting query will see entire row(s) returned from the join_menu_drinks_and_inv_edible table.
+     * @param query The query (String) to be sent to the database.
+     * @return An array list of JoinMenuDrinksAndInvEdibleRowDTOs, where each element corresponds to an entire row from join_menu_drinks_and_inv_edible.
+     */
+    public static ArrayList<JoinMenuDrinksAndInvEdibleRowDTO> issue_query_type_rows_JoinMenuDrinksAndInvEdible(String query) {
+        ArrayList<JoinMenuDrinksAndInvEdibleRowDTO> items = new ArrayList<>();
+        try {
+            open_connection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                items.add(new JoinMenuDrinksAndInvEdibleRowDTO(rs.getInt(1), rs.getInt(2), rs.getInt(3)));
+            }
+            ps.close();
+        }
+        catch (SQLException e) {
+
+            // Return false if the query was not successfully issued.
+            System.out.println(e.getMessage());
+        }
+        finally {
+
+            // Always ensure the connection is closed.
+            close_connection();
+        }
+
+        // Return the constructed ArrayList.
+        return items;
+    }
+
+    /**
+     * THIS FUNCTION DOES NOT SANITIZE QUERIES!<br>
+     * Issues the query specified as a parameter to the database.
+     * Queries here are ones which return results. These queries *fetch* data within the database.
+     * This function assumes that the resulting query will see entire row(s) returned from the join_menu_toppings_and_inv_edible table.
+     * @param query The query (String) to be sent to the database.
+     * @return An array list of JoinMenuToppingsAndInvEdibleRowDTOs, where each element corresponds to an entire row from join_menu_toppings_and_inv_edible.
+     */
+    public static ArrayList<JoinMenuToppingsAndInvEdibleRowDTO> issue_query_type_rows_JoinMenuToppingsAndInvEdible(String query) {
+        ArrayList<JoinMenuToppingsAndInvEdibleRowDTO> items = new ArrayList<>();
+        try {
+            open_connection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                items.add(new JoinMenuToppingsAndInvEdibleRowDTO(rs.getInt(1), rs.getInt(2), rs.getInt(3)));
+            }
+            ps.close();
+        }
+        catch (SQLException e) {
+
+            // Return false if the query was not successfully issued.
+            System.out.println(e.getMessage());
+        }
+        finally {
+
+            // Always ensure the connection is closed.
+            close_connection();
+        }
+
+        // Return the constructed ArrayList.
+        return items;
+    }
+
+    /**
+     * THIS FUNCTION DOES NOT SANITIZE QUERIES!<br>
+     * Issues the query specified as a parameter to the database.
+     * Queries here are ones which return results. These queries *fetch* data within the database.
+     * This function assumes that the resulting query will see entire row(s) returned from the orders table.
+     * @param query The query (String) to be sent to the database.
+     * @return An array list of OrdersRowDTOs, where each element corresponds to an entire row from orders.
+     */
+    public static ArrayList<OrdersRowDTO> issue_query_type_rows_Orders(String query) {
+        ArrayList<OrdersRowDTO> items = new ArrayList<>();
+        try {
+            open_connection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                items.add(new OrdersRowDTO(rs.getInt(1), rs.getBoolean(2), rs.getObject(3, OffsetDateTime.class), rs.getObject(4, OffsetDateTime.class), rs.getBigDecimal(5), rs.getInt(6), rs.getBigDecimal(7), rs.getInt(8), rs.getInt(9), rs.getInt(10), rs.getInt(11), rs.getInt(12), rs.getBoolean(13)));
+            }
+            ps.close();
+        }
+        catch (SQLException e) {
+
+            // Return false if the query was not successfully issued.
+            System.out.println(e.getMessage());
+        }
+        finally {
+
+            // Always ensure the connection is closed.
+            close_connection();
+        }
+
+        // Return the constructed ArrayList.
+        return items;
     }
 
     // Return the names of all drinks in menu_drinks whose "type" column equals the given type,
@@ -178,7 +500,7 @@ public class PGComms {
         close_connection();
         return price;
     }
-    
+
     public static BigDecimal get_drink_price(String name) {
         return get_price("SELECT price FROM menu_drinks WHERE name = ?", name);
     }
