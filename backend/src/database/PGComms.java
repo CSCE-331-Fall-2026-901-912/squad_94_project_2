@@ -248,7 +248,7 @@ public class PGComms {
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                items.add(new MenuDrinksRowDTO(rs.getInt(1), rs.getString(2), rs.getBigDecimal(3), rs.getBoolean(4), rs.getBoolean(5)));
+                items.add(new MenuDrinksRowDTO(rs.getInt(1), rs.getString(2), rs.getBigDecimal(3), rs.getString(4), rs.getBoolean(5), rs.getBoolean(6)));
             }
             ps.close();
         }
