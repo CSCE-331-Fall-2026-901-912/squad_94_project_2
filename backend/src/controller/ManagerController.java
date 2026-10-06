@@ -6,9 +6,14 @@ import model.MainScreenGUI;
 import model.OrderHistory;
 import model.SalesAnalytics;
 import model.Employee;
+import model.Menu;
 
 import dto.InvEdibleRowDTO;
 import dto.InvNonEdibleRowDTO;
+
+import java.util.ArrayList;
+
+import database.PGComms;
 import dto.EmployeesRowDTO;
 import dto.MenuDrinksRowDTO;
 import dto.MenuToppingsRowDTO;
@@ -31,6 +36,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
@@ -124,6 +130,32 @@ public class ManagerController {
             e.printStackTrace();
         }
     }
+    @FXML 
+    public void open_menu_view(ActionEvent event){
+        try {
+            java.net.URL url = getClass().getResource("/gui/manager/MenuView.fxml");
+            if (url == null) {                                   // avoids the "Location is not set" error
+                System.out.println("MenuView.fxml not found");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(url);
+            Menu menu = new Menu();
+            loader.setController(menu);
+
+            Parent root = loader.load();
+            menu.load_menu();                // fill the table after the FXML loads
+
+            Stage stage = new Stage();
+            stage.setTitle("Menu");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    
 //  
 //    //ITEMDETAILSPOPUP
 //    @FXML

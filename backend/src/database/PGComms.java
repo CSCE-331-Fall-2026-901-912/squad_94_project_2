@@ -509,36 +509,6 @@ public class PGComms {
         return get_price("SELECT price FROM menu_toppings WHERE name = ?", name);
     }
 
-    //Querys for the employee view
-    public static List<EmployeesRowDTO> get_employees() {
-        List<EmployeesRowDTO> list = new ArrayList<>();
-
-        if (!open_connection()) {
-            return list;
-        }
-
-        String sql = "SELECT id_employee, name, position, phone_number, current_pay_rate, hours_worked_for_week "
-                + "FROM employees ORDER BY id_employee";
-        try (Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                list.add(new EmployeesRowDTO(
-                    rs.getInt("id_employee"),
-                    rs.getString("name"),
-                    rs.getString("position"),
-                    rs.getString("phone_number"),
-                    rs.getBigDecimal("current_pay_rate"),
-                    rs.getInt("hours_worked_for_week")));
-            }
-        }
-        catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-
-        close_connection();
-        return list;
-    }
-
     public static boolean add_employee(String name, String position, String phone,
                                    BigDecimal pay_rate, int hours) {
         if (!open_connection()) {
@@ -591,4 +561,30 @@ public class PGComms {
         return ok;
     }
 
+
+    public static boolean add_drink(String name, BigDecimal price, String type,
+                                   boolean hot_available, boolean is_non_caffeinated) {
+        if (!open_connection()) {
+            return false;
+        }
+
+        String sql = "INSERT INTO menu_drinks "
+                + "(id_drink, name, price, type, hot_available, is_non_caffeinated) "
+                + "VALUES ((SELECT COALESCE(MAX(id_drink), 0) + 1 FROM menu_drinks), ?, ?, ?, ?, ?)";
+        boolean saved = false;
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, name);
+            stmt.setBigDecimal(2, price);
+            stmt.setString(3, type);
+            stmt.setBoolean(4, hot_available);
+            stmt.setBoolean(5, is_non_caffeinated);
+            saved = stmt.executeUpdate() == 1;
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        
+        close_connection();
+        return saved;
+    }
 }

@@ -15,13 +15,6 @@ import javafx.scene.control.TableView;
 import java.math.BigDecimal;
 import dto.EmployeesRowDTO;
 
-import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -44,7 +37,11 @@ public class Employee {
         EmpPay.setCellValueFactory(d   -> new ReadOnlyObjectWrapper<>(d.getValue().current_pay_rate()));
         EmpHours.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().hours_worked_for_week()));
         setup_row_click();
-        EmployeeTable.setItems(FXCollections.observableArrayList(PGComms.get_employees()));
+        
+        EmployeeTable.setItems(FXCollections.observableArrayList(
+        PGComms.issue_query_type_rows_Employees(
+            "SELECT id_employee, name, position, phone_number, current_pay_rate, hours_worked_for_week "
+        + "FROM employees ORDER BY id_employee")));
     }
     
     @FXML public void open_add_employee(ActionEvent event){
