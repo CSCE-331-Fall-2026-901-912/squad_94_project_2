@@ -15,7 +15,7 @@ public class ItemDetailsPopUp {
     public StringProperty get_current_item_name(){return item_name;}
     public IntegerProperty get_current_amount(){return item_amount;}
 
-    @FXML public void set_amount(int amount_input){
+    @FXML public void set_amount(IntegerProperty amount_input){
         item_amount = amount_input;
         //TODO Link sql 
     }

@@ -30,7 +30,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyEvent;
-
+import javafx.scene.control.TextArea;
 import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
 

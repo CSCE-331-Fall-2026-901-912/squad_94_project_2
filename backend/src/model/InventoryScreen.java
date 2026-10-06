@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
 import controller.ManagerController;
+import javafx.scene.Scene;
 
 public class InventoryScreen {
     
