@@ -1,6 +1,7 @@
 package controller;
 
 import model.ItemDetailsPopUp;
+import model.AddItemPopUp;
 import model.InventoryScreen;
 import model.MainScreenGUI;
 import model.OrderHistory;
@@ -74,11 +75,37 @@ public class ManagerController {
     }
 
     private ItemDetailsPopUp item_details_pop_up;
-
     @FXML
     void item_click(ActionEvent event) {
         Button but = (Button) event.getSource();
         item_details_pop_up = inventory_screen.item_click(this, but.getText());
+    }
+
+
+    @FXML
+    private AddItemPopUp add_item_pop_up;;
+    @FXML
+    public void add_item_click() {
+        add_item_pop_up.add_item_click();
+    }
+
+
+
+
+
+    public void initialize(InventoryScreen inventory_screen){
+        this.inventory_screen = inventory_screen;
+
+    }
+
+    public void initialize(ItemDetailsPopUp item_details_pop_up){
+        this.item_details_pop_up = item_details_pop_up;
+
+    }
+
+    public void initialize(AddItemPopUp add_item_pop_up){
+        this.add_item_pop_up = add_item_pop_up;
+        
     }
 
 //
