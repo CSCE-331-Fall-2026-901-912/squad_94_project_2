@@ -1,27 +1,40 @@
 package model;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+
 import database.PGComms;
 import dto.InvEdibleRowDTO;
 import dto.MenuDrinksRowDTO;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Alert;
+import javafx.collections.FXCollections;
+import javafx.scene.control.ComboBox;
 
 public class AddMenuDrink {
+    private static final int MAX_INGREDIENTS = 6;
+    private static final String SELECTED_STYLE =
+        "-fx-background-color: #2e9e5b; -fx-text-fill: white; -fx-font-weight: bold;";
+
     @FXML private Label titleLabel;
     @FXML private TextField name_field;
     @FXML private TextField price_field;
-    @FXML private TextField type_field;
-    @FXML private RadioButton hot_available_radio;
-    @FXML private RadioButton non_caffeinated_radio;
+    @FXML private ComboBox<String> type_box;
+    @FXML private RadioButton hot_button;
+    @FXML private RadioButton caff_button;
     @FXML private Button submitButton;
     @FXML private GridPane ingredient_grid;
 
     private final Runnable on_added;  
     private final MenuDrinksRowDTO existing;                  
+    private final Map<Button, Integer> selected_ingredients = new HashMap<>();
 
     public AddMenuDrink(Runnable on_added) {
         this.on_added = on_added;
@@ -35,6 +48,9 @@ public class AddMenuDrink {
 
     @FXML
     private void initialize() {
+        type_box.setItems(FXCollections.observableArrayList(
+                "milk tea", "fresh tea", "fruit tea", "no caff tea"));
+
         ingredient_grid.setHgap(8);
         ingredient_grid.setVgap(8);
 
@@ -45,6 +61,8 @@ public class AddMenuDrink {
                 + "FROM inv_edible ORDER BY name")) {
             Button ingredient_button = new Button(ingredient.name());
             ingredient_button.setMaxWidth(Double.MAX_VALUE);
+            ingredient_button.setUserData(ingredient.id_edible());
+            ingredient_button.setOnAction(event -> toggle_ingredient(ingredient_button));
             ingredient_grid.add(ingredient_button, column, row);
 
             column++;
@@ -53,6 +71,66 @@ public class AddMenuDrink {
                 row++;
             }
         }
+    }
+
+    private void toggle_ingredient(Button ingredient_button) {
+        if (selected_ingredients.containsKey(ingredient_button)) {
+            selected_ingredients.remove(ingredient_button);
+        } else if (selected_ingredients.size() < MAX_INGREDIENTS) {
+            selected_ingredients.put(ingredient_button, (Integer) ingredient_button.getUserData());
+        }
+
+        refresh_ingredient_buttons();
+    }
+
+    private void refresh_ingredient_buttons() {
+        boolean max_selected = selected_ingredients.size() == MAX_INGREDIENTS;
+
+        for (javafx.scene.Node node : ingredient_grid.getChildren()) {
+            Button ingredient_button = (Button) node;
+            boolean selected = selected_ingredients.containsKey(ingredient_button);
+
+            ingredient_button.setStyle(selected ? SELECTED_STYLE : "");
+            ingredient_button.setDisable(max_selected && !selected);
+        }
+    }
+
+    @FXML
+    private void submit() {
+        String name = name_field.getText().trim();
+        String type = type_box.getValue();
+
+        if (name.isEmpty() || type == null || price_field.getText().trim().isEmpty()) {
+            show_error("Name, price, and type are required.");
+            return;
+        }
+
+        BigDecimal price;
+        try {
+            price = new BigDecimal(price_field.getText().trim());
+        } catch (NumberFormatException e) {
+            show_error("Price must be a valid number.");
+            return;
+        }
+
+        boolean saved = PGComms.add_drink_with_ingredients(
+                name,
+                price,
+                type,
+                hot_button.isSelected(),
+                caff_button.isSelected(),
+                selected_ingredients.values().stream().toList());
+        if (!saved) {
+            show_error("The drink could not be saved.");
+            return;
+        }
+
+        on_added.run();
+        ((Node) submitButton).getScene().getWindow().hide();
+    }
+
+    private void show_error(String message) {
+        new Alert(Alert.AlertType.ERROR, message).showAndWait();
     }
 
 }

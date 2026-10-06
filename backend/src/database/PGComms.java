@@ -561,30 +561,70 @@ public class PGComms {
         return ok;
     }
 
-
-    public static boolean add_drink(String name, BigDecimal price, String type,
-                                   boolean hot_available, boolean is_non_caffeinated) {
+    public static boolean add_drink_with_ingredients(
+            String name, BigDecimal price, String type,
+            boolean hot_available, boolean is_non_caffeinated,
+            List<Integer> edible_ids) {
         if (!open_connection()) {
             return false;
         }
 
-        String sql = "INSERT INTO menu_drinks "
-                + "(id_drink, name, price, type, hot_available, is_non_caffeinated) "
-                + "VALUES ((SELECT COALESCE(MAX(id_drink), 0) + 1 FROM menu_drinks), ?, ?, ?, ?, ?)";
         boolean saved = false;
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, name);
-            stmt.setBigDecimal(2, price);
-            stmt.setString(3, type);
-            stmt.setBoolean(4, hot_available);
-            stmt.setBoolean(5, is_non_caffeinated);
-            saved = stmt.executeUpdate() == 1;
-        }
-        catch (SQLException e) {
+        try {
+            conn.setAutoCommit(false);
+
+            int drink_id;
+            String drink_sql = "INSERT INTO menu_drinks "
+                    + "(id_drink, name, price, type, hot_available, is_non_caffeinated) "
+                    + "VALUES ((SELECT COALESCE(MAX(id_drink), 0) + 1 FROM menu_drinks), ?, ?, ?, ?, ?) "
+                    + "RETURNING id_drink";
+            try (PreparedStatement drink_stmt = conn.prepareStatement(drink_sql)) {
+                drink_stmt.setString(1, name);
+                drink_stmt.setBigDecimal(2, price);
+                drink_stmt.setString(3, type);
+                drink_stmt.setBoolean(4, hot_available);
+                drink_stmt.setBoolean(5, is_non_caffeinated);
+
+                try (ResultSet result = drink_stmt.executeQuery()) {
+                    if (!result.next()) {
+                        conn.rollback();
+                        return false;
+                    }
+                    drink_id = result.getInt("id_drink");
+                }
+            }
+
+            String ingredient_sql = "INSERT INTO join_menu_drinks_and_inv_edible "
+                    + "(id_join_menu_drinks_and_inv_edible, id_drink, id_edible) "
+                    + "VALUES ((SELECT COALESCE(MAX(id_join_menu_drinks_and_inv_edible), 0) + 1 "
+                    + "FROM join_menu_drinks_and_inv_edible), ?, ?)";
+            try (PreparedStatement ingredient_stmt = conn.prepareStatement(ingredient_sql)) {
+                for (int edible_id : edible_ids) {
+                    ingredient_stmt.setInt(1, drink_id);
+                    ingredient_stmt.setInt(2, edible_id);
+                    ingredient_stmt.addBatch();
+                }
+                ingredient_stmt.executeBatch();
+            }
+
+            conn.commit();
+            saved = true;
+        } catch (SQLException e) {
+            try {
+                conn.rollback();
+            } catch (SQLException rollback_error) {
+                System.out.println(rollback_error.getMessage());
+            }
             System.out.println(e.getMessage());
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            close_connection();
         }
-        
-        close_connection();
+
         return saved;
     }
 }
