@@ -15,6 +15,7 @@ import dto.MenuToppingsRowDTO;
 import dto.JoinMenuDrinksAndInvEdibleRowDTO;
 import dto.JoinMenuToppingsAndInvEdibleRowDTO;
 import dto.OrdersRowDTO;
+import model.Employee;
 
 public class PGComms {
 
@@ -506,5 +507,60 @@ public class PGComms {
 
     public static BigDecimal get_topping_price(String name) {
         return get_price("SELECT price FROM menu_toppings WHERE name = ?", name);
+    }
+
+    public static List<EmployeesRowDTO> get_employees() {
+        List<EmployeesRowDTO> list = new ArrayList<>();
+
+        if (!open_connection()) {
+            return list;
+        }
+
+        String sql = "SELECT id_employee, name, position, phone_number, current_pay_rate, hours_worked_for_week "
+                + "FROM employees ORDER BY id_employee";
+        try (Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                list.add(new EmployeesRowDTO(
+                    rs.getInt("id_employee"),
+                    rs.getString("name"),
+                    rs.getString("position"),
+                    rs.getString("phone_number"),
+                    rs.getBigDecimal("current_pay_rate"),
+                    rs.getInt("hours_worked_for_week")));
+            }
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        close_connection();
+        return list;
+    }
+
+    public static boolean add_employee(String name, String position, String phone,
+                                   BigDecimal pay_rate, int hours) {
+        if (!open_connection()) {
+            return false;
+        }
+
+        String sql = "INSERT INTO employees "
+                + "(id_employee, name, position, phone_number, current_pay_rate, hours_worked_for_week) "
+                + "VALUES ((SELECT COALESCE(MAX(id_employee), 0) + 1 FROM employees), ?, ?, ?, ?, ?)";
+        boolean saved = false;
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, name);
+            stmt.setString(2, position);
+            stmt.setString(3, phone);
+            stmt.setBigDecimal(4, pay_rate);
+            stmt.setInt(5, hours);
+            saved = stmt.executeUpdate() == 1;
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        close_connection();
+        return saved;
     }
 }

@@ -5,6 +5,7 @@ import model.InventoryScreen;
 import model.MainScreenGUI;
 import model.OrderHistory;
 import model.SalesAnalytics;
+import model.Employee;
 
 import dto.InvEdibleRowDTO;
 import dto.InvNonEdibleRowDTO;
@@ -22,6 +23,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -34,6 +38,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
+import javafx.stage.Stage;
 
 
 
@@ -95,6 +100,30 @@ public class ManagerController {
         // TODO: open sales
     }
     
+    @FXML 
+    public void open_employee_view(ActionEvent event){
+        try {
+            java.net.URL url = getClass().getResource("/gui/manager/EmployeeView.fxml");
+            if (url == null) {                                   // avoids the "Location is not set" error
+                System.out.println("EmployeeView.fxml not found");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(url);
+            Employee employee = new Employee();
+            loader.setController(employee);
+
+            Parent root = loader.load();
+            employee.load_employees();                // fill the table after the FXML loads
+
+            Stage stage = new Stage();
+            stage.setTitle("Employees");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 //  
 //    //ITEMDETAILSPOPUP
 //    @FXML
