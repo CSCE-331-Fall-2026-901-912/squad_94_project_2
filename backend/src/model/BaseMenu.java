@@ -123,7 +123,7 @@ public class BaseMenu {
         return new TipPopUp(null,null);
     }
     @FXML public MainScreenGUI manager_view(ManagerController manager_controller){
-        order_total.set("null");
+        // order_total.set("null");
         try {
             Stage manager_stage = new Stage();
             FXMLLoader manager_view = new FXMLLoader(getClass().getResource("/gui/manager/MainScreenGUI.fxml"));
