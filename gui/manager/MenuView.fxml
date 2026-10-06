@@ -36,5 +36,6 @@
          </font>
       </Label>
       <Button onAction = "#open_add_menu_drink" layoutX="58.0" layoutY="332.0" mnemonicParsing="false" text="Add Drink" />
+      <Button onAction = "#open_add_menu_topping" layoutX="180.0" layoutY="332.0" mnemonicParsing="false" text="Add Topping" />
    </children>
 </AnchorPane>

@@ -2,6 +2,7 @@ package model;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import database.PGComms;
@@ -19,7 +20,7 @@ import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
 
 public class AddMenuDrink {
-    private static final int MAX_INGREDIENTS = 6;
+    private static final int MAX_INGREDIENTS = 8;
     private static final String SELECTED_STYLE =
         "-fx-background-color: #2e9e5b; -fx-text-fill: white; -fx-font-weight: bold;";
 
@@ -50,6 +51,15 @@ public class AddMenuDrink {
     private void initialize() {
         type_box.setItems(FXCollections.observableArrayList(
                 "milk tea", "fresh tea", "fruit tea", "no caff tea"));
+        if (existing != null) {
+            titleLabel.setText("Edit Drink");
+            submitButton.setText("Save");
+            name_field.setText(existing.name());
+            price_field.setText(existing.price().toPlainString());
+            type_box.setValue(existing.type());
+            hot_button.setSelected(existing.hot_available());
+            caff_button.setSelected(existing.is_non_caffeinated());
+        }
 
         ingredient_grid.setHgap(8);
         ingredient_grid.setVgap(8);
@@ -70,6 +80,26 @@ public class AddMenuDrink {
                 column = 0;
                 row++;
             }
+        }
+
+        if (existing != null) {
+            List<Integer> ingredient_ids =
+                PGComms.issue_query_type_rows_JoinMenuDrinksAndInvEdible(
+                    "SELECT id_join_menu_drinks_and_inv_edible, id_drink, id_edible "
+                    + "FROM join_menu_drinks_and_inv_edible "
+                    + "WHERE id_drink = " + existing.id_drink())
+                .stream()
+                .map(row_item -> row_item.id_edible())
+                .toList();
+
+            for (Node node : ingredient_grid.getChildren()) {
+                Button ingredient_button = (Button) node;
+                int ingredient_id = (Integer) ingredient_button.getUserData();
+                if (ingredient_ids.contains(ingredient_id)) {
+                    selected_ingredients.put(ingredient_button, ingredient_id);
+                }
+            }
+            refresh_ingredient_buttons();
         }
     }
 
@@ -113,13 +143,13 @@ public class AddMenuDrink {
             return;
         }
 
-        boolean saved = PGComms.add_drink_with_ingredients(
-                name,
-                price,
-                type,
-                hot_button.isSelected(),
-                caff_button.isSelected(),
-                selected_ingredients.values().stream().toList());
+        boolean saved = existing == null
+            ? PGComms.add_drink_with_ingredients(
+                name, price, type, hot_button.isSelected(),
+                caff_button.isSelected(), selected_ingredients.values().stream().toList())
+            : PGComms.update_drink_with_ingredients(
+                existing.id_drink(), name, price, type, hot_button.isSelected(),
+                caff_button.isSelected(), selected_ingredients.values().stream().toList());
         if (!saved) {
             show_error("The drink could not be saved.");
             return;

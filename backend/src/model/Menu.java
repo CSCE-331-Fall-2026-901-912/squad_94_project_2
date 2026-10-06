@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TableRow;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -50,6 +51,9 @@ public class Menu {
         MenuToppingsTable.setItems(FXCollections.observableArrayList(PGComms.issue_query_type_rows_MenuToppings(
             "SELECT id_topping, name, price "
             + "FROM menu_toppings ORDER BY id_topping")));
+
+        setup_drink_row_click();
+        setup_topping_row_click();
     }
 
     @FXML public void open_add_menu_drink(ActionEvent event){
@@ -77,6 +81,58 @@ public class Menu {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void setup_drink_row_click() {
+        MenuDrinksTable.setRowFactory(table -> {
+            TableRow<MenuDrinksRowDTO> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    show_menu_form(table.getScene().getWindow(), row.getItem());
+                }
+            });
+            return row;
+        });
+    }
+
+    @FXML
+    public void open_add_menu_topping(ActionEvent event) {
+        show_topping_form(((Node) event.getSource()).getScene().getWindow(), null);
+    }
+
+    private void show_topping_form(Window owner, MenuToppingsRowDTO existing) {
+        try {
+            java.net.URL url = getClass().getResource("/gui/manager/AddMenuTopping.fxml");
+            if (url == null) {
+                System.out.println("AddMenuTopping.fxml not found");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(url);
+            loader.setController(new AddMenuTopping(this::load_menu, existing));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle(existing == null ? "Add New Topping" : "Edit Topping");
+            stage.initOwner(owner);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setup_topping_row_click() {
+        MenuToppingsTable.setRowFactory(table -> {
+            TableRow<MenuToppingsRowDTO> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    show_topping_form(table.getScene().getWindow(), row.getItem());
+                }
+            });
+            return row;
+        });
     }
 
 }

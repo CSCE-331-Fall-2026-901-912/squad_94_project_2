@@ -627,4 +627,187 @@ public class PGComms {
 
         return saved;
     }
+
+    public static boolean update_drink_with_ingredients(
+            int drink_id, String name, BigDecimal price, String type,
+            boolean hot_available, boolean is_non_caffeinated,
+            List<Integer> edible_ids) {
+        if (!open_connection()) {
+            return false;
+        }
+
+        boolean saved = false;
+        try {
+            conn.setAutoCommit(false);
+
+            String drink_sql = "UPDATE menu_drinks SET name = ?, price = ?, type = ?, "
+                    + "hot_available = ?, is_non_caffeinated = ? WHERE id_drink = ?";
+            try (PreparedStatement drink_stmt = conn.prepareStatement(drink_sql)) {
+                drink_stmt.setString(1, name);
+                drink_stmt.setBigDecimal(2, price);
+                drink_stmt.setString(3, type);
+                drink_stmt.setBoolean(4, hot_available);
+                drink_stmt.setBoolean(5, is_non_caffeinated);
+                drink_stmt.setInt(6, drink_id);
+                if (drink_stmt.executeUpdate() != 1) {
+                    conn.rollback();
+                    return false;
+                }
+            }
+
+            try (PreparedStatement delete_stmt = conn.prepareStatement(
+                    "DELETE FROM join_menu_drinks_and_inv_edible WHERE id_drink = ?")) {
+                delete_stmt.setInt(1, drink_id);
+                delete_stmt.executeUpdate();
+            }
+
+            String ingredient_sql = "INSERT INTO join_menu_drinks_and_inv_edible "
+                    + "(id_join_menu_drinks_and_inv_edible, id_drink, id_edible) "
+                    + "VALUES ((SELECT COALESCE(MAX(id_join_menu_drinks_and_inv_edible), 0) + 1 "
+                    + "FROM join_menu_drinks_and_inv_edible), ?, ?)";
+            try (PreparedStatement ingredient_stmt = conn.prepareStatement(ingredient_sql)) {
+                for (int edible_id : edible_ids) {
+                    ingredient_stmt.setInt(1, drink_id);
+                    ingredient_stmt.setInt(2, edible_id);
+                    ingredient_stmt.addBatch();
+                }
+                ingredient_stmt.executeBatch();
+            }
+
+            conn.commit();
+            saved = true;
+        } catch (SQLException e) {
+            try {
+                conn.rollback();
+            } catch (SQLException rollback_error) {
+                System.out.println(rollback_error.getMessage());
+            }
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            close_connection();
+        }
+
+        return saved;
+    }
+
+    public static boolean add_topping_with_inventory(String name, BigDecimal price) {
+        if (!open_connection()) {
+            return false;
+        }
+
+        try {
+            conn.setAutoCommit(false);
+            int topping_id;
+            int edible_id;
+
+            try (PreparedStatement stmt = conn.prepareStatement(
+                    "INSERT INTO menu_toppings (id_topping, name, price) "
+                    + "VALUES ((SELECT COALESCE(MAX(id_topping), 0) + 1 FROM menu_toppings), ?, ?) "
+                    + "RETURNING id_topping")) {
+                stmt.setString(1, name);
+                stmt.setBigDecimal(2, price);
+                try (ResultSet result = stmt.executeQuery()) {
+                    if (!result.next()) {
+                        conn.rollback();
+                        return false;
+                    }
+                    topping_id = result.getInt("id_topping");
+                }
+            }
+
+            try (PreparedStatement stmt = conn.prepareStatement(
+                    "INSERT INTO inv_edible (id_edible, name, amount_servings) "
+                    + "VALUES ((SELECT COALESCE(MAX(id_edible), 0) + 1 FROM inv_edible), ?, 400) "
+                    + "RETURNING id_edible")) {
+                stmt.setString(1, name);
+                try (ResultSet result = stmt.executeQuery()) {
+                    if (!result.next()) {
+                        conn.rollback();
+                        return false;
+                    }
+                    edible_id = result.getInt("id_edible");
+                }
+            }
+
+            try (PreparedStatement stmt = conn.prepareStatement(
+                    "INSERT INTO join_menu_toppings_and_inv_edible "
+                    + "(id_join_menu_toppings_and_inv_edible, id_topping, id_edible) "
+                    + "VALUES ((SELECT COALESCE(MAX(id_join_menu_toppings_and_inv_edible), 0) + 1 "
+                    + "FROM join_menu_toppings_and_inv_edible), ?, ?)")) {
+                stmt.setInt(1, topping_id);
+                stmt.setInt(2, edible_id);
+                stmt.executeUpdate();
+            }
+
+            conn.commit();
+            return true;
+        } catch (SQLException e) {
+            rollback_connection();
+            System.out.println(e.getMessage());
+            return false;
+        } finally {
+            reset_connection();
+        }
+    }
+
+    public static boolean update_topping_with_inventory(
+            int topping_id, String name, BigDecimal price) {
+        if (!open_connection()) {
+            return false;
+        }
+
+        try {
+            conn.setAutoCommit(false);
+            try (PreparedStatement stmt = conn.prepareStatement(
+                    "UPDATE menu_toppings SET name = ?, price = ? WHERE id_topping = ?")) {
+                stmt.setString(1, name);
+                stmt.setBigDecimal(2, price);
+                stmt.setInt(3, topping_id);
+                if (stmt.executeUpdate() != 1) {
+                    conn.rollback();
+                    return false;
+                }
+            }
+
+            try (PreparedStatement stmt = conn.prepareStatement(
+                    "UPDATE inv_edible SET name = ? WHERE id_edible = "
+                    + "(SELECT id_edible FROM join_menu_toppings_and_inv_edible "
+                    + "WHERE id_topping = ?)")) {
+                stmt.setString(1, name);
+                stmt.setInt(2, topping_id);
+                stmt.executeUpdate();
+            }
+
+            conn.commit();
+            return true;
+        } catch (SQLException e) {
+            rollback_connection();
+            System.out.println(e.getMessage());
+            return false;
+        } finally {
+            reset_connection();
+        }
+    }
+
+    private static void rollback_connection() {
+        try {
+            conn.rollback();
+        } catch (SQLException rollback_error) {
+            System.out.println(rollback_error.getMessage());
+        }
+    }
+
+    private static void reset_connection() {
+        try {
+            conn.setAutoCommit(true);
+        } catch (SQLException reset_error) {
+            System.out.println(reset_error.getMessage());
+        }
+        close_connection();
+    }
 }
