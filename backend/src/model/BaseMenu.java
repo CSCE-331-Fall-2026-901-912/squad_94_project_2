@@ -83,7 +83,6 @@ public class BaseMenu {
         try {
             Stage stage_cancel = new Stage();
             FXMLLoader cancellation_pop_up = new FXMLLoader(getClass().getResource("/gui/cashier/Cancellation.fxml"));
-            CancellationPopUp cancellation_pop_up_model = new CancellationPopUp();
             cancellation_pop_up.setController(customer_controller);
 
             Parent root = cancellation_pop_up.load();
@@ -91,12 +90,15 @@ public class BaseMenu {
 
             stage_cancel.setScene(scene);
             stage_cancel.show();
+
+            CancellationPopUp cancellation_pop_up_model = new CancellationPopUp(stage_cancel);
+            customer_controller.initialize(cancellation_pop_up_model);
             return cancellation_pop_up_model;
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-        return new CancellationPopUp();
+        return new CancellationPopUp(null);
     }
     @FXML public TipPopUp finish_order(CustomerController customer_controller){
         try {
@@ -110,6 +112,7 @@ public class BaseMenu {
 
             stage_tip.setScene(scene);
             stage_tip.show();
+
             TipPopUp tip_pop_up_model = new TipPopUp(order_total.getValue(), stage_tip); 
             customer_controller.initialize(tip_pop_up_model);
             return tip_pop_up_model;

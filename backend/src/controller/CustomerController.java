@@ -56,14 +56,11 @@ public class CustomerController {
 
     // CANCELLATION POP UP BUTTONS
     @FXML public void confirm_cancel(){
+        base_menu.reset_order();
         cancel_pop_up.confirm_cancel();
-
-        // TODO: clear current_order
     }
     @FXML public void deny_cancel(){
         cancel_pop_up.deny_cancel();
-
-        // TODO: close popup
     }
 
     // ORDER MENU BUTTONS AND SLIDER
@@ -226,6 +223,9 @@ public class CustomerController {
         ((Node) event.getSource()).getScene().getWindow().hide();
     }
 
+    @FXML public void cancel_order(ActionEvent event){
+        ((Node) event.getSource()).getScene().getWindow().hide();
+    }
     // TIP POP UP BUTTONS
     @FXML private Label tip_total;
 
@@ -261,5 +261,8 @@ public class CustomerController {
     public void initialize(TipPopUp tip_pop_up){
         this.tip_pop_up = tip_pop_up;
         tip_total.textProperty().bind(tip_pop_up.get_tip_total());
+    }
+    public void initialize(CancellationPopUp cancel_pop_up){
+        this.cancel_pop_up = cancel_pop_up;
     }
 }
