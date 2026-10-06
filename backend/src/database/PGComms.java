@@ -57,39 +57,6 @@ public class PGComms {
         return true;
     }
 
-     /**
-     * THIS FUNCTION DOES NOT SANITIZE QUERIES!<br>
-     * Issues the query specified as a parameter to the database.
-     * Queries here are "updates." These queries *change* data within the database.
-     * A boolean is returned which indicates the success status of the query.<br>
-     * Update Queries include: INSERT, UPDATE, DELETE.
-     * @param query The "update" query (String) to be sent to the database.
-     * @return true if the update query was successfully processed. false if it was not.
-     */
-    public static boolean issue_query_type_update(String query) {
-        boolean query_success = false;
-        try {
-            open_connection();
-            PreparedStatement ps = conn.prepareStatement(query);
-            ps.executeUpdate();
-            query_success = true;
-            ps.close();
-        }
-        catch (SQLException e) {
-
-            // Return false if the query was not successfully issued.
-            System.out.println(e.getMessage());
-        }
-        finally {
-
-            // Always ensure the connection is closed.
-            close_connection();
-        }
-
-        // Return query success/failure status.
-        return query_success;
-    }
-
     // Private helper function to open the connection to the database.
     private static boolean open_connection() {
 
@@ -129,6 +96,73 @@ public class PGComms {
 
         // Return true if the connection was successfully closed.
         return true;
+    }
+
+     /**
+     * THIS FUNCTION DOES NOT SANITIZE QUERIES!<br>
+     * Issues the query specified as a parameter to the database.
+     * Queries here are "updates." These queries *change* data within the database.
+     * A boolean is returned which indicates the success status of the query.<br>
+     * Update Queries include: INSERT, UPDATE, DELETE.
+     * @param query The "update" query (String) to be sent to the database.
+     * @return true if the update query was successfully processed. false if it was not.
+     */
+    public static boolean issue_query_type_update(String query) {
+        boolean query_success = false;
+        try {
+            open_connection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.executeUpdate();
+            query_success = true;
+            ps.close();
+        }
+        catch (SQLException e) {
+
+            // Return false if the query was not successfully issued.
+            System.out.println(e.getMessage());
+        }
+        finally {
+
+            // Always ensure the connection is closed.
+            close_connection();
+        }
+
+        // Return query success/failure status.
+        return query_success;
+    }
+
+    /**
+     * THIS FUNCTION DOES NOT SANITIZE QUERIES!<br>
+     * Issues the query specified as a parameter to the database.
+     * Queries here are ones which return results. These queries *fetch* data within the database.
+     * This function assumes that the resulting query will see entire row(s) returned from the inv_edible table.
+     * @param query The query (String) to be sent to the database.
+     * @return An array list of InvEdibleRowDTOs, where each element corresponds to an entire row from the inv_edible.
+     */
+    public static ArrayList<InvEdibleRowDTO> issue_query_type_rows_InvEdible(String query) {
+        ArrayList<InvEdibleRowDTO> items = new ArrayList<>();
+        try {
+            open_connection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                items.add(new InvEdibleRowDTO(rs.getInt(1), rs.getString(2), rs.getInt(3)));
+            }
+            ps.close();
+        }
+        catch (SQLException e) {
+
+            // Return false if the query was not successfully issued.
+            System.out.println(e.getMessage());
+        }
+        finally {
+
+            // Always ensure the connection is closed.
+            close_connection();
+        }
+
+        // Return the constructed ArrayList.
+        return items;
     }
 
     // Return the names of all drinks in menu_drinks whose "type" column equals the given type,
