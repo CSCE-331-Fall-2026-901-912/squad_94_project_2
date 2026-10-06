@@ -75,7 +75,15 @@
                   </Label>
                </children>
             </VBox>
-            <VBox prefHeight="22.0" prefWidth="300.0" />
+            <HBox prefHeight="47.0" prefWidth="333.0">
+               <children>
+                  <Button fx:id="inedible_button1" mnemonicParsing="false" onAction="#filterInedible" prefHeight="25.0" prefWidth="74.0" text="Add Item">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
             <HBox prefHeight="53.0" prefWidth="333.0">
                <children>
                   <Button fx:id="edible_button" mnemonicParsing="false" onAction="#filterEdible" prefHeight="25.0" prefWidth="76.0" text="Edible" />
