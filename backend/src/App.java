@@ -1,3 +1,4 @@
+import dto.InvEdibleRowDTO;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -6,6 +7,7 @@ import javafx.stage.Stage;
 import model.BaseMenu;
 import controller.CustomerController;
 import database.PGComms;
+import java.util.ArrayList;
 // import controller.ManagerController;
 
 public class App extends Application {
@@ -45,6 +47,8 @@ public class App extends Application {
             return;
         }
 
+        ArrayList<InvEdibleRowDTO> items = PGComms.issue_query_type_rows_InvEdible("SELECT * FROM inv_edible");
+        System.out.println(items);
         // Launch the application fully (launch JavaFX components).
         launch(args);
     }
