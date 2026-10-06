@@ -81,7 +81,7 @@ public class CustomerController {
     @FXML private GridPane topping_grid;
     //allows for dynamic adding of toppings
     public void populate_topping_buttons(){
-        if (topping_grid == null) return;          // not the OrderMenu view
+        if (topping_grid == null) return;          
         topping_grid.getChildren().clear();
 
         List<String> toppings = PGComms.get_topping_names();
@@ -106,7 +106,7 @@ public class CustomerController {
     @FXML private Label sugar_label;
 
     public void setup_sugar_slider(){
-        if (sugar_slider == null || sugar_label == null) return;   // not the OrderMenu view
+        if (sugar_slider == null || sugar_label == null) return;   
         sugar_label.textProperty().bind(
             Bindings.createStringBinding(
                 () -> "Sugar: " + (int) Math.round(sugar_slider.getValue()) + "%",
@@ -117,7 +117,38 @@ public class CustomerController {
     public int get_sugar_level(){
         return (int) Math.round(sugar_slider.getValue());
     }
-    
+
+    @FXML private Label selected_drink_label;
+    @FXML private Button hot_button;
+
+    private List<ComboBox<String>> drink_boxes(){
+        return List.of(milk_tea_box, fresh_tea_box, fruit_tea_box, no_caff_box);
+    }
+
+    // Wire all four combo boxes to the same handler.
+    public void setup_drink_selection(){
+        if (milk_tea_box == null) return;           
+        for (ComboBox<String> box : drink_boxes()) {
+            box.setOnAction(e -> drink_picked(box));
+        }
+    }
+
+    private void drink_picked(ComboBox<String> source){
+        String name = source.getValue();
+        if (name == null) return;                 
+
+        // Only one drink can be chosen, so clear the other three boxes.
+        for (ComboBox<String> box : drink_boxes()) {
+            if (box != source) box.setValue(null);
+        }
+
+        selected_drink_label.setText("Selected: " + name);
+
+        boolean hot = PGComms.is_hot_available(name);
+        hot_button.setVisible(hot);
+        hot_button.setManaged(hot);
+    }
+        
     // TIP POP UP BUTTONS
     @FXML private Label tip_total;
 

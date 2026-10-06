@@ -104,7 +104,7 @@ public class PGComms {
         close_connection();
         return names;
     }
-    
+
     // Return the name of every topping in menu_toppings, ordered by id_topping.
     public static List<String> get_topping_names() {
         List<String> names = new ArrayList<>();
@@ -126,5 +126,30 @@ public class PGComms {
 
         close_connection();
         return names;
+    }
+
+    // Return true if the named drink has hot_available = true in menu_drinks.
+    public static boolean is_hot_available(String drink_name) {
+        boolean hot = false;
+
+        if (!open_connection()) {
+            return hot;
+        }
+
+        String sql = "SELECT hot_available FROM menu_drinks WHERE name = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, drink_name);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    hot = rs.getBoolean("hot_available");
+                }
+            }
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        close_connection();
+        return hot;
     }
 }

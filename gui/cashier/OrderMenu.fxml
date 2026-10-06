@@ -33,6 +33,7 @@
                   </ComboBox>
                   <ComboBox fx:id="no_caff_box" prefWidth="150.0" promptText="Non Caffeine Teas">
                   </ComboBox>
+                  <Label fx:id="selected_drink_label" text="No drink selected" wrapText="true" />
                </children>
             </VBox>
          </content>
@@ -75,10 +76,10 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button id="noIceButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="None" />
-                        <Button id="lightIceButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="Light" GridPane.columnIndex="1" />
-                        <Button id="regularIceButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="Regular" GridPane.rowIndex="1" />
-                        <Button id="hotIceButton" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="Hot" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Button id="no_ice_button" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="None" />
+                        <Button id="light_ice_button" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="Light" GridPane.columnIndex="1" />
+                        <Button id="regular_ice_button" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="Regular" GridPane.rowIndex="1" />
+                        <Button fx:id="hot_button" visible="false" managed="false" mnemonicParsing="false" prefHeight="180.0" prefWidth="160.0" text="Hot" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                </children>

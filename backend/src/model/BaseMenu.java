@@ -39,6 +39,7 @@ public class BaseMenu {
             customer_controller.populate_drink_boxes();
             customer_controller.populate_topping_buttons();  
             customer_controller.setup_sugar_slider();
+            customer_controller.setup_drink_selection();
             Scene scene = new Scene(root);
             
             stage_order.setScene(scene);
