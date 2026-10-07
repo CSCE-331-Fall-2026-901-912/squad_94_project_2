@@ -6,17 +6,8 @@ import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.math.BigDecimal;
-
+import dto.*;
 import org.postgresql.ds.PGSimpleDataSource;
-import dto.InvEdibleRowDTO;
-import dto.InvNonEdibleRowDTO;
-import dto.EmployeesRowDTO;
-import dto.MenuDrinksRowDTO;
-import dto.MenuToppingsRowDTO;
-import dto.JoinMenuDrinksAndInvEdibleRowDTO;
-import dto.JoinMenuToppingsAndInvEdibleRowDTO;
-import dto.OrdersRowDTO;
-import model.Employee;
 
 public class PGComms {
 
@@ -433,6 +424,21 @@ public class PGComms {
 
         close_connection();
         return names;
+    }
+
+    public static List<IDNameValDTO> get_out_of_stock() {
+        List<IDNameValDTO> output = new ArrayList<>();
+        List<InvNonEdibleRowDTO> inv_non_edible_OOS = issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible WHERE amount = 0 LIMIT 3");
+        List<InvEdibleRowDTO> inv_edible_OOS = issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE amount_servings = 0 LIMIT 3");
+        for (InvNonEdibleRowDTO item : inv_non_edible_OOS) {
+            output.add(new IDNameValDTO(item.id_nonedible(), item.name(), item.amount()));
+        }
+
+        for (InvEdibleRowDTO item : inv_edible_OOS) {
+            output.add(new IDNameValDTO(item.id_edible(), item.name(), item.amount_servings()));
+        }
+
+        return output;
     }
 
     // Return the name of every topping in menu_toppings, ordered by id_topping.

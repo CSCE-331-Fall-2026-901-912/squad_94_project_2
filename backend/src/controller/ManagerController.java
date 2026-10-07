@@ -255,6 +255,10 @@ public class ManagerController {
 
     }
 
+    public void get_OOS() {
+
+    }
+
     public void initialize(){
         TodaysSalesAmount.setText("$" + get_todays_sales());
         TotalSalesAmount.setText("$" + get_sales_total());
