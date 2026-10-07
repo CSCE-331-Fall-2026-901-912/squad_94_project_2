@@ -246,12 +246,18 @@ public class ManagerController {
     public String get_todays_sales() {
         return PGComms.get_sales_total_date(LocalDate.now().toString()).toString();
     }
+
+    public String get_sales_total() {
+        return PGComms.get_sales_total().toString();
+    }
+
     public void populate_processing_orders() {
 
     }
 
     public void initialize(){
         TodaysSalesAmount.setText("$" + get_todays_sales());
+        TotalSalesAmount.setText("$" + get_sales_total());
     }
 //    //ITEMDETAILSPOPUP
 //    @FXML
