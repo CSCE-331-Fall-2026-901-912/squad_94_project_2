@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 import database.PGComms;
+import dto.*;
 
 
 public class TipPopUp {
@@ -42,23 +43,40 @@ public class TipPopUp {
         tip_total.set("Total: " + tip_total_val);
     }
     public boolean tipdone(String current_order){
-        // TODO: update PSQL database, reset current_order data 
-        // insert_order_item(int order_id, boolean completed, double order_total, double tip, int id_drink, int id_topping1, int id_topping2, int ice_level, int sugar_level, boolean hot_chosen) {
+        // TODO: update PSQL database
         int num_orders = 0;
+        order_id = get_last_orderID() + 1;
         for (int i = 0; i < num_orders; i++){
-            PGComms.insert_order_item(order_id, ., tip_percent, id_drink, id_topping1, id_topping2, ice_level, sugar_level, hot_chosen);
+            process_order_string(order_id); 
+            // PGComms.insert_order_item(order_id, ., tip_percent, id_drink, id_topping1, id_topping2, ice_level, sugar_level, hot_chosen);
         }
-
         stage_tip.close();
         return true;
     }
 
-    private ArrayList<String> process_order_string(){
+    private ArrayList<String> process_order_string(int order_id){
         String order_string = current_order_string;
 
+        String drink_name = "";
+        String id_topping1_name = "";
+        String id_topping2_name = "";
+        String ice_level_name = "";
+        String sugar_level_name = "";
 
 
-        return order_string;
+        // TODO: match ice_level
+
+        // TODO: match sugar_level
+
+        id_drink = PGComms.issue_query_type_rows_MenuDrinks("SELECT "+drink_name+" FROM menu_drinks;").getFirst().id_drink();
+        id_topping1 = PGComms.issue_query_type_rows_InvEdible("SELECT "+id_topping1_name+" FROM menu_drinks;").getFirst().id_edible();
+        id_topping2 = PGComms.issue_query_type_rows_InvEdible("SELECT "+id_topping2_name+" FROM menu_drinks;").getFirst().id_edible();
+        ice_level = 2;
+        sugar_level = 4;
+        
+        PGComms.insert_order_item(order_id, Double.parseDouble(order_total_val), tip_percent, id_drink, id_topping1, id_topping2, ice_level, sugar_level, hot_chosen);
+        
+        return new ArrayList<String>(); //order_string;
     }
 
     // CONSTRUCTOR
@@ -69,6 +87,25 @@ public class TipPopUp {
 
         current_order_string = current_order;
         
+        tip_percent = 0.0;
+        order_id = 0;
+        id_drink = 0;
+        id_topping1 = 0;
+        id_topping2 = 0;
+        ice_level = 2;
+        sugar_level = 4;
+        hot_chosen = false;
+    }
+
+    private int get_last_orderID(){
+        ArrayList<OrdersRowDTO> order_rows;
+        order_rows = PGComms.issue_query_type_rows_Orders("SELECT * FROM orders ORDER BY id_order DESC LIMIT 1;");
+        
+        int last_num = order_rows.getFirst().id_order();
+        return last_num;
+    }
+
+    private void reset_order_data(){
         tip_percent = 0.0;
         order_id = 0;
         id_drink = 0;
