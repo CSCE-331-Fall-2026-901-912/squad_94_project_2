@@ -40,9 +40,8 @@ public class Employee {
         
         employee_table.setItems(FXCollections.observableArrayList(
         PGComms.issue_query_type_rows_Employees(
-            "SELECT id_employee, name, position, phone_number, current_pay_rate, hours_worked_for_week "
-        + "FROM employees ORDER BY id_employee")));
-    }
+            "SELECT id_employee, name, position, phone_number, current_pay_rate, hours_worked_for_week FROM employees ORDER BY id_employee")));
+        }
     
     @FXML public void open_add_employee(ActionEvent event){
         show_employee_form(((Node) event.getSource()).getScene().getWindow(), null);
