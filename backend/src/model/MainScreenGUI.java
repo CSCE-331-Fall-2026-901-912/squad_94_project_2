@@ -10,19 +10,18 @@ import controller.ManagerController;
 public class MainScreenGUI {
     @FXML public OrderHistory open_order_history(ManagerController manager_controller){
         try {
-            Stage stage_orderhistory = new Stage();
+            Stage stage_oh = new Stage();
             FXMLLoader oh_popup = new FXMLLoader(getClass().getResource("/gui/manager/OrderHistory.fxml"));
-            oh_popup.setController(manager_controller);
+
+            OrderHistory oh_model = new OrderHistory(stage_oh);
+            oh_popup.setController(oh_model);
 
             Parent root = oh_popup.load();
-            Scene scene = new Scene(root);
+            stage_oh.setScene(new Scene(root));
+            stage_oh.show();
 
-            stage_orderhistory.setScene(scene);
-            stage_orderhistory.show();
-
-            OrderHistory oh_popup_model = new OrderHistory(stage_orderhistory);
-            manager_controller.initialize(oh_popup_model);
-            return oh_popup_model;
+            oh_model.load_orders();
+            return oh_model;
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -58,13 +57,13 @@ public class MainScreenGUI {
             FXMLLoader proc_orders_popup = new FXMLLoader(getClass().getResource("/gui/manager/ProcessingOrders.fxml"));
 
             ProcessingOrders proc_popup_model = new ProcessingOrders(stage_proc_orders);
-            proc_orders_popup.setController(proc_popup_model);   // injection target
+            proc_orders_popup.setController(proc_popup_model);
 
-            Parent root = proc_orders_popup.load();              // fields injected here
+            Parent root = proc_orders_popup.load();
             stage_proc_orders.setScene(new Scene(root));
             stage_proc_orders.show();
 
-            proc_popup_model.load_orders();                      // safe now
+            proc_popup_model.load_orders();
             return proc_popup_model;
         }
         catch (Exception e) {
