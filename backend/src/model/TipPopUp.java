@@ -48,20 +48,29 @@ public class TipPopUp {
         // System.err.println("Marker -1");
         String[] order_lines = current_order_string.split("\n");
         num_orders = order_lines.length;
+        if(order_lines[0].equals("Item1: ")){
+            num_orders = 0;
+            stage_tip.close();
+            reset_order_data();
+            System.err.println("No order to finish.");
+            return false;
+        }
+        // System.err.println(":"+order_lines[0]+":");
+        
 
-
-        // System.err.println("Marker 0");
+        System.err.println("Marker 0");
         for (int i = 0; i < num_orders; i++){
             order_id = get_last_orderID() + 1;
             String trimmed = order_lines[i].substring(order_lines[i].indexOf(":")+1, order_lines[i].indexOf("%")+2).trim();
-            System.out.println("Marker 1: ");
+            // System.out.println("Marker 1: ");
             double price = Double.parseDouble(order_lines[i].substring(order_lines[i].indexOf("%")+3).trim()) * (1+tip_percent);
-            System.out.println("Marker 2: ");
+            // System.out.println("Marker 2: ");
             process_order_string(order_id, trimmed, price); 
             // System.out.println("Processing current order: " + current_order_string);
-            System.out.println("Processing order line: " + trimmed);
+            // System.out.println("Processing order line: " + trimmed);
             // PGComms.insert_order_item(order_id, ., tip_percent, id_drink, id_topping1, id_topping2, ice_level, sugar_level, hot_chosen);
         }
+        System.err.println("Marker 02");
         stage_tip.close();
         reset_order_data();
         return true;
@@ -102,13 +111,26 @@ public class TipPopUp {
         System.err.println("Marker 4");
         
         if(!id_topping1_name.equals("No topping")){
-            // System.err.println("top1");   
+            System.err.println("top1");   
             id_topping1 = PGComms.issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE name LIKE '"+id_topping1_name+"';").getFirst().id_edible();
+            System.err.println("Marker 4.5");
+            // int topping_amount = PGComms.issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE name LIKE '"+id_topping1_name+"';").getFirst().amount_servings();
+            System.err.println("Marker 4.6");
+            PGComms.modify_topping_quantity_in_edible_inventory(id_topping1, -1);
+            System.err.println("Marker 4.7");
         }
+        System.err.println("Marker 4.8");
         if(!id_topping2_name.equals("No topping")){
             // System.err.println("top2");   
             id_topping2 = PGComms.issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE name LIKE '"+id_topping2_name+"';").getFirst().id_edible();
+            // int topping_amount = PGComms.issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE name LIKE '"+id_topping2_name+"';").getFirst().amount_servings();
+            PGComms.modify_topping_quantity_in_edible_inventory(id_topping2, -1);
         }
+
+        PGComms.modify_topping_quantity_in_nonedible_inventory(1,-1);
+        PGComms.modify_topping_quantity_in_nonedible_inventory(2,-1);
+        PGComms.modify_topping_quantity_in_nonedible_inventory(3,-1);
+        PGComms.modify_topping_quantity_in_nonedible_inventory(4,-1);
         
         System.err.println("Marker 5");
         PGComms.insert_order_item(order_id, price, tip_percent, id_drink, id_topping1, id_topping2, ice_level, sugar_level, hot_chosen);
