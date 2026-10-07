@@ -16,11 +16,11 @@
          </font>
       </Label>
       <TextField fx:id="searchOH" layoutX="27.0" layoutY="95.0" prefHeight="26.0" prefWidth="303.0" text="Search" />
-      <TableView fx:id="tableOH" layoutX="27.0" layoutY="139.0" prefHeight="236.0" prefWidth="546.0">
+      <TableView fx:id="order_table" layoutX="27.0" layoutY="139.0" prefHeight="236.0" prefWidth="546.0">
          <columns>
             <TableColumn fx:id="order_id" prefWidth="75.0" text="ID" />
             <TableColumn fx:id="order_name" prefWidth="364.0000228881836" text="Order" />
-            <TableColumn fx:id="order_price" minWidth="0.0" prefWidth="106.39999389648438" text="Total" />
+            <TableColumn fx:id="order_total" minWidth="0.0" prefWidth="106.39999389648438" text="Total" />
          </columns>
       </TableView>
       <ComboBox fx:id="sortByOH" layoutX="350.0" layoutY="95.0" prefHeight="26.0" prefWidth="106.0" promptText="Sort By" />

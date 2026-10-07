@@ -156,7 +156,7 @@
       </AnchorPane>
       <ScrollPane layoutX="252.0" layoutY="259.0" prefHeight="172.0" prefWidth="314.0">
          <content>
-            <AnchorPane fx:id="ProcOrderBox1" minHeight="0.0" minWidth="0.0" onMouseClicked="#ProcOrdersOpen" prefHeight="150.0" prefWidth="316.0">
+            <AnchorPane fx:id="OHBox" minHeight="0.0" minWidth="0.0" onMouseClicked="#OHOpen" prefHeight="150.0" prefWidth="316.0">
                <children>
                   <Label layoutX="102.0" layoutY="14.0" prefHeight="33.0" prefWidth="112.0" text="Order History">
                      <font>

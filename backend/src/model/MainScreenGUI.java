@@ -13,15 +13,15 @@ public class MainScreenGUI {
             Stage stage_oh = new Stage();
             FXMLLoader oh_popup = new FXMLLoader(getClass().getResource("/gui/manager/OrderHistory.fxml"));
 
-            OrderHistory oh_model = new OrderHistory(stage_oh);
-            oh_popup.setController(oh_model);
+            OrderHistory oh_popup_model = new OrderHistory(stage_oh);
+            oh_popup.setController(oh_popup_model);
 
             Parent root = oh_popup.load();
             stage_oh.setScene(new Scene(root));
             stage_oh.show();
 
-            oh_model.load_orders();
-            return oh_model;
+            oh_popup_model.load_orders();
+            return oh_popup_model;
         }
         catch (Exception e) {
             e.printStackTrace();
