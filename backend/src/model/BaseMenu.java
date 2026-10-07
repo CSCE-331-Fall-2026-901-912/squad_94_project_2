@@ -128,7 +128,6 @@ public class BaseMenu {
             Stage manager_stage = new Stage();
             FXMLLoader manager_view = new FXMLLoader(getClass().getResource("/gui/manager/MainScreenGUI.fxml"));
             MainScreenGUI manager_view_model = new MainScreenGUI();
-            manager_view.setController(manager_controller);
             
             Parent root = manager_view.load();
             Scene scene = new Scene(root);

@@ -16,6 +16,7 @@ import dto.MenuToppingsRowDTO;
 import dto.JoinMenuDrinksAndInvEdibleRowDTO;
 import dto.JoinMenuToppingsAndInvEdibleRowDTO;
 import dto.OrdersRowDTO;
+import model.Employee;
 
 public class PGComms {
 
@@ -111,11 +112,13 @@ public class PGComms {
     public static boolean issue_query_type_update(String query) {
         boolean query_success = false;
         try {
-            open_connection();
-            PreparedStatement ps = conn.prepareStatement(query);
-            ps.executeUpdate();
-            query_success = true;
-            ps.close();
+            if (!open_connection()) {
+                return false;
+            }
+            try (PreparedStatement ps = conn.prepareStatement(query)) {
+                ps.executeUpdate();
+                query_success = true;
+            }
         }
         catch (SQLException e) {
 
@@ -404,6 +407,9 @@ public class PGComms {
         return items;
     }
 
+    // A lot of these SQL queries were created before the generic query functions were implemented, so they are not using the generic functions
+    // They will eventually be refactored to use the generic functions at a later date
+    
     // Return the names of all drinks in menu_drinks whose "type" column equals the given type,
     // ordered by id_drink. Returns an empty list if the database can't be reached or the query fails.
     public static List<String> get_drink_names_by_type(String type) {
@@ -543,5 +549,141 @@ public class PGComms {
         }
 
         close_connection();
+    }
+
+    
+    private static String sql_value(String value) {
+        return value == null ? "NULL" : "'" + value.replace("'", "''") + "'";
+    }
+
+    public static boolean add_employee(String name, String position, String phone,
+                                   BigDecimal pay_rate, int hours) {
+        String sql = "INSERT INTO employees "
+                + "(id_employee, name, position, phone_number, current_pay_rate, hours_worked_for_week) "
+                + "VALUES ((SELECT COALESCE(MAX(id_employee), 0) + 1 FROM employees), "
+                + sql_value(name) + ", " + sql_value(position) + ", " + sql_value(phone) + ", "
+                + pay_rate.toPlainString() + ", " + hours + ")";
+        return issue_query_type_update(sql);
+    }
+
+    public static boolean update_employee(int id, String name, String position, String phone,
+                                      BigDecimal pay, int hours) {
+        String sql = "UPDATE employees SET name = " + sql_value(name)
+                + ", position = " + sql_value(position)
+                + ", phone_number = " + sql_value(phone)
+                + ", current_pay_rate = " + pay.toPlainString()
+                + ", hours_worked_for_week = " + hours
+                + " WHERE id_employee = " + id;
+        return issue_query_type_update(sql);
+    }
+
+    public static boolean add_drink_with_ingredients(
+            String name, BigDecimal price, String type,
+            boolean hot_available, boolean is_non_caffeinated,
+            List<Integer> edible_ids) {
+        String drink_sql = "INSERT INTO menu_drinks "
+                + "(id_drink, name, price, type, hot_available, is_non_caffeinated) "
+                + "VALUES ((SELECT COALESCE(MAX(id_drink), 0) + 1 FROM menu_drinks), "
+                + sql_value(name) + ", " + price.toPlainString() + ", " + sql_value(type) + ", "
+                + hot_available + ", " + is_non_caffeinated + ")";
+        if (!issue_query_type_update(drink_sql)) {
+            return false;
+        }
+
+        List<MenuDrinksRowDTO> drinks = issue_query_type_rows_MenuDrinks(
+                "SELECT * FROM menu_drinks WHERE name = " + sql_value(name)
+                        + " ORDER BY id_drink DESC LIMIT 1");
+        if (drinks.isEmpty()) {
+            return false;
+        }
+        int drink_id = drinks.get(0).id_drink();
+        for (int edible_id : edible_ids) {
+            String ingredient_sql = "INSERT INTO join_menu_drinks_and_inv_edible "
+                    + "(id_join_menu_drinks_and_inv_edible, id_drink, id_edible) "
+                    + "VALUES ((SELECT COALESCE(MAX(id_join_menu_drinks_and_inv_edible), 0) + 1 "
+                    + "FROM join_menu_drinks_and_inv_edible), " + drink_id + ", " + edible_id + ")";
+            if (!issue_query_type_update(ingredient_sql)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean update_drink_with_ingredients(
+            int drink_id, String name, BigDecimal price, String type,
+            boolean hot_available, boolean is_non_caffeinated,
+            List<Integer> edible_ids) {
+        String drink_sql = "UPDATE menu_drinks SET name = " + sql_value(name)
+                + ", price = " + price.toPlainString() + ", type = " + sql_value(type)
+                + ", hot_available = " + hot_available + ", is_non_caffeinated = "
+                + is_non_caffeinated + " WHERE id_drink = " + drink_id;
+        if (!issue_query_type_update(drink_sql)
+                || !issue_query_type_update(
+                        "DELETE FROM join_menu_drinks_and_inv_edible WHERE id_drink = " + drink_id)) {
+            return false;
+        }
+
+        for (int edible_id : edible_ids) {
+            String ingredient_sql = "INSERT INTO join_menu_drinks_and_inv_edible "
+                    + "(id_join_menu_drinks_and_inv_edible, id_drink, id_edible) "
+                    + "VALUES ((SELECT COALESCE(MAX(id_join_menu_drinks_and_inv_edible), 0) + 1 "
+                    + "FROM join_menu_drinks_and_inv_edible), " + drink_id + ", " + edible_id + ")";
+            if (!issue_query_type_update(ingredient_sql)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean add_topping_with_inventory(String name, BigDecimal price) {
+        if (!issue_query_type_update(
+                "INSERT INTO menu_toppings (id_topping, name, price) "
+                + "VALUES ((SELECT COALESCE(MAX(id_topping), 0) + 1 FROM menu_toppings), "
+                + sql_value(name) + ", " + price.toPlainString() + ")")) {
+            return false;
+        }
+
+        List<MenuToppingsRowDTO> toppings = issue_query_type_rows_MenuToppings(
+                "SELECT * FROM menu_toppings WHERE name = " + sql_value(name)
+                        + " ORDER BY id_topping DESC LIMIT 1");
+        if (toppings.isEmpty()) {
+            return false;
+        }
+        int topping_id = toppings.get(0).id_topping();
+
+        if (!issue_query_type_update(
+                "INSERT INTO inv_edible (id_edible, name, amount_servings) "
+                + "VALUES ((SELECT COALESCE(MAX(id_edible), 0) + 1 FROM inv_edible), "
+                + sql_value(name) + ", 400)")) {
+            return false;
+        }
+        List<InvEdibleRowDTO> ingredients = issue_query_type_rows_InvEdible(
+                "SELECT * FROM inv_edible WHERE name = " + sql_value(name)
+                        + " ORDER BY id_edible DESC LIMIT 1");
+        if (ingredients.isEmpty()) {
+            return false;
+        }
+        int edible_id = ingredients.get(0).id_edible();
+
+        return issue_query_type_update(
+                "INSERT INTO join_menu_toppings_and_inv_edible "
+                + "(id_join_menu_toppings_and_inv_edible, id_topping, id_edible) "
+                + "VALUES ((SELECT COALESCE(MAX(id_join_menu_toppings_and_inv_edible), 0) + 1 "
+                + "FROM join_menu_toppings_and_inv_edible), " + topping_id + ", " + edible_id + ")");
+    }
+
+    public static boolean update_topping_with_inventory(
+            int topping_id, String name, BigDecimal price) {
+        if (!issue_query_type_update(
+                "UPDATE menu_toppings SET name = " + sql_value(name)
+                + ", price = " + price.toPlainString()
+                + " WHERE id_topping = " + topping_id)) {
+            return false;
+        }
+
+        return issue_query_type_update(
+                "UPDATE inv_edible SET name = " + sql_value(name)
+                + " WHERE id_edible = (SELECT id_edible "
+                + "FROM join_menu_toppings_and_inv_edible WHERE id_topping = " + topping_id + ")");
     }
 }
