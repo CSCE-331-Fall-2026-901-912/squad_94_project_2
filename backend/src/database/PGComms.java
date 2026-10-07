@@ -507,6 +507,57 @@ public class PGComms {
         return price;
     }
 
+    public static BigDecimal get_sales_total() {
+        BigDecimal price = BigDecimal.ZERO;
+
+        String sql = "SELECT SUM(total_spent) AS sum_total FROM ( SELECT total_spent FROM orders WHERE completed = TRUE) AS total_sales";
+
+        if (!open_connection()) {
+            return price;
+        }
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    BigDecimal p = rs.getBigDecimal("sum_total");
+                    if (p != null) price = p;
+                }
+            }
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        close_connection();
+        return price;
+    }
+
+    public static BigDecimal get_sales_total_date(String date) {
+        BigDecimal price = BigDecimal.ZERO;
+
+        String sql = "SELECT SUM(total_spent) AS sum_total FROM ( SELECT total_spent FROM orders WHERE completed = TRUE AND date(time_completed_at) = ?) AS total_sales";
+
+        if (!open_connection()) {
+            return price;
+        }
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, date);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    BigDecimal p = rs.getBigDecimal("sum_total");
+                    if (p != null) price = p;
+                }
+            }
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        close_connection();
+        return price;
+    }
+
     public static BigDecimal get_drink_price(String name) {
         return get_price("SELECT price FROM menu_drinks WHERE name = ?", name);
     }

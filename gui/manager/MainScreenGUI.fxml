@@ -158,7 +158,7 @@
             <Button layoutX="14.0" layoutY="220.0" mnemonicParsing="false" onAction="#open_menu_view" prefHeight="30.0" prefWidth="167.0" text="Menus" />
          </children>
       </AnchorPane>
-      <Button fx:id="sales_analytics_button" layoutX="312.0" layoutY="446.0" mnemonicParsing="false" onAction="#proceed_sales_analytics_menu" text="Sales Analytics">
+      <Button fx:id="sales_analytics_button" layoutX="312.0" layoutY="446.0" mnemonicParsing="false" onMouseClicked="#SalesEntered" text="Sales Analytics">
          <font>
             <Font size="25.0" />
          </font>

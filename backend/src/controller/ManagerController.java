@@ -45,7 +45,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
 import javafx.stage.Stage;
-
+import java.time.*;
 
 
 
@@ -76,6 +76,91 @@ public class ManagerController {
 
     @FXML
     private TextArea running_low_text_area;
+
+    // MAIN SCREEN
+    @FXML
+    private AnchorPane InventoryBox;
+
+    @FXML
+    private Label InventoryLabel;
+
+    @FXML
+    private Label ManagerLabel;
+
+    @FXML
+    private TableColumn<?, ?> OOSAmount;
+
+    @FXML
+    private Label OOSLabel;
+
+    @FXML
+    private TableColumn<?, ?> OOSName;
+
+    @FXML
+    private TableView<?> OOSTable;
+
+    @FXML
+    private AnchorPane ProcOrderBox;
+
+    @FXML
+    private TableColumn<?, ?> ProcOrderID;
+
+    @FXML
+    private TableView<?> ProcOrderTable;
+
+    @FXML
+    private TableColumn<?, ?> ProcOrderTotal;
+
+    @FXML
+    private TableColumn<?, ?> ProcOrders;
+
+    @FXML
+    private TableColumn<?, ?> RLAmount;
+
+    @FXML
+    private TableColumn<?, ?> RLName;
+
+    @FXML
+    private TableView<?> RLTable;
+
+    @FXML
+    private AnchorPane SalesBox;
+
+    @FXML
+    private Label SalesLabel;
+
+    @FXML
+    private AnchorPane TodayOHBox;
+
+    @FXML
+    private TableColumn<?, ?> TodayOHID;
+
+    @FXML
+    private TableColumn<?, ?> TodayOHOrder;
+
+    @FXML
+    private TableView<?> TodayOHTable;
+
+    @FXML
+    private TableColumn<?, ?> TodayOHTotal;
+
+    @FXML
+    private SplitPane TodaysSales;
+
+    @FXML
+    private Label TodaysSalesAmount;
+
+    @FXML
+    private Label TodaysSalesLabel;
+
+    @FXML
+    private SplitPane TotalSales;
+
+    @FXML
+    private Label TotalSalesAmount;
+
+    @FXML
+    private Label TotalSalesLabel;
 
     @FXML
     void filter_edible() {
@@ -132,6 +217,7 @@ public class ManagerController {
             e.printStackTrace();
         }
     }
+
     @FXML 
     public void open_menu_view(ActionEvent event){
         try {
@@ -157,8 +243,16 @@ public class ManagerController {
         }
     }
 
-    
-//  
+    public String get_todays_sales() {
+        return PGComms.get_sales_total_date(LocalDate.now().toString()).toString();
+    }
+    public void populate_processing_orders() {
+
+    }
+
+    public void initialize(){
+        TodaysSalesAmount.setText("$" + get_todays_sales());
+    }
 //    //ITEMDETAILSPOPUP
 //    @FXML
 //    private TextField inputNumberTextField;
@@ -207,91 +301,8 @@ public class ManagerController {
 //
 //
 //
-//    // MAIN SCREEN
-//    @FXML
-//    private AnchorPane InventoryBox;
-//
-//    @FXML
-//    private Label InventoryLabel;
-//
-//    @FXML
-//    private Label ManagerLabel;
-//
-//    @FXML
-//    private TableColumn<?, ?> OOSAmount;
-//
-//    @FXML
-//    private Label OOSLabel;
-//
-//    @FXML
-//    private TableColumn<?, ?> OOSName;
-//
-//    @FXML
-//    private TableView<?> OOSTable;
-//
-//    @FXML
-//    private AnchorPane ProcOrderBox;
-//
-//    @FXML
-//    private TableColumn<?, ?> ProcOrderID;
-//
-//    @FXML
-//    private TableView<?> ProcOrderTable;
-//
-//    @FXML
-//    private TableColumn<?, ?> ProcOrderTotal;
-//
-//    @FXML
-//    private TableColumn<?, ?> ProcOrders;
-//
-//    @FXML
-//    private TableColumn<?, ?> RLAmount;
-//
-//    @FXML
-//    private TableColumn<?, ?> RLName;
-//
-//    @FXML
-//    private TableView<?> RLTable;
-//
-//    @FXML
-//    private AnchorPane SalesBox;
-//
-//    @FXML
-//    private Label SalesLabel;
-//
-//    @FXML
-//    private AnchorPane TodayOHBox;
-//
-//    @FXML
-//    private TableColumn<?, ?> TodayOHID;
-//
-//    @FXML
-//    private TableColumn<?, ?> TodayOHOrder;
-//
-//    @FXML
-//    private TableView<?> TodayOHTable;
-//
-//    @FXML
-//    private TableColumn<?, ?> TodayOHTotal;
-//
-//    @FXML
-//    private SplitPane TodaysSales;
-//
-//    @FXML
-//    private Label TodaysSalesAmount;
-//
-//    @FXML
-//    private Label TodaysSalesLabel;
-//
-//    @FXML
-//    private SplitPane TotalSales;
-//
-//    @FXML
-//    private Label TotalSalesAmount;
-//
-//    @FXML
-//    private Label TotalSalesLabel;
-//
+
+
 //    // ORDER HISTORY
 //    @FXML
 //    private Button OHExit;

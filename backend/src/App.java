@@ -47,8 +47,6 @@ public class App extends Application {
             return;
         }
 
-        ArrayList<MenuDrinksRowDTO> items = PGComms.issue_query_type_rows_MenuDrinks("SELECT * FROM menu_drinks");
-        System.out.println(items);
         // Launch the application fully (launch JavaFX components).
         launch(args);
     }

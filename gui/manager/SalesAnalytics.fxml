@@ -22,7 +22,7 @@
       </Text>
       <ScrollPane fitToHeight="true" fitToWidth="true" layoutX="120.0" layoutY="90.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="90.0">
          <content>
-            <TableView>
+            <TableView fx:id="sales_table">
               <columns>
                 <TableColumn prefWidth="347.0" text="Order" />
                 <TableColumn minWidth="0.0" prefWidth="107.0" text="Total" />
@@ -43,7 +43,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <ComboBox prefWidth="150.0" promptText="Sort By" />
+            <ComboBox prefWidth="150.0" promptText="Entries Displayed" />
             <ComboBox prefWidth="150.0" promptText="Time Period" GridPane.columnIndex="1" />
             <TextField alignment="TOP_LEFT" promptText="Search" GridPane.columnIndex="2" />
          </children>
@@ -57,7 +57,7 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="38.0" prefWidth="102.0">
                <children>
-                  <Text layoutX="38.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\$$$" textAlignment="CENTER">
+                  <Text fx:id="todays_sales_text" layoutX="38.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\$$$" textAlignment="CENTER">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -75,7 +75,7 @@
             </AnchorPane>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="38.0" prefWidth="102.0">
                <children>
-                  <Text layoutX="41.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\$$$" textAlignment="CENTER" />
+                  <Text fx:id="total_sales_text" layoutX="41.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\$$$" textAlignment="CENTER" />
                </children>
             </AnchorPane>
          </items>
