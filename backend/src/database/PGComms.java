@@ -520,7 +520,7 @@ public class PGComms {
             return;
         }
         // int:1, boolean, timestamptz, timestamptz, numeric, int:employee_id, numeric, int:id_drink, int:id_topping1, int:id_topping2, int:ice_level (0,1,2), int:sugar_level (0,1,2,3,4), boolean:hot_chosen
-        String sql = "INSERT INTO order_test (id_order, completed, time_created_at, time_completed_at, total_spent, id_employee, tip, id_drink, id_topping1, id_topping2, ice_level, sugar_level, hot_chosen) VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?)";
+        String sql = "INSERT INTO orders (id_order, completed, time_created_at, time_completed_at, total_spent, id_employee, tip, id_drink, id_topping1, id_topping2, ice_level, sugar_level, hot_chosen) VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             BigDecimal price;
             BigDecimal tip_amount;
@@ -529,8 +529,8 @@ public class PGComms {
 
             stmt.setInt(1, order_id);
             stmt.setBoolean(2, false);
-            stmt.setTimestamp(3, null); //created time
-            stmt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now())); // time completed
+            stmt.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now())); //created time
+            stmt.setTimestamp(4, null); // time completed
             stmt.setBigDecimal(5, price);
             // TODO: GET CURRENT EMPLOYEE ID
             stmt.setInt(6, 0);
@@ -551,7 +551,7 @@ public class PGComms {
         close_connection();
     }
 
-    
+
     private static String sql_value(String value) {
         return value == null ? "NULL" : "'" + value.replace("'", "''") + "'";
     }
