@@ -173,7 +173,7 @@ public class PGComms {
      * @param query The query (String) to be sent to the database.
      * @return An array list of InvNonEdibleRowDTOs, where each element corresponds to an entire row from inv_nonedible.
      */
-    public static ArrayList<InvNonEdibleRowDTO> issue_query_type_rows_NonInvEdible(String query) {
+    public static ArrayList<InvNonEdibleRowDTO> issue_query_type_rows_InvNonEdible(String query) {
         ArrayList<InvNonEdibleRowDTO> items = new ArrayList<>();
         try {
             open_connection();
@@ -248,7 +248,7 @@ public class PGComms {
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                items.add(new MenuDrinksRowDTO(rs.getInt(1), rs.getString(2), rs.getBigDecimal(3), rs.getBoolean(4), rs.getBoolean(5)));
+                items.add(new MenuDrinksRowDTO(rs.getInt(1), rs.getString(2), rs.getBigDecimal(3), rs.getString(4), rs.getBoolean(5), rs.getBoolean(6)));
             }
             ps.close();
         }

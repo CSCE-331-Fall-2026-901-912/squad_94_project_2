@@ -1,4 +1,4 @@
-import dto.InvEdibleRowDTO;
+import dto.MenuDrinksRowDTO;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -47,7 +47,7 @@ public class App extends Application {
             return;
         }
 
-        ArrayList<InvEdibleRowDTO> items = PGComms.issue_query_type_rows_InvEdible("SELECT * FROM inv_edible");
+        ArrayList<MenuDrinksRowDTO> items = PGComms.issue_query_type_rows_MenuDrinks("SELECT * FROM menu_drinks");
         System.out.println(items);
         // Launch the application fully (launch JavaFX components).
         launch(args);

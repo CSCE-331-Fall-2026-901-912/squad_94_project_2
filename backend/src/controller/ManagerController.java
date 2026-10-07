@@ -15,6 +15,7 @@ import dto.MenuToppingsRowDTO;
 import dto.JoinMenuDrinksAndInvEdibleRowDTO;
 import dto.JoinMenuToppingsAndInvEdibleRowDTO;
 import dto.OrdersRowDTO;
+import javafx.scene.input.MouseEvent;
 
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableView;
@@ -109,6 +110,20 @@ public class ManagerController {
     }
 
 //
+    @FXML public void ProcOrdersOpen(MouseEvent event){
+        // TODO: open the processing orders view
+    }
+    @FXML public void OHOpen(MouseEvent event){
+        // TODO: open today's order history
+    }
+    @FXML public void InventoryOpen(MouseEvent event){
+        // TODO: open inventory
+    }
+    @FXML public void SalesEntered(MouseEvent event){
+        // TODO: open sales
+    }
+    
+//  
 //    //ITEMDETAILSPOPUP
 //    @FXML
 //    private TextField inputNumberTextField;
@@ -241,26 +256,6 @@ public class ManagerController {
 //
 //    @FXML
 //    private Label TotalSalesLabel;
-//
-//    @FXML
-//    void InventoryOpen(MouseEvent event) {
-//
-//    }
-//
-//    @FXML
-//    void OHOpen(MouseEvent event) {
-//
-//    }
-//
-//    @FXML
-//    void ProcOrdersOpen(MouseEvent event) {
-//
-//    }
-//
-//    @FXML
-//    void SalesEntered(MouseEvent event) {
-//
-//    }
 //
 //    // ORDER HISTORY
 //    @FXML

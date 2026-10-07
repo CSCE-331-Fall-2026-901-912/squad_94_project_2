@@ -77,7 +77,7 @@
             </VBox>
             <HBox prefHeight="47.0" prefWidth="333.0">
                <children>
-                  <Button fx:id="inedible_button1" mnemonicParsing="false" onAction="#filterInedible" prefHeight="25.0" prefWidth="74.0" text="Add Item">
+                  <Button fx:id="add_item_button" mnemonicParsing="false" onAction="#add_item_click" prefHeight="25.0" prefWidth="74.0" text="Add Item">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>

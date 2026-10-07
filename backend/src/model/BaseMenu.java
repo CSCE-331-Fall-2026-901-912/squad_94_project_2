@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import controller.CustomerController;
+import controller.ManagerController;
 import javafx.beans.property.FloatProperty;
 // import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -104,7 +105,7 @@ public class BaseMenu {
         try {
             
             Stage stage_tip = new Stage();
-            FXMLLoader tip_pop_up = new FXMLLoader(getClass().getResource("/gui/cashier/TotalPopUp.fxml"));
+            FXMLLoader tip_pop_up = new FXMLLoader(getClass().getResource("/gui/cashier/TipPopUp.fxml"));
             tip_pop_up.setController(customer_controller);
             
             Parent root = tip_pop_up.load();
@@ -121,24 +122,24 @@ public class BaseMenu {
         }
         return new TipPopUp(null,null);
     }
-    @FXML public void manager_view(CustomerController manager_controller){
+    @FXML public MainScreenGUI manager_view(ManagerController manager_controller){
         order_total.set("null");
         try {
-            // Stage manager_stage = new Stage();
-            // FXMLLoader manager_view = new FXMLLoader(getClass().getResource("/gui/cashier/TipPopUp.fxml"));
-            // ManagerView manager_view_model = new BaseMenu();
-            // manager_view.setController(manager_controller);
+            Stage manager_stage = new Stage();
+            FXMLLoader manager_view = new FXMLLoader(getClass().getResource("/gui/manager/MainScreenGUI.fxml"));
+            MainScreenGUI manager_view_model = new MainScreenGUI();
+            manager_view.setController(manager_controller);
             
-            // Parent root = manager_view.load();
-            // Scene scene = new Scene(root);
+            Parent root = manager_view.load();
+            Scene scene = new Scene(root);
 
-            // manager_stage.setScene(scene);
-            // manager_stage.show();
-            // return manager_view_model;
+            manager_stage.setScene(scene);
+            manager_stage.show();
+            return manager_view_model;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // return new ManagerView();
+        return new MainScreenGUI();
     }
 
     // CONSTRUCTOR
