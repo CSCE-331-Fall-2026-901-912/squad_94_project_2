@@ -105,7 +105,7 @@ public class BaseMenu {
         try {
             
             Stage stage_tip = new Stage();
-            FXMLLoader tip_pop_up = new FXMLLoader(getClass().getResource("/gui/cashier/TipPopUp.fxml"));
+            FXMLLoader tip_pop_up = new FXMLLoader(getClass().getResource("/gui/cashier/TotalPopUp.fxml"));
             tip_pop_up.setController(customer_controller);
             
             Parent root = tip_pop_up.load();
