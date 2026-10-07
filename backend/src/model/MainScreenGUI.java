@@ -1,12 +1,98 @@
 package model;
 
-import controller.ManagerController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import controller.ManagerController;
 
 public class MainScreenGUI {
-    
+    @FXML public OrderHistory open_order_history(ManagerController manager_controller){
+        try {
+            Stage stage_orderhistory = new Stage();
+            FXMLLoader oh_popup = new FXMLLoader(getClass().getResource("/gui/manager/OrderHistory.fxml"));
+            oh_popup.setController(manager_controller);
+
+            Parent root = oh_popup.load();
+            Scene scene = new Scene(root);
+
+            stage_orderhistory.setScene(scene);
+            stage_orderhistory.show();
+
+            OrderHistory oh_popup_model = new OrderHistory(stage_orderhistory);
+            manager_controller.initialize(oh_popup_model);
+            return oh_popup_model;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new OrderHistory(null);
+    }
+
+    @FXML public SalesAnalytics open_sales_analytics(ManagerController manager_controller){
+        try {
+            Stage stage_sales = new Stage();
+            FXMLLoader sales_popup = new FXMLLoader(getClass().getResource("/gui/manager/SalesAnalytics.fxml"));
+            sales_popup.setController(manager_controller);
+
+            Parent root = sales_popup.load();
+            Scene scene = new Scene(root);
+
+            stage_sales.setScene(scene);
+            stage_sales.show();
+
+            SalesAnalytics sales_popup_model = new SalesAnalytics(stage_sales);
+            manager_controller.initialize(sales_popup_model);
+            return sales_popup_model;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new SalesAnalytics(null);
+    }
+
+    @FXML public ProcessingOrders open_proc_orders(ManagerController manager_controller){
+        try {
+            Stage stage_proc_orders = new Stage();
+            FXMLLoader proc_orders_popup = new FXMLLoader(getClass().getResource("/gui/manager/ProcessingOrders.fxml"));
+            proc_orders_popup.setController(manager_controller);
+
+            Parent root = proc_orders_popup.load();
+            Scene scene = new Scene(root);
+
+            stage_proc_orders.setScene(scene);
+            stage_proc_orders.show();
+
+            ProcessingOrders proc_popup_model = new ProcessingOrders(stage_proc_orders);
+            manager_controller.initialize(proc_popup_model);
+            return proc_popup_model;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ProcessingOrders(null);
+    }
+
+    @FXML public InventoryScreen open_inventory(ManagerController manager_controller){
+        try {
+            Stage stage_inv = new Stage();
+            FXMLLoader inv_popup = new FXMLLoader(getClass().getResource("/gui/manager/InventoryScreen.fxml"));
+            inv_popup.setController(manager_controller);
+
+            Parent root = inv_popup.load();
+            Scene scene = new Scene(root);
+
+            stage_inv.setScene(scene);
+            stage_inv.show();
+
+            InventoryScreen inv_popup_model = new InventoryScreen(stage_inv);
+            manager_controller.initialize(inv_popup_model);
+            return inv_popup_model;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new InventoryScreen(null);
+    } 
 }

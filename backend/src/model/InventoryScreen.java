@@ -8,7 +8,15 @@ import controller.ManagerController;
 import javafx.scene.Scene;
 
 public class InventoryScreen {
-    
+
+    private final Stage stage;
+
+    public InventoryScreen() { this(null); }
+    public InventoryScreen(Stage stage) { this.stage = stage; }
+
+    public void close() {
+        if (stage != null) stage.close();
+    }
 
     @FXML public ItemDetailsPopUp item_click(ManagerController manager_controller, String item_name) {
         try{
@@ -19,7 +27,7 @@ public class InventoryScreen {
 
             Parent root = item_details.load();
             Scene scene = new Scene(root);
-            
+
             stage_item.setScene(scene);
             stage_item.show();
             return item_details_model;
@@ -29,8 +37,4 @@ public class InventoryScreen {
         }
         return new ItemDetailsPopUp();
     }
-
-
-
-
 }
