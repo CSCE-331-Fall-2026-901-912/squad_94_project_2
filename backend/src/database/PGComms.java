@@ -510,7 +510,7 @@ public class PGComms {
     public static BigDecimal get_sales_total() {
         BigDecimal price = BigDecimal.ZERO;
 
-        String sql = "SELECT SUM(total_spent) AS sum_total FROM ( SELECT total_spent FROM orders WHERE completed = TRUE) AS total_sales";
+        String sql = "SELECT SUM(total_spent) AS sum_total FROM ( SELECT total_spent FROM orders WHERE completed = TRUE)";
 
         if (!open_connection()) {
             return price;
@@ -532,17 +532,19 @@ public class PGComms {
         return price;
     }
 
-    public static BigDecimal get_sales_total_date(String date) {
+    public static BigDecimal get_sales_total_date(String date_input) {
         BigDecimal price = BigDecimal.ZERO;
 
-        String sql = "SELECT SUM(total_spent) AS sum_total FROM ( SELECT total_spent FROM orders WHERE completed = TRUE AND date(time_completed_at) = ?) AS total_sales";
+        String sql = "SELECT SUM(total_spent) AS sum_total FROM ( SELECT total_spent FROM orders WHERE completed = TRUE AND time_completed_at >= ? AND time_completed_at < ?)";
 
         if (!open_connection()) {
             return price;
         }
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, date);
+            LocalDate day = LocalDate.parse(date_input);
+            stmt.setObject(1, day.atStartOfDay());
+            stmt.setObject(2, day.plusDays(1).atStartOfDay());
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     BigDecimal p = rs.getBigDecimal("sum_total");
@@ -579,9 +581,17 @@ public class PGComms {
             tip_amount = BigDecimal.valueOf(tip);
 
             stmt.setInt(1, order_id);
-            stmt.setBoolean(2, false);
-            stmt.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now())); //created time
-            stmt.setTimestamp(4, null); // time completed
+
+            // We take an order to be completed when it is added into the database.
+            stmt.setBoolean(2, true);
+
+            // Created time.
+            Timestamp right_now = Timestamp.valueOf(LocalDateTime.now());
+            stmt.setTimestamp(3, right_now);
+
+            // Time completed (we take an order to be completed when it is added into the database).
+            stmt.setTimestamp(4, right_now);
+
             stmt.setBigDecimal(5, price);
             // TODO: GET CURRENT EMPLOYEE ID
             stmt.setInt(6, 0);
