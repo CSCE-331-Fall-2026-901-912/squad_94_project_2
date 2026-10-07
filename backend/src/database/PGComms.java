@@ -435,6 +435,7 @@ public class PGComms {
         for (InvEdibleRowDTO item : inv_edible_select) {
             output.add(new IDNameValDTO(item.id_edible(), item.name(), item.amount_servings()));
         }
+        System.out.println(output);
         return output;
     }
     public static List<IDNameValDTO> get_out_of_stock() {
@@ -444,8 +445,8 @@ public class PGComms {
     }
 
     public static List<IDNameValDTO> get_running_low_on() {
-        List<InvNonEdibleRowDTO> inv_non_edible_select = issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible WHERE amount > 0 LIMIT 3");
-        List<InvEdibleRowDTO> inv_edible_select = issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE amount_servings > 0 LIMIT 3");
+        List<InvNonEdibleRowDTO> inv_non_edible_select = issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible WHERE amount > 0 ORDER BY amount LIMIT 3");
+        List<InvEdibleRowDTO> inv_edible_select = issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE amount_servings > 0 ORDER BY amount_servings LIMIT 3");
         return get_inv_selection_common(inv_non_edible_select, inv_edible_select);
     }
 

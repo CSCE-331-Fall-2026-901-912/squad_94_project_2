@@ -101,7 +101,7 @@
                   <Font size="11.0" />
                </font>
             </Label>
-            <TableView id="RLTable" fx:id="RLTable" layoutX="14.0" layoutY="125.0" prefHeight="46.0" prefWidth="167.0">
+            <TableView id="RLTable" fx:id="RLTable" layoutX="14.0" layoutY="125.0" prefHeight="74.0" prefWidth="167.0">
                <columns>
                   <TableColumn fx:id="RLName" prefWidth="75.0" text="Name" />
                   <TableColumn fx:id="RLAmount" prefWidth="91.19999999999999" text="Amount" />

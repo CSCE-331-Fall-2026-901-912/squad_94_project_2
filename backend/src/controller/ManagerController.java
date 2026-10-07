@@ -1,5 +1,8 @@
 package controller;
 
+import dto.*;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.collections.FXCollections;
 import model.ItemDetailsPopUp;
 import model.InventoryScreen;
 import model.MainScreenGUI;
@@ -8,18 +11,10 @@ import model.SalesAnalytics;
 import model.Employee;
 import model.Menu;
 
-import dto.InvEdibleRowDTO;
-import dto.InvNonEdibleRowDTO;
-
+import java.net.IDN;
 import java.util.ArrayList;
 
 import database.PGComms;
-import dto.EmployeesRowDTO;
-import dto.MenuDrinksRowDTO;
-import dto.MenuToppingsRowDTO;
-import dto.JoinMenuDrinksAndInvEdibleRowDTO;
-import dto.JoinMenuToppingsAndInvEdibleRowDTO;
-import dto.OrdersRowDTO;
 import javafx.scene.input.MouseEvent;
 
 import javafx.scene.control.ComboBox;
@@ -88,16 +83,16 @@ public class ManagerController {
     private Label ManagerLabel;
 
     @FXML
-    private TableColumn<?, ?> OOSAmount;
-
-    @FXML
     private Label OOSLabel;
 
     @FXML
-    private TableColumn<?, ?> OOSName;
+    private TableView<IDNameValDTO> OOSTable;
 
     @FXML
-    private TableView<?> OOSTable;
+    private TableColumn<IDNameValDTO, String> OOSName;
+
+    @FXML
+    private TableColumn<IDNameValDTO, Integer> OOSAmount;
 
     @FXML
     private AnchorPane ProcOrderBox;
@@ -115,13 +110,13 @@ public class ManagerController {
     private TableColumn<?, ?> ProcOrders;
 
     @FXML
-    private TableColumn<?, ?> RLAmount;
+    private TableView<IDNameValDTO> RLTable;
 
     @FXML
-    private TableColumn<?, ?> RLName;
+    private TableColumn<IDNameValDTO, String> RLName;
 
     @FXML
-    private TableView<?> RLTable;
+    private TableColumn<IDNameValDTO, Integer> RLAmount;
 
     @FXML
     private AnchorPane SalesBox;
@@ -262,7 +257,22 @@ public class ManagerController {
     public void initialize(){
         TodaysSalesAmount.setText("$" + get_todays_sales());
         TotalSalesAmount.setText("$" + get_sales_total());
+        load_inventory_details_small();
     }
+
+    public void load_inventory_details_small() {
+
+        // Load out-of-stock table
+        OOSName.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().name()));
+        OOSAmount.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().val()));
+        OOSTable.setItems(FXCollections.observableArrayList(PGComms.get_out_of_stock()));
+
+        // Load running low on table
+        RLName.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().name()));
+        RLAmount.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().val()));
+        RLTable.setItems(FXCollections.observableArrayList(PGComms.get_running_low_on()));
+    }
+
 //    //ITEMDETAILSPOPUP
 //    @FXML
 //    private TextField inputNumberTextField;
