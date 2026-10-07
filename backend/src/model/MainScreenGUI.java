@@ -56,16 +56,15 @@ public class MainScreenGUI {
         try {
             Stage stage_proc_orders = new Stage();
             FXMLLoader proc_orders_popup = new FXMLLoader(getClass().getResource("/gui/manager/ProcessingOrders.fxml"));
-            proc_orders_popup.setController(manager_controller);
-
-            Parent root = proc_orders_popup.load();
-            Scene scene = new Scene(root);
-
-            stage_proc_orders.setScene(scene);
-            stage_proc_orders.show();
 
             ProcessingOrders proc_popup_model = new ProcessingOrders(stage_proc_orders);
-            manager_controller.initialize(proc_popup_model);
+            proc_orders_popup.setController(proc_popup_model);   // injection target
+
+            Parent root = proc_orders_popup.load();              // fields injected here
+            stage_proc_orders.setScene(new Scene(root));
+            stage_proc_orders.show();
+
+            proc_popup_model.load_orders();                      // safe now
             return proc_popup_model;
         }
         catch (Exception e) {
