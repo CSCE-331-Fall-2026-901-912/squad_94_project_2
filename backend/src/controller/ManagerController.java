@@ -56,22 +56,6 @@ public class ManagerController {
     private SalesAnalytics sales_analytics;
     private ProcessingOrders proc_orders;
 
-
-    private static final int LOW_STOCK_THRESHOLD = 10;
-    private static final boolean PROCESSING_FLAG_VALUE = true;
-
-    @FXML private TextArea proc_orders_text_area;
-    @FXML private TextArea today_oh_text_area;
-    @FXML private Label TodaysSalesAmount;
-    @FXML private Label TotalSalesAmount;
-    @FXML private TableView<OrderHistory.OrderSummary> OHTable;
-    @FXML private TableColumn<OrderHistory.OrderSummary, Integer> OHID;
-    @FXML private TableColumn<OrderHistory.OrderSummary, String> OHOrder;
-    @FXML private TableColumn<OrderHistory.OrderSummary, BigDecimal> OHTotal;
-    @FXML private TextField OHSearch;
-    @FXML private ComboBox<String> OHSortBy;
-    @FXML private ComboBox<String> OHTimePeriod;
-
     //INVENTORYSCREEN
     @FXML
     private Button edible_button;
@@ -126,111 +110,10 @@ public class ManagerController {
         sales_analytics = main_screen_gui.open_sales_analytics(this);
     }
 
-    @FXML public void initialize() {
-        populate_inventory_areas();
-        populate_order_areas();
-    }
-
-    private record InvLevel(String name, int amount) {}
-
-    private static List<InvLevel> read_inventory() {
-        List<InvLevel> levels = new ArrayList<>();
-        List<List<?>> tables = List.of(
-            PGComms.issue_query_type_rows_InvEdible("SELECT * FROM inv_edible ORDER BY 1"),
-            PGComms.issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible ORDER BY 1"));
-        for (List<?> rows : tables) {
-            for (Object row : rows) {
-                Object name = OrderHistory.field(row, 1);
-                Object amount = OrderHistory.field(row, 2);
-                levels.add(new InvLevel(String.valueOf(name), amount instanceof Integer i ? i : 0));
-            }
-        }
-        return levels;
-    }
-
-    private void populate_inventory_areas() {
-        if (out_of_stock_text_area == null && running_low_text_area == null) return;
-        StringBuilder out = new StringBuilder();
-        StringBuilder low = new StringBuilder();
-        for (InvLevel item : read_inventory()) {
-            String line = item.name() + "\t" + item.amount() + "\n";
-            if (item.amount() <= 0) {
-                out.append(line);
-            } else if (item.amount() < LOW_STOCK_THRESHOLD) {
-                low.append(line);
-            }
-        }
-        if (out_of_stock_text_area != null) out_of_stock_text_area.setText(out.toString());
-        if (running_low_text_area != null) running_low_text_area.setText(low.toString());
-    }
-
-    private void populate_order_areas() {
-        if (proc_orders_text_area == null && today_oh_text_area == null
-                && TodaysSalesAmount == null && TotalSalesAmount == null) return;
-
-        StringBuilder processing = new StringBuilder();
-        StringBuilder today = new StringBuilder();
-        BigDecimal today_sales = BigDecimal.ZERO;
-        BigDecimal total_sales = BigDecimal.ZERO;
-
-        for (OrderHistory.OrderSummary o : OrderHistory.fetch_orders()) {
-            String line = o.id() + "\t" + o.placed_text() + "\t$" + String.format("%.2f", o.total()) + "\n";
-            total_sales = total_sales.add(o.total());
-            if (o.is_today()) {
-                today.append(line);
-                today_sales = today_sales.add(o.total());
-            }
-            if (o.flag() == PROCESSING_FLAG_VALUE) {
-                processing.append(line);
-            }
-        }
-
-        if (proc_orders_text_area != null) proc_orders_text_area.setText(processing.toString());
-        if (today_oh_text_area != null) today_oh_text_area.setText(today.toString());
-        if (TodaysSalesAmount != null) TodaysSalesAmount.setText("$" + String.format("%.2f", today_sales));
-        if (TotalSalesAmount != null) TotalSalesAmount.setText("$" + String.format("%.2f", total_sales));
-    }
-
-    public void initialize(OrderHistory oh) {
-        this.order_history = oh;
-        if (OHTable == null) return;
-        if (OHID != null) {
-            OHID.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().id()));
-            OHID.setSortable(false);
-        }
-        if (OHOrder != null) {
-            OHOrder.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().placed_text()));
-            OHOrder.setSortable(false);
-        }
-        if (OHTotal != null) {
-            OHTotal.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().total()));
-            OHTotal.setSortable(false);
-        }
-        if (OHTimePeriod != null) {
-            OHTimePeriod.setItems(FXCollections.observableArrayList("All time", "Today"));
-            OHTimePeriod.setValue("All time");
-        }
-        if (OHSortBy != null) {
-            OHSortBy.setItems(FXCollections.observableArrayList(
-                "Newest first", "Oldest first", "Highest total", "Lowest total"));
-            OHSortBy.setValue("Newest first");
-        }
-        oh.load_orders();
-        OHTable.setItems(oh.get_orders());
-    }
-
     @FXML void OHExitPressed(ActionEvent event) {
         if (order_history != null) order_history.close();
     }
-    @FXML void OHSearchEnter(KeyEvent event) {
-        if (order_history != null && OHSearch != null) order_history.filter(OHSearch.getText());
-    }
-    @FXML void OHSortByPick(ActionEvent event) {
-        if (order_history != null && OHSortBy != null) order_history.sort_by(OHSortBy.getValue());
-    }
-    @FXML void OHTimePeriodPick(ActionEvent event) {
-        if (order_history != null && OHTimePeriod != null) order_history.set_period(OHTimePeriod.getValue());
-    }
+    public void initialize(OrderHistory oh) { this.order_history = oh; }
     public void initialize(SalesAnalytics sales) { this.sales_analytics = sales; }
     public void initialize(ProcessingOrders proc) { this.proc_orders = proc; }
     public void initialize(InventoryScreen inv) { this.inventory_screen = inv; }
