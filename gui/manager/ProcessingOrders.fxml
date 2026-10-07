@@ -10,7 +10,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label layoutX="27.0" layoutY="27.0" prefHeight="38.0" prefWidth="272.0" text="Processing Oders">
+      <Label layoutX="27.0" layoutY="27.0" prefHeight="38.0" prefWidth="272.0" text="Processing Orders">
          <font>
             <Font name="Calibri" size="18.0" />
          </font>
