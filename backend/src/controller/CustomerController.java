@@ -254,11 +254,10 @@ public class CustomerController {
         tip_pop_up.tip(1.25);
     }
     @FXML public void tipdone(){
-        if (tip_pop_up.tipdone(order_total.toString())){
+        if (tip_pop_up.tipdone()){
             base_menu.reset_order();
         }
-        // TODO: update PSQL database, reset current_order data 
-        // TODO: close window
+        // TODO: update PSQL database
     }
 
 

@@ -44,7 +44,7 @@ public class BaseMenu {
         if (item_count == 1) {
             set_current_order(line);                      // replaces the "Item1: " placeholder
         } else {
-            set_current_order(get_current_order() + "\n" + line);
+            set_current_order(get_current_order().getValue() + "\n" + line);
         }
         set_order_total("Total: " + String.format("%.2f", running_total));
     }
@@ -105,7 +105,7 @@ public class BaseMenu {
         try {
             
             Stage stage_tip = new Stage();
-            FXMLLoader tip_pop_up = new FXMLLoader(getClass().getResource("/gui/cashier/TipPopUp.fxml"));
+            FXMLLoader tip_pop_up = new FXMLLoader(getClass().getResource("/gui/cashier/TotalPopUp.fxml"));
             tip_pop_up.setController(customer_controller);
             
             Parent root = tip_pop_up.load();
@@ -114,21 +114,20 @@ public class BaseMenu {
             stage_tip.setScene(scene);
             stage_tip.show();
 
-            TipPopUp tip_pop_up_model = new TipPopUp(order_total.getValue(), stage_tip); 
+            TipPopUp tip_pop_up_model = new TipPopUp(order_total.getValue(), current_order.getValue(), stage_tip); 
             customer_controller.initialize(tip_pop_up_model);
             return tip_pop_up_model;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new TipPopUp(null,null);
+        return new TipPopUp(null,null,null);
     }
     @FXML public MainScreenGUI manager_view(ManagerController manager_controller){
-        order_total.set("null");
+        // order_total.set("null");
         try {
             Stage manager_stage = new Stage();
             FXMLLoader manager_view = new FXMLLoader(getClass().getResource("/gui/manager/MainScreenGUI.fxml"));
             MainScreenGUI manager_view_model = new MainScreenGUI();
-            manager_view.setController(manager_controller);
             
             Parent root = manager_view.load();
             Scene scene = new Scene(root);

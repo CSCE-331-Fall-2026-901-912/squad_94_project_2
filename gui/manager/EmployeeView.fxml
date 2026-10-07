@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="23.0" layoutY="22.0" prefHeight="48.0" prefWidth="162.0" text="Employee View">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <TableView fx:id="employee_table" layoutX="17.0" layoutY="73.0" prefHeight="241.0" prefWidth="585.0">
+        <columns>
+         <TableColumn fx:id="emp_id" prefWidth="75.0" text="id_employee" />
+         <TableColumn fx:id="emp_name" prefWidth="120.0" text="name" />
+         <TableColumn fx:id="emp_pos" prefWidth="75.0" text="position" />
+         <TableColumn fx:id="emp_phone" prefWidth="120.0" text="phone number" />
+         <TableColumn fx:id="emp_pay" prefWidth="75.0" text="pay rate" />
+         <TableColumn fx:id="emp_hours" prefWidth="120.0" text="hours scheduled" />
+        </columns>
+      </TableView>
+      <Button onAction = "#open_add_employee" layoutX="16.0" layoutY="342.0" mnemonicParsing="false" text="Add new employee" />
+   </children>
+</AnchorPane>
