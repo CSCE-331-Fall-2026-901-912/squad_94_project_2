@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 
@@ -21,6 +22,7 @@ public class AddEmployee {
     @FXML private TextField pay_field;
     @FXML private TextField hours_field;
     @FXML private Button submit_button;
+    @FXML private Button delete_button;
 
     private final Runnable on_added;  
     private final EmployeesRowDTO existing;                  
@@ -39,6 +41,8 @@ public class AddEmployee {
         if (existing == null) return;
         title_label.setText("Edit Employee");
         submit_button.setText("Save");
+        delete_button.setVisible(true);
+        delete_button.setManaged(true);
         name_field.setText(existing.name());
         position_field.setText(existing.position());
         phone_field.setText(existing.phone_number() == null ? "" : existing.phone_number());
@@ -80,6 +84,33 @@ public class AddEmployee {
         }
 
         on_added.run();                                    // reload the table
+        ((Node) event.getSource()).getScene().getWindow().hide();
+    }
+
+    @FXML public void delete(ActionEvent event) {
+        if (existing == null) {
+            return;
+        }
+
+        Alert confirmation = new Alert(
+            Alert.AlertType.CONFIRMATION,
+            "Delete " + existing.name() + "? This action cannot be undone.",
+            ButtonType.CANCEL,
+            ButtonType.OK
+        );
+        confirmation.setTitle("Delete Employee");
+        confirmation.setHeaderText(null);
+
+        if (confirmation.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) {
+            return;
+        }
+
+        if (!PGComms.delete_employee(existing.id_employee())) {
+            show_warning("The employee could not be deleted. Check the console for the database message.");
+            return;
+        }
+
+        on_added.run();
         ((Node) event.getSource()).getScene().getWindow().hide();
     }
 

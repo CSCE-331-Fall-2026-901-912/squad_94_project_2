@@ -16,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
 
@@ -31,6 +32,7 @@ public class AddMenuDrink {
     @FXML private RadioButton hot_button;
     @FXML private RadioButton caff_button;
     @FXML private Button submit_button;
+    @FXML private Button delete_button;
     @FXML private GridPane ingredient_grid;
 
     private final Runnable on_added;  
@@ -54,6 +56,8 @@ public class AddMenuDrink {
         if (existing != null) {
             title_label.setText("Edit Drink");
             submit_button.setText("Save");
+            delete_button.setVisible(true);
+            delete_button.setManaged(true);
             name_field.setText(existing.name());
             price_field.setText(existing.price().toPlainString());
             type_box.setValue(existing.type());
@@ -152,6 +156,34 @@ public class AddMenuDrink {
                 caff_button.isSelected(), selected_ingredients.values().stream().toList());
         if (!saved) {
             show_error("The drink could not be saved.");
+            return;
+        }
+
+        on_added.run();
+        ((Node) submit_button).getScene().getWindow().hide();
+    }
+
+    @FXML
+    private void delete() {
+        if (existing == null) {
+            return;
+        }
+
+        Alert confirmation = new Alert(
+            Alert.AlertType.CONFIRMATION,
+            "Delete " + existing.name() + "? This action cannot be undone.",
+            ButtonType.CANCEL,
+            ButtonType.OK
+        );
+        confirmation.setTitle("Delete Drink");
+        confirmation.setHeaderText(null);
+
+        if (confirmation.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) {
+            return;
+        }
+
+        if (!PGComms.delete_drink(existing.id_drink())) {
+            show_error("The drink could not be deleted.");
             return;
         }
 

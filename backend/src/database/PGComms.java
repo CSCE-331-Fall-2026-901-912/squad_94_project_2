@@ -539,6 +539,10 @@ public class PGComms {
         return issue_query_type_update(sql);
     }
 
+    public static boolean delete_employee(int id) {
+        return issue_query_type_update("DELETE FROM employees WHERE id_employee = " + id);
+    }
+
     public static boolean add_drink_with_ingredients(
             String name, BigDecimal price, String type,
             boolean hot_available, boolean is_non_caffeinated,
@@ -597,6 +601,15 @@ public class PGComms {
         return true;
     }
 
+    public static boolean delete_drink(int drink_id) {
+        if(!issue_query_type_update("DELETE FROM menu_drinks WHERE id_drink = " + drink_id)){ 
+            return false;
+        }
+        return issue_query_type_update(
+                "DELETE FROM join_menu_drinks_and_inv_edible WHERE id_drink = " + drink_id);
+
+    }
+
     public static boolean add_topping_with_inventory(String name, BigDecimal price) {
         if (!issue_query_type_update(
                 "INSERT INTO menu_toppings (id_topping, name, price) "
@@ -647,5 +660,17 @@ public class PGComms {
                 "UPDATE inv_edible SET name = " + sql_value(name)
                 + " WHERE id_edible = (SELECT id_edible "
                 + "FROM join_menu_toppings_and_inv_edible WHERE id_topping = " + topping_id + ")");
+    }
+
+    public static boolean delete_topping(int topping_id) {
+        if(!issue_query_type_update("DELETE FROM menu_toppings WHERE id_topping = " + topping_id)){ 
+            return false;
+        }
+        if(!issue_query_type_update("DELETE FROM inv_edible WHERE id_edible = (SELECT id_edible "
+                + "FROM join_menu_toppings_and_inv_edible WHERE id_topping = " + topping_id + ")")) {
+            return false;
+        }
+        return issue_query_type_update(
+                "DELETE FROM join_menu_toppings_and_inv_edible WHERE id_topping = " + topping_id);
     }
 }

@@ -20,5 +20,6 @@
       <TextField fx:id="pay_field" layoutX="223.0" layoutY="94.0" promptText="starting pay" />
       <TextField fx:id="hours_field" layoutX="220.0" layoutY="158.0" promptText="hours for week" />
       <Button fx:id="submit_button" layoutX="273.0" layoutY="218.0" mnemonicParsing="false" onAction="#submit" text="Submit" />
+      <Button fx:id="delete_button" layoutX="348.0" layoutY="218.0" managed="false" mnemonicParsing="false" onAction="#delete" text="Delete" visible="false" />
    </children>
 </AnchorPane>

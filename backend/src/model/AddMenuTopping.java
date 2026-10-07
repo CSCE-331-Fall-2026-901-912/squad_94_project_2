@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
@@ -15,6 +16,7 @@ public class AddMenuTopping {
     @FXML private TextField name_field;
     @FXML private TextField price_field;
     @FXML private Button submit_button;
+    @FXML private Button delete_button;
 
     private final Runnable on_saved;
     private final MenuToppingsRowDTO existing;
@@ -31,6 +33,8 @@ public class AddMenuTopping {
         }
         title_label.setText("Edit Topping");
         submit_button.setText("Save");
+        delete_button.setVisible(true);
+        delete_button.setManaged(true);
         name_field.setText(existing.name());
         price_field.setText(existing.price().toPlainString());
     }
@@ -56,6 +60,34 @@ public class AddMenuTopping {
                 : PGComms.update_topping_with_inventory(existing.id_topping(), name, price);
         if (!saved) {
             show_error("The topping could not be saved.");
+            return;
+        }
+
+        on_saved.run();
+        ((Node) submit_button).getScene().getWindow().hide();
+    }
+
+    @FXML
+    private void delete() {
+        if (existing == null) {
+            return;
+        }
+
+        Alert confirmation = new Alert(
+            Alert.AlertType.CONFIRMATION,
+            "Delete " + existing.name() + "? This action cannot be undone.",
+            ButtonType.CANCEL,
+            ButtonType.OK
+        );
+        confirmation.setTitle("Delete Topping");
+        confirmation.setHeaderText(null);
+
+        if (confirmation.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) {
+            return;
+        }
+
+        if (!PGComms.delete_topping(existing.id_topping())) {
+            show_error("The topping could not be deleted.");
             return;
         }
 
