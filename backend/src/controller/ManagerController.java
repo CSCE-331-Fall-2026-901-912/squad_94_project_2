@@ -56,7 +56,9 @@ public class ManagerController {
     private OrderHistory order_history;
     private SalesAnalytics sales_analytics;
 
-//    //INVENTORYSCREEN
+
+
+    //INVENTORYSCREEN
     @FXML
     private Button edible_button;
 
