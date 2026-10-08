@@ -56,8 +56,11 @@ public class ManagerController {
     private MainScreenGUI main_screen_gui;
     private OrderHistory order_history;
     private SalesAnalytics sales_analytics;
+    private AddItemPopUp add_item_pop_up;
 
 //    //INVENTORYSCREEN
+
+
     @FXML
     private Button edible_button;
 
@@ -86,39 +89,71 @@ public class ManagerController {
 
     }
 
-    private ItemDetailsPopUp item_details_pop_up;
-    @FXML
-    void item_click(ActionEvent event) {
-        Button but = (Button) event.getSource();
-        item_details_pop_up = inventory_screen.item_click(this, but.getText());
-    }
+    // private ItemDetailsPopUp item_details_pop_up;
+    // @FXML
+    // void item_click(ActionEvent event) {
+    //     Button but = (Button) event.getSource();
+    //     item_details_pop_up = inventory_screen.item_click(this, but.getText());
+    // }
 
 
-    @FXML
-    private AddItemPopUp add_item_pop_up;;
-    @FXML
-    public void add_item_click() {
-        add_item_pop_up.add_item_click();
-    }
+    // @FXML
+    // private AddItemPopUp add_item_pop_up;
+    // @FXML
+    // public void add_item_click() {
+    //     add_item_pop_up.add_item_click();
+    // }
 
 
 
 
-
+    @FXML private TextArea non_edible_text_area;
+    @FXML private TextArea edible_text_area;
     public void initialize(InventoryScreen inventory_screen){
+
         this.inventory_screen = inventory_screen;
+        non_edible_text_area.textProperty().bind(inventory_screen.get_non_edible());
+        edible_text_area.textProperty().bind(inventory_screen.get_edible());        
 
     }
 
-    public void initialize(ItemDetailsPopUp item_details_pop_up){
-        this.item_details_pop_up = item_details_pop_up;
-
+    @FXML private TextField input_name;
+    @FXML private TextField input_quantity;
+    @FXML public AddItemPopUp change_item_button(){
+        return inventory_screen.change_item(this);
+    }
+    @FXML public AddItemPopUp submit_changes_button(){
+        return add_item_pop_up.submit_changes_button(input_name.getText(), input_quantity.getText());
     }
 
     public void initialize(AddItemPopUp add_item_pop_up){
         this.add_item_pop_up = add_item_pop_up;
+
         
+
+        // input_name.textProperty().bind(add_item_pop_up.get_input_name()); //with bind updates every time a change is made
+        // input_quantity.textProperty().bind(add_item_pop_up.get_input_quantity());
+
+        
+
+        // input_quantity.setEditable(true);
+        // input_name.setEditable(true);
+        
+        //find_and_change_item();
+
     }
+
+
+
+    // public void initialize(ItemDetailsPopUp item_details_pop_up){
+    //     this.item_details_pop_up = item_details_pop_up;
+
+    // }
+
+    // public void initialize(AddItemPopUp add_item_pop_up){
+    //     this.add_item_pop_up = add_item_pop_up;
+        
+    // }
 
 //
     @FXML public void ProcOrdersOpen(MouseEvent event){
