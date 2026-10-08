@@ -43,27 +43,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ManagerController">
    <children>
-      <ScrollPane layoutX="252.0" layoutY="58.0" prefHeight="172.0" prefWidth="314.0">
-         <content>
-          <AnchorPane fx:id="ProcOrderBox" minHeight="0.0" minWidth="0.0" onMouseClicked="#ProcOrdersOpen" prefHeight="150.0" prefWidth="316.0">
-               <children>
-                  <Label layoutX="102.0" layoutY="14.0" prefHeight="33.0" prefWidth="112.0" text="Processing Orders">
-                     <font>
-                        <Font name="Calibri" size="14.0" />
-                     </font>
-                  </Label>
-                  <TableView fx:id="ProcOrderTable" layoutX="19.0" layoutY="47.0" prefHeight="94.0" prefWidth="282.0">
-                    <columns>
-                      <TableColumn fx:id="ProcOrderID" prefWidth="57.599971771240234" text="ID" />
-                      <TableColumn fx:id="ProcOrders" prefWidth="149.60003662109375" text="Order" />
-                        <TableColumn fx:id="ProcOrderTotal" prefWidth="75.99999084472654" text="Total" />
-                    </columns>
-                  </TableView>
-               </children>
-            </AnchorPane>
-         </content>
-      </ScrollPane>
-      <ScrollPane layoutX="252.0" layoutY="253.0" prefHeight="172.0" prefWidth="314.0">
+      <ScrollPane layoutX="252.0" layoutY="35.0" prefHeight="172.0" prefWidth="314.0">
          <content>
             <AnchorPane fx:id="TodayOHBox" minHeight="0.0" minWidth="0.0" onMouseClicked="#OHOpen" prefHeight="150.0" prefWidth="316.0">
                <children>
@@ -83,14 +63,14 @@
             </AnchorPane>
          </content>
       </ScrollPane>
-      <AnchorPane fx:id="InventoryBox" layoutX="29.0" layoutY="53.0" onMouseClicked="#InventoryOpen" prefHeight="181.0" prefWidth="196.0">
+      <AnchorPane fx:id="InventoryBox" layoutX="29.0" layoutY="53.0" onMouseClicked="#InventoryOpen" prefHeight="435.0" prefWidth="196.0">
          <children>
             <Label fx:id="InventoryLabel" layoutX="66.0" layoutY="1.0" prefHeight="26.0" prefWidth="62.0" text="Inventory">
                <font>
                   <Font name="Calibri" size="14.0" />
                </font>
             </Label>
-            <TableView id="OOSTable" fx:id="OOSTable" layoutX="13.0" layoutY="54.0" prefHeight="46.0" prefWidth="167.0">
+            <TableView id="OOSTable" fx:id="OOSTable" layoutX="13.0" layoutY="54.0" prefHeight="154.0" prefWidth="167.0">
               <columns>
                 <TableColumn fx:id="OOSName" prefWidth="75.0" text="Name" />
                 <TableColumn fx:id="OOSAmount" prefWidth="91.19999999999999" text="Amount" />
@@ -101,13 +81,13 @@
                   <Font size="11.0" />
                </font>
             </Label>
-            <TableView id="RLTable" fx:id="RLTable" layoutX="14.0" layoutY="125.0" prefHeight="74.0" prefWidth="167.0">
+            <TableView id="RLTable" fx:id="RLTable" layoutX="14.0" layoutY="245.0" prefHeight="189.0" prefWidth="167.0">
                <columns>
                   <TableColumn fx:id="RLName" prefWidth="75.0" text="Name" />
                   <TableColumn fx:id="RLAmount" prefWidth="91.19999999999999" text="Amount" />
                </columns>
             </TableView>
-            <Label layoutX="13.0" layoutY="99.0" prefHeight="26.0" prefWidth="70.0" text="Running Low">
+            <Label layoutX="13.0" layoutY="217.0" prefHeight="26.0" prefWidth="70.0" text="Running Low">
                <font>
                   <Font size="11.0" />
                </font>
@@ -119,7 +99,7 @@
             <Font name="Calibri" size="18.0" />
          </font>
       </Label>
-      <AnchorPane fx:id="SalesBox" layoutX="29.0" layoutY="248.0" onMouseClicked="#SalesEntered" prefHeight="181.0" prefWidth="196.0">
+      <AnchorPane fx:id="SalesBox" layoutX="225.0" layoutY="234.0" onMouseClicked="#SalesEntered" prefHeight="181.0" prefWidth="196.0">
          <children>
             <SplitPane fx:id="TodaysSales" dividerPositions="0.5" layoutX="14.0" layoutY="31.0" orientation="VERTICAL" prefHeight="62.0" prefWidth="167.0">
               <items>
@@ -154,13 +134,21 @@
                   </Label>
                </items>
             </SplitPane>
-            <Button layoutX="14.0" layoutY="180.0" mnemonicParsing="false" onAction="#open_employee_view" prefHeight="30.0" prefWidth="167.0" text="Employees" />
-            <Button layoutX="14.0" layoutY="220.0" mnemonicParsing="false" onAction="#open_menu_view" prefHeight="30.0" prefWidth="167.0" text="Menus" />
          </children>
       </AnchorPane>
-      <Button fx:id="sales_analytics_button" layoutX="312.0" layoutY="446.0" mnemonicParsing="false" onMouseClicked="#SalesEntered" text="Sales Analytics">
+      <Button fx:id="sales_analytics_button" layoutX="430.0" layoutY="275.0" mnemonicParsing="false" onMouseClicked="#SalesEntered" prefHeight="98.0" prefWidth="154.0" text="Sales Analytics" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
          <font>
             <Font size="25.0" />
+         </font>
+      </Button>
+      <Button layoutX="239.0" layoutY="444.0" mnemonicParsing="false" onAction="#open_employee_view" prefHeight="30.0" prefWidth="167.0" text="Employees">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button layoutX="423.0" layoutY="444.0" mnemonicParsing="false" onAction="#open_menu_view" prefHeight="30.0" prefWidth="167.0" text="Menus">
+         <font>
+            <Font size="14.0" />
          </font>
       </Button>
    </children>
