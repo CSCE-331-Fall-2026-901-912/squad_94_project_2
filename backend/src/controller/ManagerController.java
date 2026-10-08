@@ -4,11 +4,20 @@ import dto.*;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import model.ItemDetailsPopUp;
+import model.AddItemPopUp;
+import model.CancellationPopUp;
 import model.InventoryScreen;
 import model.MainScreenGUI;
 import model.OrderHistory;
 import model.SalesAnalytics;
 import model.Employee;
+import model.ProcessingOrders;
+import database.PGComms;
+import java.util.ArrayList;
+import java.util.List;
+import java.math.BigDecimal;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.collections.FXCollections;
 import model.Menu;
 
 import java.net.IDN;
@@ -26,6 +35,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -46,14 +56,15 @@ import java.time.*;
 
 public class ManagerController {
     
+    private MainScreenGUI main_screen_gui = new MainScreenGUI();
     private InventoryScreen inventory_screen;
-    private MainScreenGUI main_screen_gui;
     private OrderHistory order_history;
     private SalesAnalytics sales_analytics;
-
-
+    private ProcessingOrders proc_orders;
 
     //INVENTORYSCREEN
+    private AddItemPopUp add_item_pop_up;
+
     @FXML
     private Button edible_button;
 
@@ -167,32 +178,104 @@ public class ManagerController {
 
     }
 
-    private ItemDetailsPopUp item_details_pop_up;
+    // private ItemDetailsPopUp item_details_pop_up;
+    // @FXML
+    // void item_click(ActionEvent event) {
+    //     Button but = (Button) event.getSource();
+    //     item_details_pop_up = inventory_screen.item_click(this, but.getText());
+    // }
 
-    @FXML
-    void item_click(ActionEvent event) {
-        Button but = (Button) event.getSource();
-        item_details_pop_up = inventory_screen.item_click(this, but.getText());
+
+    // @FXML
+    // private AddItemPopUp add_item_pop_up;
+    // @FXML
+    // public void add_item_click() {
+    //     add_item_pop_up.add_item_click();
+    // }
+
+
+
+
+    @FXML private TextArea non_edible_text_area;
+    @FXML private TextArea edible_text_area;
+    public void initialize(InventoryScreen inventory_screen){
+
+        this.inventory_screen = inventory_screen;
+        non_edible_text_area.textProperty().bind(inventory_screen.get_non_edible());
+        edible_text_area.textProperty().bind(inventory_screen.get_edible());
+
     }
 
+    @FXML private TextField input_name;
+    @FXML private TextField input_quantity;
+
+    @FXML public AddItemPopUp change_item_button(){
+        return inventory_screen.change_item(this);
+    }
+    @FXML public AddItemPopUp submit_changes_button(){
+        return add_item_pop_up.submit_changes_button(input_name.getText(), input_quantity.getText());
+    }
+
+    public void initialize(AddItemPopUp add_item_pop_up){
+        this.add_item_pop_up = add_item_pop_up;
+
+
+
+        // input_name.textProperty().bind(add_item_pop_up.get_input_name()); //with bind updates every time a change is made
+        // input_quantity.textProperty().bind(add_item_pop_up.get_input_quantity());
+
+
+
+        // input_quantity.setEditable(true);
+        // input_name.setEditable(true);
+
+        //find_and_change_item();
+
+    }
+
+
+
+    // public void initialize(ItemDetailsPopUp item_details_pop_up){
+    //     this.item_details_pop_up = item_details_pop_up;
+
+    // }
+
+    // public void initialize(AddItemPopUp add_item_pop_up){
+    //     this.add_item_pop_up = add_item_pop_up;
+
+    // }
+
+//
     @FXML public void ProcOrdersOpen(MouseEvent event){
         // TODO: open the processing orders view
+        proc_orders = main_screen_gui.open_proc_orders(this);
     }
     @FXML public void OHOpen(MouseEvent event){
         // TODO: open today's order history
+        order_history = main_screen_gui.open_order_history(this);
     }
     @FXML public void InventoryOpen(MouseEvent event){
         // TODO: open inventory
+        inventory_screen = main_screen_gui.open_inventory(this);
     }
     @FXML public void SalesEntered(MouseEvent event){
         // TODO: open sales
+        sales_analytics = main_screen_gui.open_sales_analytics(this);
     }
-    
+
+    @FXML void OHExitPressed(ActionEvent event) {
+        if (order_history != null) order_history.close();
+    }
+    public void initialize(OrderHistory oh) { this.order_history = oh; }
+    public void initialize(SalesAnalytics sales) { this.sales_analytics = sales; }
+    public void initialize(ProcessingOrders proc) { this.proc_orders = proc; }
+    // public void initialize(InventoryScreen inv) { this.inventory_screen = inv; }
+
     @FXML 
     public void open_employee_view(ActionEvent event){
         try {
             java.net.URL url = getClass().getResource("/gui/manager/EmployeeView.fxml");
-            if (url == null) {                                   // avoids the "Location is not set" error
+            if (url == null) {
                 System.out.println("EmployeeView.fxml not found");
                 return;
             }
@@ -202,7 +285,7 @@ public class ManagerController {
             loader.setController(employee);
 
             Parent root = loader.load();
-            employee.load_employees();                // fill the table after the FXML loads
+            employee.load_employees();
 
             Stage stage = new Stage();
             stage.setTitle("Employees");
@@ -213,7 +296,7 @@ public class ManagerController {
         }
     }
 
-    @FXML 
+    @FXML
     public void open_menu_view(ActionEvent event){
         try {
             java.net.URL url = getClass().getResource("/gui/manager/MenuView.fxml");
@@ -233,6 +316,26 @@ public class ManagerController {
             stage.setTitle("Menu");
             stage.setScene(new Scene(root));
             stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML private void open_edit_inventory(){
+        try {
+            Stage stage = new Stage();
+            FXMLLoader inv_menu = new FXMLLoader(getClass().getResource("/gui/manager/InventoryScreen.fxml"));
+            // ManagerController customer_controller = new ManagerController();
+            inventory_screen = new InventoryScreen(stage);
+            inv_menu.setController(this);
+
+            Parent root1 = inv_menu.load();
+            Scene scene1 = new Scene(root1);
+
+            stage.setScene(scene1);
+            stage.show();
+
+            initialize(inventory_screen);
         } catch (Exception e) {
             e.printStackTrace();
         }

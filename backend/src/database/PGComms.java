@@ -802,6 +802,7 @@ public class PGComms {
                 + "FROM join_menu_toppings_and_inv_edible WHERE id_topping = " + topping_id + ")");
     }
 
+
     private static boolean modify_topping_quantity_in_inventory(int topping_id, int val, String type) {
         if(type.equals("inv_edible")){
             // ArrayList<JoinMenuToppingsAndInvEdibleRowDTO> edible_rows;
@@ -846,6 +847,7 @@ public class PGComms {
         }
         return modify_topping_quantity_in_inventory(nonedible_id, val, "inv_nonedible");
     }
+
     public static boolean delete_topping(int topping_id) {
         if(!issue_query_type_update("DELETE FROM menu_toppings WHERE id_topping = " + topping_id)){ 
             return false;
