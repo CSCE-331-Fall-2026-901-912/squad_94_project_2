@@ -2,6 +2,7 @@ package controller;
 
 import model.ItemDetailsPopUp;
 import model.AddItemPopUp;
+import model.CancellationPopUp;
 import model.InventoryScreen;
 import model.MainScreenGUI;
 import model.OrderHistory;
@@ -32,6 +33,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -45,8 +47,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
-import javafx.stage.Stage;
-
 
 
 
@@ -119,6 +119,7 @@ public class ManagerController {
 
     @FXML private TextField input_name;
     @FXML private TextField input_quantity;
+    
     @FXML public AddItemPopUp change_item_button(){
         return inventory_screen.change_item(this);
     }
@@ -213,6 +214,26 @@ public class ManagerController {
             stage.setTitle("Menu");
             stage.setScene(new Scene(root));
             stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML private void open_edit_inventory(){
+        try {
+            Stage stage = new Stage();
+            FXMLLoader inv_menu = new FXMLLoader(getClass().getResource("/gui/manager/InventoryScreen.fxml"));
+            // ManagerController customer_controller = new ManagerController();
+            inventory_screen = new InventoryScreen();
+            inv_menu.setController(this);
+            
+            Parent root1 = inv_menu.load();
+            Scene scene1 = new Scene(root1);
+
+            stage.setScene(scene1);
+            stage.show();
+
+            initialize(inventory_screen);
         } catch (Exception e) {
             e.printStackTrace();
         }
