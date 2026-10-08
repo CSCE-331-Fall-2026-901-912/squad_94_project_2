@@ -15,7 +15,7 @@
             <Font name="Calibri" size="18.0" />
          </font>
       </Label>
-      <TextField fx:id="searchOH" layoutX="27.0" layoutY="95.0" prefHeight="26.0" prefWidth="303.0" text="Search" />
+      <TextField fx:id="searchOH" layoutX="27.0" layoutY="95.0" prefHeight="26.0" prefWidth="303.0" promptText="Search" />
       <TableView fx:id="order_table" layoutX="27.0" layoutY="139.0" prefHeight="236.0" prefWidth="546.0">
          <columns>
             <TableColumn fx:id="order_id" prefWidth="75.0" text="ID" />
