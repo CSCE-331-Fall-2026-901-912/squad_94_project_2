@@ -134,7 +134,7 @@ public class TipPopUp {
         System.err.println("Marker 4.8");
         if(!id_topping2_name.equals("No topping")){
             // System.err.println("top2");   
-            id_topping2 = PGComms.issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE name LIKE '"+id_topping2_name+"';").getFirst().id_edible();
+            id_topping2 = PGComms.issue_query_type_rows_MenuToppings("SELECT * FROM menu_toppings WHERE name LIKE '"+id_topping2_name+"';").getFirst().id_topping();
             int id_edible2 = PGComms.issue_query_type_rows_JoinMenuToppingsAndInvEdible("SELECT * FROM join_menu_toppings_and_inv_edible WHERE id_topping = " + id_topping2).getFirst().id_edible();
             // int topping_amount = PGComms.issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE name LIKE '"+id_topping2_name+"';").getFirst().amount_servings();
             PGComms.modify_topping_quantity_in_edible_inventory(id_edible2, -1);

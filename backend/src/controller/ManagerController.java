@@ -246,10 +246,10 @@ public class ManagerController {
     // }
 
 //
-    @FXML public void ProcOrdersOpen(MouseEvent event){
-        // TODO: open the processing orders view
-        proc_orders = main_screen_gui.open_proc_orders(this);
-    }
+//    @FXML public void ProcOrdersOpen(MouseEvent event){
+//        // TODO: open the processing orders view
+//        proc_orders = main_screen_gui.open_proc_orders(this);
+//    }
     @FXML public void OHOpen(MouseEvent event){
         // TODO: open today's order history
         order_history = main_screen_gui.open_order_history(this);

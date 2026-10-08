@@ -60,26 +60,26 @@ public class MainScreenGUI {
         return new SalesAnalytics(null);
     }
 
-    @FXML public ProcessingOrders open_proc_orders(ManagerController manager_controller){
-        try {
-            Stage stage_proc_orders = new Stage();
-            FXMLLoader proc_orders_popup = new FXMLLoader(getClass().getResource("/gui/manager/ProcessingOrders.fxml"));
-
-            ProcessingOrders proc_popup_model = new ProcessingOrders(stage_proc_orders);
-            proc_orders_popup.setController(proc_popup_model);
-
-            Parent root = proc_orders_popup.load();
-            stage_proc_orders.setScene(new Scene(root));
-            stage_proc_orders.show();
-
-            proc_popup_model.load_orders();
-            return proc_popup_model;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new ProcessingOrders(null);
-    }
+//    @FXML public ProcessingOrders open_proc_orders(ManagerController manager_controller){
+//        try {
+//            Stage stage_proc_orders = new Stage();
+//            FXMLLoader proc_orders_popup = new FXMLLoader(getClass().getResource("/gui/manager/ProcessingOrders.fxml"));
+//
+//            ProcessingOrders proc_popup_model = new ProcessingOrders(stage_proc_orders);
+//            proc_orders_popup.setController(proc_popup_model);
+//
+//            Parent root = proc_orders_popup.load();
+//            stage_proc_orders.setScene(new Scene(root));
+//            stage_proc_orders.show();
+//
+//            proc_popup_model.load_orders();
+//            return proc_popup_model;
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return new ProcessingOrders(null);
+//    }
 
     @FXML public InventoryScreen open_inventory(ManagerController manager_controller){
         try {
@@ -124,20 +124,20 @@ public class MainScreenGUI {
     @FXML
     private TableView<?> OOSTable;
 
-    @FXML
-    private AnchorPane ProcOrderBox;
-
-    @FXML
-    private TableColumn<?, ?> ProcOrderID;
-
-    @FXML
-    private TableView<?> ProcOrderTable;
-
-    @FXML
-    private TableColumn<?, ?> ProcOrderTotal;
-
-    @FXML
-    private TableColumn<?, ?> ProcOrders;
+//    @FXML
+//    private AnchorPane ProcOrderBox;
+//
+//    @FXML
+//    private TableColumn<?, ?> ProcOrderID;
+//
+//    @FXML
+//    private TableView<?> ProcOrderTable;
+//
+//    @FXML
+//    private TableColumn<?, ?> ProcOrderTotal;
+//
+//    @FXML
+//    private TableColumn<?, ?> ProcOrders;
 
     @FXML
     private TableColumn<?, ?> RLAmount;
