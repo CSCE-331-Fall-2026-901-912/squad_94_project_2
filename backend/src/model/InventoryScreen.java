@@ -15,6 +15,15 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class InventoryScreen {
+
+    private final Stage stage;
+
+    // public InventoryScreen() { this(null); }
+    // public InventoryScreen(Stage stage) { this.stage = stage; }
+
+    public void close() {
+        if (stage != null) stage.close();
+    }
     
     private StringProperty edible;
     private StringProperty non_edible;
@@ -105,7 +114,8 @@ public class InventoryScreen {
     //     return new ItemDetailsPopUp();
     // }
 
-    public InventoryScreen(){
+    public InventoryScreen(Stage stage) { 
+        this.stage = stage; 
         
         edible = new SimpleStringProperty("");
         non_edible = new SimpleStringProperty("");
