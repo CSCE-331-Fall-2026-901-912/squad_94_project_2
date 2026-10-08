@@ -700,6 +700,52 @@ public class PGComms {
                 + "FROM join_menu_toppings_and_inv_edible WHERE id_topping = " + topping_id + ")");
     }
 
+    
+    private static boolean modify_topping_quantity_in_inventory(int topping_id, int val, String type) {
+        if(type.equals("inv_edible")){
+            // ArrayList<JoinMenuToppingsAndInvEdibleRowDTO> edible_rows;
+            // edible_rows = PGComms.issue_query_type_rows_JoinMenuToppingsAndInvEdible("SELECT * FROM join_menu_toppings_and_inv_edible WHERE id_topping = " + topping_id);
+            // int edible_id = edible_rows.getFirst().id_edible();
+
+            if (!issue_query_type_update(
+                    "UPDATE inv_edible SET amount_servings = " + val
+                    + " WHERE id_edible = " + topping_id)) {
+                return false;
+            }
+            return true;
+        }
+        else if(type.equals("inv_nonedible")) {
+            if (!issue_query_type_update(
+                    "UPDATE inv_nonedible SET amount = " + val
+                    + " WHERE id_nonedible = " + topping_id)) {
+                return false;
+            }
+            return true;
+        }
+        else{throw new IllegalArgumentException("Invalid inventory type: " + type);}
+    }
+
+    /**
+     * Modifies the quantity of a edible inventory item to the input value.
+     * If you simply want to decrement, input -1.
+     */
+    public static boolean modify_topping_quantity_in_edible_inventory(int edible_id, int val){
+        if(val == -1){
+            val= PGComms.issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE id_edible = " + edible_id).getFirst().amount_servings() - 1;
+        }
+        return modify_topping_quantity_in_inventory(edible_id, val, "inv_edible");
+    }
+    /**
+     * Modifies the quantity of a nonedible inventory item to the input value.
+     * If you simply want to decrement, input -1.
+     */
+    public static boolean modify_topping_quantity_in_nonedible_inventory(int nonedible_id, int val){
+        if(val == -1){
+            val= PGComms.issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible WHERE id_nonedible = " + nonedible_id).getFirst().amount() - 1;
+        }
+        return modify_topping_quantity_in_inventory(nonedible_id, val, "inv_nonedible");
+    }
+
     public static boolean delete_topping(int topping_id) {
         if(!issue_query_type_update("DELETE FROM menu_toppings WHERE id_topping = " + topping_id)){ 
             return false;
