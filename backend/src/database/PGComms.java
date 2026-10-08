@@ -6,6 +6,7 @@ import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.math.BigDecimal;
+
 import org.postgresql.ds.PGSimpleDataSource;
 import dto.InvEdibleRowDTO;
 import dto.InvNonEdibleRowDTO;
@@ -111,11 +112,13 @@ public class PGComms {
     public static boolean issue_query_type_update(String query) {
         boolean query_success = false;
         try {
-            open_connection();
-            PreparedStatement ps = conn.prepareStatement(query);
-            ps.executeUpdate();
-            query_success = true;
-            ps.close();
+            if (!open_connection()) {
+                return false;
+            }
+            try (PreparedStatement ps = conn.prepareStatement(query)) {
+                ps.executeUpdate();
+                query_success = true;
+            }
         }
         catch (SQLException e) {
 
@@ -404,6 +407,9 @@ public class PGComms {
         return items;
     }
 
+    // A lot of these SQL queries were created before the generic query functions were implemented, so they are not using the generic functions
+    // They will eventually be refactored to use the generic functions at a later date
+    
     // Return the names of all drinks in menu_drinks whose "type" column equals the given type,
     // ordered by id_drink. Returns an empty list if the database can't be reached or the query fails.
     public static List<String> get_drink_names_by_type(String type) {
@@ -509,86 +515,246 @@ public class PGComms {
         return get_price("SELECT price FROM menu_toppings WHERE name = ?", name);
     }
 
-    //Querys for the employee view
-    public static List<EmployeesRowDTO> get_employees() {
-        List<EmployeesRowDTO> list = new ArrayList<>();
-
+    public static void insert_order_item(int order_id, double order_total, double tip, int id_drink, int id_topping1, int id_topping2, int ice_level, int sugar_level, boolean hot_chosen) {
         if (!open_connection()) {
-            return list;
+            return;
         }
+        // int:1, boolean, timestamptz, timestamptz, numeric, int:employee_id, numeric, int:id_drink, int:id_topping1, int:id_topping2, int:ice_level (0,1,2), int:sugar_level (0,1,2,3,4), boolean:hot_chosen
+        String sql = "INSERT INTO orders (id_order, completed, time_created_at, time_completed_at, total_spent, id_employee, tip, id_drink, id_topping1, id_topping2, ice_level, sugar_level, hot_chosen) VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            BigDecimal price;
+            BigDecimal tip_amount;
+            price = BigDecimal.valueOf(order_total);
+            tip_amount = BigDecimal.valueOf(tip);
 
-        String sql = "SELECT id_employee, name, position, phone_number, current_pay_rate, hours_worked_for_week "
-                + "FROM employees ORDER BY id_employee";
-        try (Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                list.add(new EmployeesRowDTO(
-                    rs.getInt("id_employee"),
-                    rs.getString("name"),
-                    rs.getString("position"),
-                    rs.getString("phone_number"),
-                    rs.getBigDecimal("current_pay_rate"),
-                    rs.getInt("hours_worked_for_week")));
-            }
+            stmt.setInt(1, order_id);
+            stmt.setBoolean(2, false);
+            stmt.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now())); //created time
+            stmt.setTimestamp(4, null); // time completed
+            stmt.setBigDecimal(5, price);
+            // TODO: GET CURRENT EMPLOYEE ID
+            stmt.setInt(6, 0);
+            stmt.setBigDecimal(7, tip_amount);
+            stmt.setInt(8, id_drink);
+            stmt.setInt(9, id_topping1);
+            stmt.setInt(10, id_topping2);
+            stmt.setInt(11, ice_level);
+            stmt.setInt(12, sugar_level);
+            stmt.setBoolean(13, hot_chosen);
+
+            stmt.executeUpdate();
         }
         catch (SQLException e) {
             System.out.println(e.getMessage());
         }
 
         close_connection();
-        return list;
+    }
+
+
+    private static String sql_value(String value) {
+        return value == null ? "NULL" : "'" + value.replace("'", "''") + "'";
     }
 
     public static boolean add_employee(String name, String position, String phone,
                                    BigDecimal pay_rate, int hours) {
-        if (!open_connection()) {
-            return false;
-        }
-
         String sql = "INSERT INTO employees "
                 + "(id_employee, name, position, phone_number, current_pay_rate, hours_worked_for_week) "
-                + "VALUES ((SELECT COALESCE(MAX(id_employee), 0) + 1 FROM employees), ?, ?, ?, ?, ?)";
-        boolean saved = false;
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, name);
-            stmt.setString(2, position);
-            stmt.setString(3, phone);
-            stmt.setBigDecimal(4, pay_rate);
-            stmt.setInt(5, hours);
-            saved = stmt.executeUpdate() == 1;
-        }
-        catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-
-        close_connection();
-        return saved;
+                + "VALUES ((SELECT COALESCE(MAX(id_employee), 0) + 1 FROM employees), "
+                + sql_value(name) + ", " + sql_value(position) + ", " + sql_value(phone) + ", "
+                + pay_rate.toPlainString() + ", " + hours + ")";
+        return issue_query_type_update(sql);
     }
 
     public static boolean update_employee(int id, String name, String position, String phone,
                                       BigDecimal pay, int hours) {
-        if (!open_connection()) {
+        String sql = "UPDATE employees SET name = " + sql_value(name)
+                + ", position = " + sql_value(position)
+                + ", phone_number = " + sql_value(phone)
+                + ", current_pay_rate = " + pay.toPlainString()
+                + ", hours_worked_for_week = " + hours
+                + " WHERE id_employee = " + id;
+        return issue_query_type_update(sql);
+    }
+
+    public static boolean delete_employee(int id) {
+        return issue_query_type_update("DELETE FROM employees WHERE id_employee = " + id);
+    }
+
+    public static boolean add_drink_with_ingredients(
+            String name, BigDecimal price, String type,
+            boolean hot_available, boolean is_non_caffeinated,
+            List<Integer> edible_ids) {
+        String drink_sql = "INSERT INTO menu_drinks "
+                + "(id_drink, name, price, type, hot_available, is_non_caffeinated) "
+                + "VALUES ((SELECT COALESCE(MAX(id_drink), 0) + 1 FROM menu_drinks), "
+                + sql_value(name) + ", " + price.toPlainString() + ", " + sql_value(type) + ", "
+                + hot_available + ", " + is_non_caffeinated + ")";
+        if (!issue_query_type_update(drink_sql)) {
             return false;
         }
 
-        String sql = "UPDATE employees SET name = ?, position = ?, phone_number = ?, "
-                + "current_pay_rate = ?, hours_worked_for_week = ? WHERE id_employee = ?";
-        boolean ok = false;
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, name);
-            stmt.setString(2, position);
-            stmt.setString(3, phone);
-            stmt.setBigDecimal(4, pay);
-            stmt.setInt(5, hours);
-            stmt.setInt(6, id);
-            ok = stmt.executeUpdate() == 1;
+        List<MenuDrinksRowDTO> drinks = issue_query_type_rows_MenuDrinks(
+                "SELECT * FROM menu_drinks WHERE name = " + sql_value(name)
+                        + " ORDER BY id_drink DESC LIMIT 1");
+        if (drinks.isEmpty()) {
+            return false;
         }
-        catch (SQLException e) {
-            System.out.println(e.getMessage());
+        int drink_id = drinks.get(0).id_drink();
+        for (int edible_id : edible_ids) {
+            String ingredient_sql = "INSERT INTO join_menu_drinks_and_inv_edible "
+                    + "(id_join_menu_drinks_and_inv_edible, id_drink, id_edible) "
+                    + "VALUES ((SELECT COALESCE(MAX(id_join_menu_drinks_and_inv_edible), 0) + 1 "
+                    + "FROM join_menu_drinks_and_inv_edible), " + drink_id + ", " + edible_id + ")";
+            if (!issue_query_type_update(ingredient_sql)) {
+                return false;
+            }
         }
-
-        close_connection();
-        return ok;
+        return true;
     }
 
+    public static boolean update_drink_with_ingredients(
+            int drink_id, String name, BigDecimal price, String type,
+            boolean hot_available, boolean is_non_caffeinated,
+            List<Integer> edible_ids) {
+        String drink_sql = "UPDATE menu_drinks SET name = " + sql_value(name)
+                + ", price = " + price.toPlainString() + ", type = " + sql_value(type)
+                + ", hot_available = " + hot_available + ", is_non_caffeinated = "
+                + is_non_caffeinated + " WHERE id_drink = " + drink_id;
+        if (!issue_query_type_update(drink_sql)
+                || !issue_query_type_update(
+                        "DELETE FROM join_menu_drinks_and_inv_edible WHERE id_drink = " + drink_id)) {
+            return false;
+        }
+
+        for (int edible_id : edible_ids) {
+            String ingredient_sql = "INSERT INTO join_menu_drinks_and_inv_edible "
+                    + "(id_join_menu_drinks_and_inv_edible, id_drink, id_edible) "
+                    + "VALUES ((SELECT COALESCE(MAX(id_join_menu_drinks_and_inv_edible), 0) + 1 "
+                    + "FROM join_menu_drinks_and_inv_edible), " + drink_id + ", " + edible_id + ")";
+            if (!issue_query_type_update(ingredient_sql)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean delete_drink(int drink_id) {
+        if(!issue_query_type_update("DELETE FROM menu_drinks WHERE id_drink = " + drink_id)){ 
+            return false;
+        }
+        return issue_query_type_update(
+                "DELETE FROM join_menu_drinks_and_inv_edible WHERE id_drink = " + drink_id);
+
+    }
+
+    public static boolean add_topping_with_inventory(String name, BigDecimal price) {
+        if (!issue_query_type_update(
+                "INSERT INTO menu_toppings (id_topping, name, price) "
+                + "VALUES ((SELECT COALESCE(MAX(id_topping), 0) + 1 FROM menu_toppings), "
+                + sql_value(name) + ", " + price.toPlainString() + ")")) {
+            return false;
+        }
+
+        List<MenuToppingsRowDTO> toppings = issue_query_type_rows_MenuToppings(
+                "SELECT * FROM menu_toppings WHERE name = " + sql_value(name)
+                        + " ORDER BY id_topping DESC LIMIT 1");
+        if (toppings.isEmpty()) {
+            return false;
+        }
+        int topping_id = toppings.get(0).id_topping();
+
+        if (!issue_query_type_update(
+                "INSERT INTO inv_edible (id_edible, name, amount_servings) "
+                + "VALUES ((SELECT COALESCE(MAX(id_edible), 0) + 1 FROM inv_edible), "
+                + sql_value(name) + ", 400)")) {
+            return false;
+        }
+        List<InvEdibleRowDTO> ingredients = issue_query_type_rows_InvEdible(
+                "SELECT * FROM inv_edible WHERE name = " + sql_value(name)
+                        + " ORDER BY id_edible DESC LIMIT 1");
+        if (ingredients.isEmpty()) {
+            return false;
+        }
+        int edible_id = ingredients.get(0).id_edible();
+
+        return issue_query_type_update(
+                "INSERT INTO join_menu_toppings_and_inv_edible "
+                + "(id_join_menu_toppings_and_inv_edible, id_topping, id_edible) "
+                + "VALUES ((SELECT COALESCE(MAX(id_join_menu_toppings_and_inv_edible), 0) + 1 "
+                + "FROM join_menu_toppings_and_inv_edible), " + topping_id + ", " + edible_id + ")");
+    }
+
+    public static boolean update_topping_with_inventory(
+            int topping_id, String name, BigDecimal price) {
+        if (!issue_query_type_update(
+                "UPDATE menu_toppings SET name = " + sql_value(name)
+                + ", price = " + price.toPlainString()
+                + " WHERE id_topping = " + topping_id)) {
+            return false;
+        }
+
+        return issue_query_type_update(
+                "UPDATE inv_edible SET name = " + sql_value(name)
+                + " WHERE id_edible = (SELECT id_edible "
+                + "FROM join_menu_toppings_and_inv_edible WHERE id_topping = " + topping_id + ")");
+    }
+
+    
+    private static boolean modify_topping_quantity_in_inventory(int topping_id, int val, String type) {
+        if(type.equals("inv_edible")){
+            // ArrayList<JoinMenuToppingsAndInvEdibleRowDTO> edible_rows;
+            // edible_rows = PGComms.issue_query_type_rows_JoinMenuToppingsAndInvEdible("SELECT * FROM join_menu_toppings_and_inv_edible WHERE id_topping = " + topping_id);
+            // int edible_id = edible_rows.getFirst().id_edible();
+
+            if (!issue_query_type_update(
+                    "UPDATE inv_edible SET amount_servings = " + val
+                    + " WHERE id_edible = " + topping_id)) {
+                return false;
+            }
+            return true;
+        }
+        else if(type.equals("inv_nonedible")) {
+            if (!issue_query_type_update(
+                    "UPDATE inv_nonedible SET amount = " + val
+                    + " WHERE id_nonedible = " + topping_id)) {
+                return false;
+            }
+            return true;
+        }
+        else{throw new IllegalArgumentException("Invalid inventory type: " + type);}
+    }
+
+    /**
+     * Modifies the quantity of a edible inventory item to the input value.
+     * If you simply want to decrement, input -1.
+     */
+    public static boolean modify_topping_quantity_in_edible_inventory(int edible_id, int val){
+        if(val == -1){
+            val= PGComms.issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE id_edible = " + edible_id).getFirst().amount_servings() - 1;
+        }
+        return modify_topping_quantity_in_inventory(edible_id, val, "inv_edible");
+    }
+    /**
+     * Modifies the quantity of a nonedible inventory item to the input value.
+     * If you simply want to decrement, input -1.
+     */
+    public static boolean modify_topping_quantity_in_nonedible_inventory(int nonedible_id, int val){
+        if(val == -1){
+            val= PGComms.issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible WHERE id_nonedible = " + nonedible_id).getFirst().amount() - 1;
+        }
+        return modify_topping_quantity_in_inventory(nonedible_id, val, "inv_nonedible");
+    }
+
+    public static boolean delete_topping(int topping_id) {
+        if(!issue_query_type_update("DELETE FROM menu_toppings WHERE id_topping = " + topping_id)){ 
+            return false;
+        }
+        if(!issue_query_type_update("DELETE FROM inv_edible WHERE id_edible = (SELECT id_edible "
+                + "FROM join_menu_toppings_and_inv_edible WHERE id_topping = " + topping_id + ")")) {
+            return false;
+        }
+        return issue_query_type_update(
+                "DELETE FROM join_menu_toppings_and_inv_edible WHERE id_topping = " + topping_id);
+    }
 }

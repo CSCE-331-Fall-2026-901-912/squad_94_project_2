@@ -6,9 +6,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.BaseMenu;
 import controller.CustomerController;
+//import model.InventoryScreen;
 import database.PGComms;
 import java.util.ArrayList;
-// import controller.ManagerController;
+//import controller.ManagerController;
 
 public class App extends Application {
 
@@ -19,7 +20,7 @@ public class App extends Application {
         try {
             FXMLLoader base_menu = new FXMLLoader(getClass().getResource("/gui/cashier/BaseMenu.fxml"));
             CustomerController customer_controller = new CustomerController();
-            BaseMenu base_menu_model = new BaseMenu();
+            BaseMenu inventory_screen = new BaseMenu();
             base_menu.setController(customer_controller);
             
             Parent root1 = base_menu.load();
@@ -28,7 +29,7 @@ public class App extends Application {
             stage.setScene(scene1);
             stage.show();
 
-            customer_controller.initialize(base_menu_model);
+            customer_controller.initialize(inventory_screen);
                 
         } catch (Exception e) {
             System.err.println("Error given as: " +e);
