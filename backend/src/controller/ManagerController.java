@@ -7,6 +7,13 @@ import model.MainScreenGUI;
 import model.OrderHistory;
 import model.SalesAnalytics;
 import model.Employee;
+import model.ProcessingOrders;
+import database.PGComms;
+import java.util.ArrayList;
+import java.util.List;
+import java.math.BigDecimal;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.collections.FXCollections;
 import model.Menu;
 
 import dto.InvEdibleRowDTO;
@@ -48,14 +55,15 @@ import javafx.event.ActionEvent;
 import javafx.stage.Stage;
 
 
-
-
 public class ManagerController {
     
+    private MainScreenGUI main_screen_gui = new MainScreenGUI();
     private InventoryScreen inventory_screen;
-    private MainScreenGUI main_screen_gui;
     private OrderHistory order_history;
     private SalesAnalytics sales_analytics;
+    private ProcessingOrders proc_orders;
+
+    //INVENTORYSCREEN
     private AddItemPopUp add_item_pop_up;
 
 //    //INVENTORYSCREEN
@@ -158,22 +166,34 @@ public class ManagerController {
 //
     @FXML public void ProcOrdersOpen(MouseEvent event){
         // TODO: open the processing orders view
+        proc_orders = main_screen_gui.open_proc_orders(this);
     }
     @FXML public void OHOpen(MouseEvent event){
         // TODO: open today's order history
+        order_history = main_screen_gui.open_order_history(this);
     }
     @FXML public void InventoryOpen(MouseEvent event){
         // TODO: open inventory
+        inventory_screen = main_screen_gui.open_inventory(this);
     }
     @FXML public void SalesEntered(MouseEvent event){
         // TODO: open sales
+        sales_analytics = main_screen_gui.open_sales_analytics(this);
     }
+
+    @FXML void OHExitPressed(ActionEvent event) {
+        if (order_history != null) order_history.close();
+    }
+    public void initialize(OrderHistory oh) { this.order_history = oh; }
+    public void initialize(SalesAnalytics sales) { this.sales_analytics = sales; }
+    public void initialize(ProcessingOrders proc) { this.proc_orders = proc; }
+    public void initialize(InventoryScreen inv) { this.inventory_screen = inv; }
     
     @FXML 
     public void open_employee_view(ActionEvent event){
         try {
             java.net.URL url = getClass().getResource("/gui/manager/EmployeeView.fxml");
-            if (url == null) {                                   // avoids the "Location is not set" error
+            if (url == null) {
                 System.out.println("EmployeeView.fxml not found");
                 return;
             }
@@ -183,7 +203,7 @@ public class ManagerController {
             loader.setController(employee);
 
             Parent root = loader.load();
-            employee.load_employees();                // fill the table after the FXML loads
+            employee.load_employees();
 
             Stage stage = new Stage();
             stage.setTitle("Employees");

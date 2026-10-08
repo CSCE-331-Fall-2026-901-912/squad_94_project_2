@@ -24,28 +24,28 @@ import java.util.Comparator;
 import javafx.scene.control.ComboBox;
 
 
-public class OrderHistory {
+public class ProcessingOrders {
     @FXML private TableView<OrdersRowDTO> order_table;
     @FXML private TableColumn<OrdersRowDTO, Integer> order_id;
     @FXML private TableColumn<OrdersRowDTO, String> order_name;
     @FXML private TableColumn<OrdersRowDTO, BigDecimal> order_total;
-    @FXML private TextField searchOH;
-    @FXML private ComboBox<String> sortByOH;
-    @FXML private ComboBox<String> timePeriodOH;
+    @FXML private TextField searchBarProcessingOrders;
+    @FXML private ComboBox<String> sortByDropdownProcessingOrders;
+    @FXML private ComboBox<String> timePeriodDropdownProcessingOrders;
 
     private final Stage stage;
     private final Map<Integer, String> drink_names = new HashMap<>();
     private FilteredList<OrdersRowDTO> filtered;
     private SortedList<OrdersRowDTO> sorted;
 
-    public OrderHistory() { this(null); }
-    public OrderHistory(Stage stage) { this.stage = stage; }
+    public ProcessingOrders() { this(null); }
+    public ProcessingOrders(Stage stage) { this.stage = stage; }
 
     public void close() {
         if (stage != null) stage.close();
     }
 
-     public void load_orders() {
+    public void load_orders() {
         drink_names.clear();
         for (MenuDrinksRowDTO d : PGComms.issue_query_type_rows_MenuDrinks("SELECT * FROM menu_drinks")) {
             drink_names.put(d.id_drink(), d.name());
@@ -61,15 +61,15 @@ public class OrderHistory {
         sorted = new SortedList<>(filtered);
         order_table.setItems(sorted);
 
-        sortByOH.getItems().setAll("Order ID (low to high)", "Order ID (high to low)", "Drink name (A-Z)", "Total (low to high)", "Total (high to low)", "Newest first");
-        sortByOH.getSelectionModel().selectFirst();
+        sortByDropdownProcessingOrders.getItems().setAll("Order ID (low to high)", "Order ID (high to low)", "Drink name (A-Z)", "Total (low to high)", "Total (high to low)", "Newest first");
+        sortByDropdownProcessingOrders.getSelectionModel().selectFirst();
 
-        timePeriodOH.getItems().setAll("All time", "Today", "Last 7 days", "Last 30 days");
-        timePeriodOH.getSelectionModel().selectFirst();
+        timePeriodDropdownProcessingOrders.getItems().setAll("All time", "Today", "Last 7 days", "Last 30 days");
+        timePeriodDropdownProcessingOrders.getSelectionModel().selectFirst();
 
-        searchOH.textProperty().addListener((o, a, b) -> apply_filters());
-        timePeriodOH.valueProperty().addListener((o, a, b) -> apply_filters());
-        sortByOH.valueProperty().addListener((o, a, b) -> apply_sort());
+        searchBarProcessingOrders.textProperty().addListener((o, a, b) -> apply_filters());
+        timePeriodDropdownProcessingOrders.valueProperty().addListener((o, a, b) -> apply_filters());
+        sortByDropdownProcessingOrders.valueProperty().addListener((o, a, b) -> apply_sort());
         apply_sort();
     }
 
@@ -78,8 +78,8 @@ public class OrderHistory {
     }
 
     private void apply_filters() {
-        String text = searchOH.getText() == null ? "" : searchOH.getText().trim().toLowerCase();
-        String period = timePeriodOH.getValue();
+        String text = searchBarProcessingOrders.getText() == null ? "" : searchBarProcessingOrders.getText().trim().toLowerCase();
+        String period = timePeriodDropdownProcessingOrders.getValue();
         filtered.setPredicate(o -> matches_search(o, text) && in_period(o, period));
     }
 
@@ -104,7 +104,7 @@ public class OrderHistory {
     }
 
     private void apply_sort() {
-        String choice = sortByOH.getValue();
+        String choice = sortByDropdownProcessingOrders.getValue();
         if (choice == null) return;
         Comparator<OrdersRowDTO> c = switch (choice) {
             case "Order ID (high to low)" -> Comparator.comparingInt(OrdersRowDTO::id_order).reversed();
@@ -124,7 +124,7 @@ public class OrderHistory {
         });
     }
 
-        private OffsetDateTime order_time(OrdersRowDTO order) {
+    private OffsetDateTime order_time(OrdersRowDTO order) {
         return order.time_created_at();
     } 
 }

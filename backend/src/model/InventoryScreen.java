@@ -15,6 +15,14 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class InventoryScreen {
+
+    private final Stage stage;
+
+    public InventoryScreen() { this(null); }
+    public InventoryScreen(Stage stage) { this.stage = stage; }
+
+    public void close() {
+        if (stage != null) stage.close();
     
     private StringProperty edible;
     private StringProperty non_edible;
