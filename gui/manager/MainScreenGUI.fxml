@@ -41,7 +41,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ManagerController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ManagerController">
    <children>
       <ScrollPane layoutX="252.0" layoutY="35.0" prefHeight="172.0" prefWidth="314.0">
          <content>
@@ -70,13 +70,13 @@
                   <Font name="Calibri" size="14.0" />
                </font>
             </Label>
-            <TableView id="OOSTable" fx:id="OOSTable" layoutX="13.0" layoutY="54.0" prefHeight="154.0" prefWidth="167.0">
+            <TableView id="OOSTable" fx:id="OOSTable" layoutX="13.0" layoutY="94.0" prefHeight="114.0" prefWidth="167.0">
               <columns>
                 <TableColumn fx:id="OOSName" prefWidth="75.0" text="Name" />
                 <TableColumn fx:id="OOSAmount" prefWidth="91.19999999999999" text="Amount" />
               </columns>
             </TableView>
-            <Label fx:id="OOSLabel" layoutX="13.0" layoutY="27.0" prefHeight="26.0" prefWidth="70.0" text="Out Of Stock">
+            <Label fx:id="OOSLabel" layoutX="13.0" layoutY="67.0" prefHeight="26.0" prefWidth="70.0" text="Out Of Stock">
                <font>
                   <Font size="11.0" />
                </font>
@@ -92,6 +92,11 @@
                   <Font size="11.0" />
                </font>
             </Label>
+            <Button layoutX="13.0" layoutY="32.0" mnemonicParsing="false" onAction="#open_edit_inventory" prefHeight="18.0" prefWidth="167.0" text="Edit Inventory">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
       <Label fx:id="ManagerLabel" layoutX="29.0" layoutY="17.0" prefHeight="36.0" prefWidth="78.0" text="Manager">
