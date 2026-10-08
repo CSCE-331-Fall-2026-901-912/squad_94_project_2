@@ -41,7 +41,9 @@ public class TipPopUp {
         tip_total.set("Total: " + tip_total_val);
     }
     public boolean tipdone(){
+
         // TODO: update PSQL database
+        // I believe this task has been completed? - Rigo
         int num_orders = 0;
 
         
@@ -108,23 +110,34 @@ public class TipPopUp {
         }
 
         id_drink = PGComms.issue_query_type_rows_MenuDrinks("SELECT * FROM menu_drinks WHERE name LIKE '"+drink_name+"';").getFirst().id_drink();
+
+        // Handle removal of inv_edible amounts based upon drink.
+        ArrayList<Integer> id_edibles = PGComms.get_id_edibles_for_drink(id_drink);
+        for (int id_edible : id_edibles){
+            PGComms.modify_topping_quantity_in_edible_inventory(id_edible, -1);
+        }
+
+
         System.err.println("Marker 4");
         
         if(!id_topping1_name.equals("No topping")){
             System.err.println("top1");   
-            id_topping1 = PGComms.issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE name LIKE '"+id_topping1_name+"';").getFirst().id_edible();
+            id_topping1 = PGComms.issue_query_type_rows_MenuToppings("SELECT * FROM menu_toppings WHERE name LIKE '"+id_topping1_name+"';").getFirst().id_topping();
+            int id_edible1 = PGComms.issue_query_type_rows_JoinMenuToppingsAndInvEdible("SELECT * FROM join_menu_toppings_and_inv_edible WHERE id_topping = " + id_topping1).getFirst().id_edible();
+
             System.err.println("Marker 4.5");
             // int topping_amount = PGComms.issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE name LIKE '"+id_topping1_name+"';").getFirst().amount_servings();
             System.err.println("Marker 4.6");
-            PGComms.modify_topping_quantity_in_edible_inventory(id_topping1, -1);
+            PGComms.modify_topping_quantity_in_edible_inventory(id_edible1, -1);
             System.err.println("Marker 4.7");
         }
         System.err.println("Marker 4.8");
         if(!id_topping2_name.equals("No topping")){
             // System.err.println("top2");   
             id_topping2 = PGComms.issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE name LIKE '"+id_topping2_name+"';").getFirst().id_edible();
+            int id_edible2 = PGComms.issue_query_type_rows_JoinMenuToppingsAndInvEdible("SELECT * FROM join_menu_toppings_and_inv_edible WHERE id_topping = " + id_topping2).getFirst().id_edible();
             // int topping_amount = PGComms.issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE name LIKE '"+id_topping2_name+"';").getFirst().amount_servings();
-            PGComms.modify_topping_quantity_in_edible_inventory(id_topping2, -1);
+            PGComms.modify_topping_quantity_in_edible_inventory(id_edible2, -1);
         }
 
         PGComms.modify_topping_quantity_in_nonedible_inventory(1,-1);

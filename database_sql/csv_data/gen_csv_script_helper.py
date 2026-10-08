@@ -14,7 +14,7 @@ def gen_hardcoded_csv(csv_name):
             writer.writerow({"id_edible": 6, "name": "Honey", "amount_servings": 500})
             writer.writerow({"id_edible": 7, "name": "Ice", "amount_servings": 1300})
             writer.writerow({"id_edible": 8, "name": "Coffee", "amount_servings": 550})
-            writer.writerow({"id_edible": 9, "name": "Creama Topping", "amount_servings": 250})
+            writer.writerow({"id_edible": 9, "name": "Crema Topping", "amount_servings": 250})
             writer.writerow({"id_edible": 10, "name": "Coffee Jelly", "amount_servings": 300})
             writer.writerow({"id_edible": 11, "name": "Hokkaido Powder", "amount_servings": 170})
             writer.writerow({"id_edible": 12, "name": "Thai Tea Powder", "amount_servings": 500})
@@ -158,7 +158,7 @@ def gen_hardcoded_csv(csv_name):
             writer.writerow({"id_topping": 7, "name": "Mango Popping Boba", "price": 1.0})
             writer.writerow({"id_topping": 8, "name": "Strawberry Popping Boba", "price": 1.0})
             writer.writerow({"id_topping": 9, "name": "Ice Cream", "price": 1.0})
-            writer.writerow({"id_topping": 10, "name": "Creama", "price": 1.0})
+            writer.writerow({"id_topping": 10, "name": "Crema", "price": 1.0})
 
         if csv_name == "join_menu_drinks_and_inv_edible":
             header = ["id_join_menu_drinks_and_inv_edible", "id_drink", "id_edible"]

@@ -432,10 +432,11 @@ public class PGComms {
         for (InvNonEdibleRowDTO item : inv_non_edible_select) {
             output.add(new IDNameValDTO(item.id_nonedible(), item.name(), item.amount()));
         }
+
         for (InvEdibleRowDTO item : inv_edible_select) {
             output.add(new IDNameValDTO(item.id_edible(), item.name(), item.amount_servings()));
         }
-        System.out.println(output);
+
         return output;
     }
     public static List<IDNameValDTO> get_out_of_stock() {
@@ -448,6 +449,31 @@ public class PGComms {
         List<InvNonEdibleRowDTO> inv_non_edible_select = issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible WHERE amount > 0 ORDER BY amount LIMIT 3");
         List<InvEdibleRowDTO> inv_edible_select = issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE amount_servings > 0 ORDER BY amount_servings LIMIT 3");
         return get_inv_selection_common(inv_non_edible_select, inv_edible_select);
+    }
+
+    // Get all id_edible values that correspond to edible inventory that must be consumed for a specific drink (based on id_drink).
+    public static ArrayList<Integer> get_id_edibles_for_drink(int id_drink) {
+        ArrayList<Integer> id_edibles = new ArrayList<>();
+
+        if (!open_connection()) {
+            return id_edibles;
+        }
+
+        String sql = "SELECT id_edible FROM join_menu_drinks_and_inv_edible WHERE id_drink = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id_drink);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    id_edibles.add(rs.getInt("id_edible"));
+                }
+            }
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        close_connection();
+        return id_edibles;
     }
 
     // Return the name of every topping in menu_toppings, ordered by id_topping.
