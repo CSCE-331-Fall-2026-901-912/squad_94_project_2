@@ -5,11 +5,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.BaseMenu;
-//import controller.CustomerController;
-import model.InventoryScreen;
+import controller.CustomerController;
+//import model.InventoryScreen;
 import database.PGComms;
 import java.util.ArrayList;
-import controller.ManagerController;
+//import controller.ManagerController;
 
 public class App extends Application {
 
@@ -18,9 +18,9 @@ public class App extends Application {
 
     public void start(Stage stage) throws Exception {
         try {
-            FXMLLoader base_menu = new FXMLLoader(getClass().getResource("/gui/manager/InventoryScreen.fxml"));
-            ManagerController customer_controller = new ManagerController();
-            InventoryScreen inventory_screen = new InventoryScreen();
+            FXMLLoader base_menu = new FXMLLoader(getClass().getResource("/gui/cashier/BaseMenu.fxml"));
+            CustomerController customer_controller = new CustomerController();
+            BaseMenu inventory_screen = new BaseMenu();
             base_menu.setController(customer_controller);
             
             Parent root1 = base_menu.load();
