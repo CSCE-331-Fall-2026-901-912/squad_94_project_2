@@ -280,28 +280,7 @@ public class ManagerController {
 //    @FXML
 //    private ImageView itemImage;
 //
-//    //PROCESSINGORDERS
-//    @FXML
-//    private TableColumn<Order, Integer> idProcessingOrdersCol;
-//
-//    @FXML
-//    private TableColumn<Order, String> orderProcessingOrdersCol;
-//
-//    @FXML
-//    private TextField searchBarProcessingOrders;
-//
-//    @FXML
-//    private ComboBox<String> sortByDropdownProcessingOrders;
-//
-//    @FXML
-//    private TableView<Order> tableProcessingOrders;
-//
-//    @FXML
-//    private ComboBox<String> timePeriodDropdownProcessingOrders;
-//
-//    @FXML
-//    private TableColumn<Order, Double> totalProcessingOrdersCol;
-//
+
 //
 //    //INVENTORYSCREEN FUNCTIONS
 //    @FXML
