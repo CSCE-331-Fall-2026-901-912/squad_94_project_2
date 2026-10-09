@@ -86,4 +86,25 @@ public class MenuModel {
     public boolean delete_topping(int topping_id) {
         return PGComms.delete_topping(topping_id);
     }
+
+    //used for the cashier side
+    public List<String> get_drink_names_by_type(String type) {
+        return PGComms.get_drink_names_by_type(type);
+    }
+
+    public List<String> get_topping_names() {
+        return PGComms.get_topping_names();
+    }
+
+    public boolean is_hot_available(String drink_name) {
+        return PGComms.is_hot_available(drink_name);
+    }
+
+    public BigDecimal get_drink_price(String drink_name) {
+        return PGComms.get_drink_price(drink_name);
+    }
+
+    public BigDecimal get_topping_price(String topping_name) {
+        return PGComms.get_topping_price(topping_name);
+    }
 }

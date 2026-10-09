@@ -1,6 +1,7 @@
 package model;
 
 import database.PGComms;
+import dto.IDNameValDTO;
 import dto.InvEdibleRowDTO;
 import dto.InvNonEdibleRowDTO;
 
@@ -47,5 +48,13 @@ public class InventoryModel {
 
     public List<InvNonEdibleRowDTO> find_non_edible(String name) {
         return PGComms.issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible WHERE name ILIKE '" + name + "';");
+    }
+
+    public List<IDNameValDTO> get_out_of_stock() {
+        return PGComms.get_out_of_stock();
+    }
+
+    public List<IDNameValDTO> get_running_low() {
+        return PGComms.get_running_low_on();
     }
 }

@@ -1,40 +1,33 @@
-import dto.MenuDrinksRowDTO;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import model.BaseMenu;
-import controller.CustomerController;
-//import model.InventoryScreen;
+import model.CurrentOrderModel;
+import model.MenuModel;
+import controller.BaseMenuController;
 import database.PGComms;
-import java.util.ArrayList;
-//import controller.ManagerController;
 
 public class App extends Application {
 
-    
-    // @Override
-
     public void start(Stage stage) throws Exception {
-        try {
-            FXMLLoader base_menu = new FXMLLoader(getClass().getResource("/gui/cashier/BaseMenu.fxml"));
-            CustomerController customer_controller = new CustomerController();
-            BaseMenu inventory_screen = new BaseMenu();
-            base_menu.setController(customer_controller);
-            
-            Parent root1 = base_menu.load();
-            Scene scene1 = new Scene(root1);
+        CurrentOrderModel order_model = new CurrentOrderModel();
+        MenuModel menu_model = new MenuModel();
 
-            stage.setScene(scene1);
-            stage.show();
+        BaseMenuController controller =
+            new BaseMenuController(order_model, menu_model);
 
-            customer_controller.initialize(inventory_screen);
-                
-        } catch (Exception e) {
-            System.err.println("Error given as: " +e);
-        }
+        FXMLLoader loader = new FXMLLoader(
+            getClass().getResource("/gui/cashier/BaseMenu.fxml"));
+        loader.setController(controller);
+
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+
+        stage.setScene(scene);
+        stage.show();
     }
+
     public static void main(String[] args) {
         if (args.length != 1) {
             return;

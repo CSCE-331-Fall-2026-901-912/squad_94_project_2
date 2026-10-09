@@ -1,73 +1,62 @@
 package controller;
 
-import model.BaseMenu;
-import model.CancellationPopUp;
-import model.OrderMenu;
-import model.TipPopUp;
-
-import javafx.fxml.FXML;
-// import java.sql.*;
-import javafx.scene.control.Button;
-// import javafx.scene.control.TextField;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.Label;
-// import javafx.scene.text.Text;
-import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
-import javafx.event.ActionEvent;
-import javafx.scene.control.Alert;
-
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.beans.binding.Bindings;
-import javafx.scene.control.Slider;
-import javafx.scene.Node;
-import java.math.BigDecimal;
 
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import database.PGComms;
+import javafx.scene.control.Slider;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
+import javafx.scene.control.Label;
+import javafx.scene.Node;
+import javafx.beans.binding.Bindings;
 
-public class CustomerController {
+import model.CurrentOrderModel;
+import model.MenuModel;
+import dto.OrderLineDTO;
 
-    // private DataSource dataSource;
-    private BaseMenu base_menu;
-    private CancellationPopUp cancel_pop_up;
-    private OrderMenu order_menu;
-    private TipPopUp tip_pop_up;
+public class OrderMenuController {
+    private final CurrentOrderModel order_model;
+    private final MenuModel menu_model;
 
-
-    // BASEMENU TEXTS & BUTTONS
-    @FXML private TextArea current_order;
-    @FXML private Label order_total;
-    
-    @FXML public void add_drink(){
-        order_menu = base_menu.add_drink(this);
-    }
-    @FXML public void clear_order(){
-        cancel_pop_up = base_menu.clear_order(this);
-    }
-    @FXML public void finish_order(){
-        tip_pop_up = base_menu.finish_order(this);
-    }
-    @FXML public void manager_view(){
-        base_menu.manager_view(new ManagerController());
-    }
-
-    // CANCELLATION POP UP BUTTONS
-    @FXML public void confirm_cancel(){
-        base_menu.reset_order();
-        cancel_pop_up.confirm_cancel();
-    }
-    @FXML public void deny_cancel(){
-        cancel_pop_up.deny_cancel();
-    }
-
-    // ORDER MENU BUTTONS AND SLIDER
     @FXML private ComboBox<String> milk_tea_box;
     @FXML private ComboBox<String> fresh_tea_box;
     @FXML private ComboBox<String> fruit_tea_box;
     @FXML private ComboBox<String> no_caff_box;
+
+    @FXML private GridPane topping_grid;
+    private static final int MAX_TOPPINGS = 2;
+    private static final String SELECTED_STYLE =
+        "-fx-background-color: #2e9e5b; -fx-text-fill: white; -fx-font-weight: bold;";
+    private final List<String> selected_toppings = new ArrayList<>();
+
+    @FXML private Slider sugar_slider;
+    @FXML private Label sugar_label;
+
+    @FXML private Label selected_drink_label;
+    @FXML private Button no_ice_button;
+    @FXML private Button light_ice_button;
+    @FXML private Button regular_ice_button;
+    @FXML private Button hot_button;
+
+    public OrderMenuController(CurrentOrderModel order_model, MenuModel menu_model) {
+        this.order_model = order_model;
+        this.menu_model = menu_model;
+    }
+
+    @FXML
+    private void initialize() {
+        populate_drink_boxes();
+        populate_topping_buttons();
+        setup_sugar_slider();
+        setup_drink_selection();
+    }
 
     // Fill each combo box with the menu_drinks rows of the matching type (dynamic adding)
     public void populate_drink_boxes(){
@@ -78,14 +67,8 @@ public class CustomerController {
     }
     private void fill_box(ComboBox<String> box, String type){
         if (box == null) return;
-        box.setItems(FXCollections.observableArrayList(PGComms.get_drink_names_by_type(type)));
+        box.setItems(FXCollections.observableArrayList(menu_model.get_drink_names_by_type(type)));
     }
-    
-    @FXML private GridPane topping_grid;
-    private static final int MAX_TOPPINGS = 2;
-    private static final String SELECTED_STYLE =
-        "-fx-background-color: #2e9e5b; -fx-text-fill: white; -fx-font-weight: bold;";
-    private final List<String> selected_toppings = new ArrayList<>();
 
     //allows for dynamic adding of toppings
     public void populate_topping_buttons(){
@@ -93,7 +76,7 @@ public class CustomerController {
         selected_toppings.clear();         
         topping_grid.getChildren().clear();
 
-        List<String> toppings = PGComms.get_topping_names();
+        List<String> toppings = menu_model.get_topping_names();
         for (int i = 0; i < toppings.size(); i++) {
             String name = toppings.get(i);
 
@@ -135,9 +118,6 @@ public class CustomerController {
         return List.copyOf(selected_toppings);
     }
 
-    @FXML private Slider sugar_slider;
-    @FXML private Label sugar_label;
-
     public void setup_sugar_slider(){
         if (sugar_slider == null || sugar_label == null) return;   
         sugar_label.textProperty().bind(
@@ -150,14 +130,8 @@ public class CustomerController {
     public int get_sugar_level(){
         return (int) Math.round(sugar_slider.getValue());
     }
-
-    @FXML private Label selected_drink_label;
-    @FXML private Button no_ice_button;
-    @FXML private Button light_ice_button;
-    @FXML private Button regular_ice_button;
-    @FXML private Button hot_button;
+    
     private String selected_drink;
-
     private List<ComboBox<String>> drink_boxes(){
         return List.of(milk_tea_box, fresh_tea_box, fruit_tea_box, no_caff_box);
     }
@@ -184,13 +158,12 @@ public class CustomerController {
         selected_drink = name;
         selected_drink_label.setText("Selected: " + name);
 
-        boolean hot = PGComms.is_hot_available(name);
+        boolean hot = menu_model.is_hot_available(name);
         hot_button.setVisible(hot);
         hot_button.setManaged(hot);
     }
 
     private String selected_ice;
-
     @FXML public void ice_selected(ActionEvent event){
         Button clicked = (Button) event.getSource();
         selected_ice = clicked.getText();                    // "None", "Light", "Regular" or "Hot"
@@ -209,59 +182,27 @@ public class CustomerController {
         String topping1 = selected_toppings.size() > 0 ? selected_toppings.get(0) : "No topping";
         String topping2 = selected_toppings.size() > 1 ? selected_toppings.get(1) : "No topping";
 
-        BigDecimal price = PGComms.get_drink_price(selected_drink);
+        BigDecimal price = menu_model.get_drink_price(selected_drink);
         for (String t : selected_toppings) {
-            price = price.add(PGComms.get_topping_price(t));
+            price = price.add(menu_model.get_topping_price(t));
         }
 
-        base_menu.add_item(
-            selected_drink + ", " + topping1 + ", " + topping2 + ", "
-            + selected_ice + ", " + get_sugar_level() + "%",
-            price);
-
+        order_model.add_item(new OrderLineDTO(
+            selected_drink,
+            topping1,
+            topping2,
+            selected_ice,
+            get_sugar_level(),
+            price));
+        
+        order_model.refresh_display();
         // Close the order menu window.
         ((Node) event.getSource()).getScene().getWindow().hide();
     }
 
-    @FXML public void cancel_order(ActionEvent event){
+    @FXML
+    public void cancel_order(ActionEvent event) {
         ((Node) event.getSource()).getScene().getWindow().hide();
     }
-    // TIP POP UP BUTTONS
-    @FXML private Label tip_total;
 
-    @FXML public void tip0(){
-        tip_pop_up.tip(1.0);
-    }
-    @FXML public void tip10(){
-        tip_pop_up.tip(1.10);
-    }
-    @FXML public void tip15(){
-        tip_pop_up.tip(1.15);
-    }
-    @FXML public void tip20(){
-        tip_pop_up.tip(1.2);
-    }
-    @FXML public void tip25(){
-        tip_pop_up.tip(1.25);
-    }
-    @FXML public void tipdone(){
-        if (tip_pop_up.tipdone()){
-            base_menu.reset_order();
-        }
-        // TODO: update PSQL database
-    }
-
-
-    public void initialize(BaseMenu base_menu){
-        this.base_menu = base_menu;
-        current_order.textProperty().bind(base_menu.get_current_order());
-        order_total.textProperty().bind(base_menu.get_order_total());
-    }
-    public void initialize(TipPopUp tip_pop_up){
-        this.tip_pop_up = tip_pop_up;
-        tip_total.textProperty().bind(tip_pop_up.get_tip_total());
-    }
-    public void initialize(CancellationPopUp cancel_pop_up){
-        this.cancel_pop_up = cancel_pop_up;
-    }
 }
