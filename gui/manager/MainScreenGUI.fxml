@@ -45,7 +45,7 @@
    <children>
       <ScrollPane layoutX="252.0" layoutY="35.0" prefHeight="172.0" prefWidth="314.0">
          <content>
-            <AnchorPane fx:id="OHBox" minHeight="0.0" minWidth="0.0" onMouseClicked="#OHOpen" prefHeight="150.0" prefWidth="316.0">
+            <AnchorPane fx:id="OHBox" minHeight="0.0" minWidth="0.0" onMouseClicked="#open_order_history" prefHeight="150.0" prefWidth="316.0">
                <children>
                   <TableView fx:id="TodayOHTable" layoutX="17.0" layoutY="48.0" prefHeight="94.0" prefWidth="282.0">
                      <columns>

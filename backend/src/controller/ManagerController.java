@@ -3,14 +3,13 @@ package controller;
 import dto.*;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
-import model.AddItemPopUp;
 import model.MainScreenGUI;
-import model.OrderHistory;
 import model.SalesAnalytics;
 import model.EmployeeModel;
 import model.InventoryModel;
 import model.ProcessingOrders;
 import model.MenuModel;
+import model.OrderHistoryModel;
 import database.PGComms;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.Node;
@@ -36,12 +35,8 @@ import java.time.*;
 public class ManagerController {
     
     private MainScreenGUI main_screen_gui = new MainScreenGUI();
-    private OrderHistory order_history;
     private SalesAnalytics sales_analytics;
     private ProcessingOrders proc_orders;
-
-    //INVENTORYSCREEN
-    private AddItemPopUp add_item_pop_up;
 
     @FXML
     private Button edible_button;
@@ -180,23 +175,6 @@ public class ManagerController {
     @FXML private TextField input_name;
     @FXML private TextField input_quantity;
 
-    public void initialize(AddItemPopUp add_item_pop_up){
-        this.add_item_pop_up = add_item_pop_up;
-
-
-
-        // input_name.textProperty().bind(add_item_pop_up.get_input_name()); //with bind updates every time a change is made
-        // input_quantity.textProperty().bind(add_item_pop_up.get_input_quantity());
-
-
-
-        // input_quantity.setEditable(true);
-        // input_name.setEditable(true);
-
-        //find_and_change_item();
-
-    }
-
 
 
     // public void initialize(ItemDetailsPopUp item_details_pop_up){
@@ -214,19 +192,12 @@ public class ManagerController {
 //        // TODO: open the processing orders view
 //        proc_orders = main_screen_gui.open_proc_orders(this);
 //    }
-    @FXML public void OHOpen(MouseEvent event){
-        // TODO: open today's order history
-        order_history = main_screen_gui.open_order_history(this);
-    }
+    
     @FXML public void SalesEntered(MouseEvent event){
         // TODO: open sales
         sales_analytics = main_screen_gui.open_sales_analytics(this);
     }
 
-    @FXML void OHExitPressed(ActionEvent event) {
-        if (order_history != null) order_history.close();
-    }
-    public void initialize(OrderHistory oh) { this.order_history = oh; }
     public void initialize(SalesAnalytics sales) { this.sales_analytics = sales; }
     public void initialize(ProcessingOrders proc) { this.proc_orders = proc; }
 
@@ -284,6 +255,23 @@ public class ManagerController {
                 stage.setTitle("Inventory");
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML private void open_order_history(MouseEvent event) {
+        try {
+            OrderHistoryModel model = new OrderHistoryModel();
+            OrderHistoryController controller = new OrderHistoryController(model);
+            
+            Stage stage = ViewLoader.open_window(
+                "/gui/manager/OrderHistory.fxml",
+                controller,
+                ((Node) event.getSource()).getScene().getWindow());
+            
+            if (stage != null) {
+                stage.setTitle("Order History");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

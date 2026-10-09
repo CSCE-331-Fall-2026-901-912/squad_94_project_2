@@ -378,7 +378,7 @@ public class PGComms {
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                items.add(new OrdersRowDTO(rs.getInt(1), rs.getBoolean(2), rs.getObject(3, OffsetDateTime.class), rs.getObject(4, OffsetDateTime.class), rs.getBigDecimal(5), rs.getInt(6), rs.getBigDecimal(7), rs.getInt(8), rs.getInt(9), rs.getInt(10), rs.getInt(11), rs.getInt(12), rs.getBoolean(13)));
+                items.add(new OrdersRowDTO(rs.getInt(1), rs.getString(2), rs.getObject(3, OffsetDateTime.class), rs.getBigDecimal(4), rs.getInt(5), rs.getBigDecimal(6), rs.getInt(7), rs.getInt(8), rs.getInt(9), rs.getInt(10), rs.getInt(11), rs.getBoolean(12)));
             }
             ps.close();
         }
