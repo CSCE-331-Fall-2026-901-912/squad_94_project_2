@@ -7,7 +7,7 @@ WHERE tip > (0.5); --total_spend/2--
 SELECT *
 FROM (
 	SELECT
-		EXTRACT(HOUR FROM time_completed_at) AS sale_hour, 
+		EXTRACT(HOUR FROM time_created_at) AS sale_hour, 
 		COUNT(DISTINCT id_order) AS order_count,
 		COUNT(*) FILTER (WHERE hot_chosen IS TRUE) AS num_hot,
 		COUNT(*) FILTER (WHERE hot_chosen IS NOT TRUE) AS num_cold
