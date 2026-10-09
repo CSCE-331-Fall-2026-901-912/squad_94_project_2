@@ -19,18 +19,8 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class AddItemPopUp {
-    // private StringProperty input_name;
-    // private StringProperty input_quantity;
-
-    // public StringProperty get_input_name(){ return input_name; }
-    // public StringProperty get_input_quantity(){ return input_quantity; }
-
-    // public void set_input_name(String n_name){ input_name.set(n_name); }
-    // public void set_input_quantity(String n_quantity){ input_quantity.set(n_quantity); }
-
 
     public void find_and_change_item(String name, String quantity){
-
         String name_non_edible_query = "SELECT * FROM inv_nonedible WHERE name LIKE '"+name+"';";
         String name_edible_query = "SELECT * FROM inv_edible WHERE name LIKE '"+name+"';";
         //System.out.println("after the query");

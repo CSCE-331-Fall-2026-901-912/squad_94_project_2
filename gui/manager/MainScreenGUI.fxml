@@ -63,13 +63,13 @@
             </AnchorPane>
          </content>
       </ScrollPane>
-      <AnchorPane fx:id="InventoryBox" layoutX="29.0" layoutY="53.0" onMouseClicked="#InventoryOpen" prefHeight="435.0" prefWidth="196.0">
+      <AnchorPane fx:id="InventoryBox" layoutX="29.0" layoutY="53.0" prefHeight="435.0" prefWidth="196.0">
          <children>
-            <Label fx:id="InventoryLabel" layoutX="66.0" layoutY="1.0" prefHeight="26.0" prefWidth="62.0" text="Inventory">
+            <Button fx:id="InventoryLabel" layoutX="66.0" onAction="#open_edit_inventory" layoutY="1.0" prefHeight="26.0" prefWidth="90.0" text="Inventory">
                <font>
                   <Font name="Calibri" size="14.0" />
                </font>
-            </Label>
+            </Button>
             <TableView id="OOSTable" fx:id="OOSTable" layoutX="13.0" layoutY="54.0" prefHeight="154.0" prefWidth="167.0">
               <columns>
                 <TableColumn fx:id="OOSName" prefWidth="75.0" text="Name" />

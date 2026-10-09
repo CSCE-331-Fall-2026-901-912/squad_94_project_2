@@ -1,7 +1,6 @@
 package database;
 
 import java.sql.*;
-import javax.sql.*;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;

@@ -2,7 +2,6 @@ package controller;
 
 import java.math.BigDecimal;
 
-import database.PGComms;
 import dto.EmployeesRowDTO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,9 +10,7 @@ import javafx.scene.control.TextField;
 import model.EmployeeModel;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 
 public class AddEmployeeController {
@@ -36,7 +33,7 @@ public class AddEmployeeController {
         this.existing = existing;
     }
 
-    @FXML private void initialize() {                       // runs after the fields are injected
+    @FXML private void initialize() {            
         if (existing == null) return;
         title_label.setText("Edit Employee");
         submit_button.setText("Save");

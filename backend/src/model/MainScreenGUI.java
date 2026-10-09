@@ -80,28 +80,6 @@ public class MainScreenGUI {
 //        }
 //        return new ProcessingOrders(null);
 //    }
-
-    @FXML public InventoryScreen open_inventory(ManagerController manager_controller){
-        try {
-            Stage stage_inv = new Stage();
-            FXMLLoader inv_popup = new FXMLLoader(getClass().getResource("/gui/manager/InventoryScreen.fxml"));
-            inv_popup.setController(manager_controller);
-
-            Parent root = inv_popup.load();
-            Scene scene = new Scene(root);
-
-            stage_inv.setScene(scene);
-            stage_inv.show();
-
-            InventoryScreen inv_popup_model = new InventoryScreen(stage_inv);
-            manager_controller.initialize(inv_popup_model);
-            return inv_popup_model;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new InventoryScreen(null);
-    }
     // MAIN SCREEN
     @FXML
     private AnchorPane InventoryBox;

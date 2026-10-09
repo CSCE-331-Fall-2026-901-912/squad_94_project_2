@@ -12,8 +12,6 @@ import javafx.scene.control.TableView;
 import javafx.stage.Window;
 import javafx.stage.Stage;
 import model.EmployeeModel;
-import controller.ViewLoader;
-import controller.AddEmployeeController;
 
 import java.math.BigDecimal;
 

@@ -5,15 +5,6 @@ import model.CancellationPopUp;
 import model.OrderMenu;
 import model.TipPopUp;
 
-import dto.InvEdibleRowDTO;
-import dto.InvNonEdibleRowDTO;
-import dto.EmployeesRowDTO;
-import dto.MenuDrinksRowDTO;
-import dto.MenuToppingsRowDTO;
-import dto.JoinMenuDrinksAndInvEdibleRowDTO;
-import dto.JoinMenuToppingsAndInvEdibleRowDTO;
-import dto.OrdersRowDTO;
-
 import javafx.fxml.FXML;
 // import java.sql.*;
 import javafx.scene.control.Button;

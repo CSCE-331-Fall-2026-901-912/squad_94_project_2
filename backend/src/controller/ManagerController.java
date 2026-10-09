@@ -4,11 +4,11 @@ import dto.*;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import model.AddItemPopUp;
-import model.InventoryScreen;
 import model.MainScreenGUI;
 import model.OrderHistory;
 import model.SalesAnalytics;
 import model.EmployeeModel;
+import model.InventoryModel;
 import model.ProcessingOrders;
 import model.MenuModel;
 import database.PGComms;
@@ -36,7 +36,6 @@ import java.time.*;
 public class ManagerController {
     
     private MainScreenGUI main_screen_gui = new MainScreenGUI();
-    private InventoryScreen inventory_screen;
     private OrderHistory order_history;
     private SalesAnalytics sales_analytics;
     private ProcessingOrders proc_orders;
@@ -67,7 +66,7 @@ public class ManagerController {
     private AnchorPane InventoryBox;
 
     @FXML
-    private Label InventoryLabel;
+    private Button InventoryLabel;
 
     @FXML
     private Label ManagerLabel;
@@ -177,23 +176,9 @@ public class ManagerController {
 
     @FXML private TextArea non_edible_text_area;
     @FXML private TextArea edible_text_area;
-    public void initialize(InventoryScreen inventory_screen){
-
-        this.inventory_screen = inventory_screen;
-        non_edible_text_area.textProperty().bind(inventory_screen.get_non_edible());
-        edible_text_area.textProperty().bind(inventory_screen.get_edible());
-
-    }
 
     @FXML private TextField input_name;
     @FXML private TextField input_quantity;
-
-    @FXML public AddItemPopUp change_item_button(){
-        return inventory_screen.change_item(this);
-    }
-    @FXML public AddItemPopUp submit_changes_button(){
-        return add_item_pop_up.submit_changes_button(input_name.getText(), input_quantity.getText());
-    }
 
     public void initialize(AddItemPopUp add_item_pop_up){
         this.add_item_pop_up = add_item_pop_up;
@@ -233,10 +218,6 @@ public class ManagerController {
         // TODO: open today's order history
         order_history = main_screen_gui.open_order_history(this);
     }
-    @FXML public void InventoryOpen(MouseEvent event){
-        // TODO: open inventory
-        inventory_screen = main_screen_gui.open_inventory(this);
-    }
     @FXML public void SalesEntered(MouseEvent event){
         // TODO: open sales
         sales_analytics = main_screen_gui.open_sales_analytics(this);
@@ -248,7 +229,6 @@ public class ManagerController {
     public void initialize(OrderHistory oh) { this.order_history = oh; }
     public void initialize(SalesAnalytics sales) { this.sales_analytics = sales; }
     public void initialize(ProcessingOrders proc) { this.proc_orders = proc; }
-    // public void initialize(InventoryScreen inv) { this.inventory_screen = inv; }
 
     @FXML 
     public void open_employee_view(ActionEvent event){
@@ -289,21 +269,21 @@ public class ManagerController {
         }
     }
 
-    @FXML private void open_edit_inventory(){
+    @FXML private void open_edit_inventory(ActionEvent event) {
         try {
-            Stage stage = new Stage();
-            FXMLLoader inv_menu = new FXMLLoader(getClass().getResource("/gui/manager/InventoryScreen.fxml"));
-            // ManagerController customer_controller = new ManagerController();
-            inventory_screen = new InventoryScreen(stage);
-            inv_menu.setController(this);
+            InventoryModel model = new InventoryModel();
+            InventoryController controller =
+                new InventoryController(model);
 
-            Parent root1 = inv_menu.load();
-            Scene scene1 = new Scene(root1);
+            Stage stage = ViewLoader.open_window(
+                "/gui/manager/InventoryScreen.fxml",
+                controller,
+                ((Node) event.getSource()).getScene().getWindow());
 
-            stage.setScene(scene1);
-            stage.show();
+            if (stage != null) {
+                stage.setTitle("Inventory");
+            }
 
-            initialize(inventory_screen);
         } catch (Exception e) {
             e.printStackTrace();
         }
