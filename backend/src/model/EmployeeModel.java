@@ -8,7 +8,7 @@ import java.util.List;
 
 public class EmployeeModel {
     public List<EmployeesRowDTO> get_all() {
-        return PGComms.issue_query_type_rows_Employees("SELECT * FROM employees;");
+        return PGComms.issue_query_type_rows_Employees("SELECT * FROM employees ORDER BY id_employee;");
     }
 
     public boolean add(
