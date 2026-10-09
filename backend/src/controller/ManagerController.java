@@ -10,10 +10,7 @@ import model.OrderHistory;
 import model.SalesAnalytics;
 import model.EmployeeModel;
 import model.ProcessingOrders;
-import database.PGComms;
-import java.net.URL;
-import model.Menu;
-
+import model.MenuModel;
 import database.PGComms;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.Node;
@@ -257,7 +254,6 @@ public class ManagerController {
     public void open_employee_view(ActionEvent event){
         try{
             EmployeeModel model = new EmployeeModel();
-
             EmployeeController controller =
                 new EmployeeController(model);
 
@@ -277,23 +273,17 @@ public class ManagerController {
     @FXML
     public void open_menu_view(ActionEvent event){
         try {
-            java.net.URL url = getClass().getResource("/gui/manager/MenuView.fxml");
-            if (url == null) {                                   // avoids the "Location is not set" error
-                System.out.println("MenuView.fxml not found");
-                return;
+            MenuModel model = new MenuModel();
+            MenuController controller = new MenuController(model);
+
+            Stage stage = ViewLoader.open_window(
+                "/gui/manager/MenuView.fxml",
+                controller,
+                ((Node) event.getSource()).getScene().getWindow());
+            
+            if (stage != null) {
+                stage.setTitle("Menu");
             }
-
-            FXMLLoader loader = new FXMLLoader(url);
-            Menu menu = new Menu();
-            loader.setController(menu);
-
-            Parent root = loader.load();
-            menu.load_menu();                // fill the table after the FXML loads
-
-            Stage stage = new Stage();
-            stage.setTitle("Menu");
-            stage.setScene(new Scene(root));
-            stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }

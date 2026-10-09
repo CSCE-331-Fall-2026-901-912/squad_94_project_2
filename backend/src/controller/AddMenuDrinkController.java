@@ -1,11 +1,11 @@
-package model;
+package controller;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import database.PGComms;
+import model.MenuModel;
 import dto.InvEdibleRowDTO;
 import dto.MenuDrinksRowDTO;
 import javafx.fxml.FXML;
@@ -20,7 +20,7 @@ import javafx.scene.control.ButtonType;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
 
-public class AddMenuDrink {
+public class AddMenuDrinkController {
     private static final int MAX_INGREDIENTS = 8;
     private static final String SELECTED_STYLE =
         "-fx-background-color: #2e9e5b; -fx-text-fill: white; -fx-font-weight: bold;";
@@ -35,16 +35,13 @@ public class AddMenuDrink {
     @FXML private Button delete_button;
     @FXML private GridPane ingredient_grid;
 
+    private final MenuModel model;
     private final Runnable on_added;  
     private final MenuDrinksRowDTO existing;                  
     private final Map<Button, Integer> selected_ingredients = new HashMap<>();
 
-    public AddMenuDrink(Runnable on_added) {
-        this.on_added = on_added;
-        this.existing = null;
-    }
-
-    public AddMenuDrink(Runnable on_added, MenuDrinksRowDTO existing) {
+    public AddMenuDrinkController(MenuModel model, Runnable on_added, MenuDrinksRowDTO existing){
+        this.model = model;
         this.on_added = on_added;
         this.existing = existing;
     }
@@ -70,9 +67,7 @@ public class AddMenuDrink {
 
         int column = 0;
         int row = 0;
-        for (InvEdibleRowDTO ingredient : PGComms.issue_query_type_rows_InvEdible(
-                "SELECT id_edible, name, amount_servings "
-                + "FROM inv_edible ORDER BY name")) {
+        for (InvEdibleRowDTO ingredient : model.get_ingredients()) {
             Button ingredient_button = new Button(ingredient.name());
             ingredient_button.setMaxWidth(Double.MAX_VALUE);
             ingredient_button.setUserData(ingredient.id_edible());
@@ -88,10 +83,7 @@ public class AddMenuDrink {
 
         if (existing != null) {
             List<Integer> ingredient_ids =
-                PGComms.issue_query_type_rows_JoinMenuDrinksAndInvEdible(
-                    "SELECT id_join_menu_drinks_and_inv_edible, id_drink, id_edible "
-                    + "FROM join_menu_drinks_and_inv_edible "
-                    + "WHERE id_drink = " + existing.id_drink())
+                model.get_drink_ingredients(existing.id_drink())
                 .stream()
                 .map(row_item -> row_item.id_edible())
                 .toList();
@@ -148,10 +140,10 @@ public class AddMenuDrink {
         }
 
         boolean saved = existing == null
-            ? PGComms.add_drink_with_ingredients(
+            ? model.add_drink(
                 name, price, type, hot_button.isSelected(),
                 caff_button.isSelected(), selected_ingredients.values().stream().toList())
-            : PGComms.update_drink_with_ingredients(
+            : model.update_drink(
                 existing.id_drink(), name, price, type, hot_button.isSelected(),
                 caff_button.isSelected(), selected_ingredients.values().stream().toList());
         if (!saved) {
@@ -182,7 +174,7 @@ public class AddMenuDrink {
             return;
         }
 
-        if (!PGComms.delete_drink(existing.id_drink())) {
+        if (!model.delete_drink(existing.id_drink())) {
             show_error("The drink could not be deleted.");
             return;
         }
@@ -194,5 +186,4 @@ public class AddMenuDrink {
     private void show_error(String message) {
         new Alert(Alert.AlertType.ERROR, message).showAndWait();
     }
-
 }

@@ -1,8 +1,8 @@
-package model;
+package controller;
 
 import java.math.BigDecimal;
-import database.PGComms;
 import dto.MenuToppingsRowDTO;
+import model.MenuModel;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -11,17 +11,19 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-public class AddMenuTopping {
+public class AddMenuToppingController {
     @FXML private Label title_label;
     @FXML private TextField name_field;
     @FXML private TextField price_field;
     @FXML private Button submit_button;
     @FXML private Button delete_button;
 
+    private final MenuModel model;
     private final Runnable on_saved;
     private final MenuToppingsRowDTO existing;
 
-    public AddMenuTopping(Runnable on_saved, MenuToppingsRowDTO existing) {
+    public AddMenuToppingController(MenuModel model, Runnable on_saved, MenuToppingsRowDTO existing) {
+        this.model = model;
         this.on_saved = on_saved;
         this.existing = existing;
     }
@@ -56,8 +58,8 @@ public class AddMenuTopping {
         }
 
         boolean saved = existing == null
-                ? PGComms.add_topping_with_inventory(name, price)
-                : PGComms.update_topping_with_inventory(existing.id_topping(), name, price);
+                ? model.add_topping(name, price)
+                : model.update_topping(existing.id_topping(), name, price);
         if (!saved) {
             show_error("The topping could not be saved.");
             return;
@@ -86,7 +88,7 @@ public class AddMenuTopping {
             return;
         }
 
-        if (!PGComms.delete_topping(existing.id_topping())) {
+        if (!model.delete_topping(existing.id_topping())) {
             show_error("The topping could not be deleted.");
             return;
         }
