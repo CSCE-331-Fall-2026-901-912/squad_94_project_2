@@ -3,33 +3,22 @@ package controller;
 import dto.*;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
-import model.ItemDetailsPopUp;
 import model.AddItemPopUp;
-import model.CancellationPopUp;
 import model.InventoryScreen;
 import model.MainScreenGUI;
 import model.OrderHistory;
 import model.SalesAnalytics;
-import model.Employee;
+import model.EmployeeModel;
 import model.ProcessingOrders;
 import database.PGComms;
-import java.util.ArrayList;
-import java.util.List;
-import java.math.BigDecimal;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.collections.FXCollections;
+import java.net.URL;
 import model.Menu;
-
-import java.net.IDN;
-import java.util.ArrayList;
 
 import database.PGComms;
 import javafx.scene.input.MouseEvent;
-
-import javafx.scene.control.ComboBox;
+import javafx.scene.Node;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,18 +27,11 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.Button;
-import javafx.event.ActionEvent;
-import javafx.stage.Stage;
 import java.time.*;
 
 
@@ -273,24 +255,20 @@ public class ManagerController {
 
     @FXML 
     public void open_employee_view(ActionEvent event){
-        try {
-            java.net.URL url = getClass().getResource("/gui/manager/EmployeeView.fxml");
-            if (url == null) {
-                System.out.println("EmployeeView.fxml not found");
-                return;
+        try{
+            EmployeeModel model = new EmployeeModel();
+
+            EmployeeController controller =
+                new EmployeeController(model);
+
+            Stage stage = ViewLoader.open_window(
+                "/gui/manager/EmployeeView.fxml",
+                controller,
+                ((Node) event.getSource()).getScene().getWindow());
+
+            if (stage != null) {
+                stage.setTitle("Employees");
             }
-
-            FXMLLoader loader = new FXMLLoader(url);
-            Employee employee = new Employee();
-            loader.setController(employee);
-
-            Parent root = loader.load();
-            employee.load_employees();
-
-            Stage stage = new Stage();
-            stage.setTitle("Employees");
-            stage.setScene(new Scene(root));
-            stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }

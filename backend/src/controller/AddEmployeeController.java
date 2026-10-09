@@ -1,11 +1,14 @@
-package model;
+package controller;
+
+import java.math.BigDecimal;
 
 import database.PGComms;
 import dto.EmployeesRowDTO;
-
-import java.math.BigDecimal;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import model.EmployeeModel;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -13,7 +16,10 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 
-public class AddEmployee {
+public class AddEmployeeController {
+    private final EmployeeModel model;
+    private final Runnable on_added;
+    private final EmployeesRowDTO existing;
 
     @FXML private Label title_label;
     @FXML private TextField name_field;
@@ -24,16 +30,9 @@ public class AddEmployee {
     @FXML private Button submit_button;
     @FXML private Button delete_button;
 
-    private final Runnable on_added;  
-    private final EmployeesRowDTO existing;                  
-
-    public AddEmployee(Runnable on_added) {
-        this.on_added = on_added;
-        this.existing = null;
-    }
-
-    public AddEmployee(Runnable on_added, EmployeesRowDTO existing) {
-        this.on_added = on_added;
+    public AddEmployeeController(EmployeeModel model, Runnable on_saved, EmployeesRowDTO existing) {
+        this.model = model;
+        this.on_added = on_saved;
         this.existing = existing;
     }
 
@@ -75,8 +74,8 @@ public class AddEmployee {
         }
 
         boolean ok = (existing == null)
-            ? PGComms.add_employee(name, position, phone, pay, hours)
-            : PGComms.update_employee(existing.id_employee(), name, position, phone, pay, hours);
+            ? model.add(name, position, phone, pay, hours)
+            : model.update(existing.id_employee(), name, position, phone, pay, hours);
 
         if (!ok) {
             show_warning("The employee could not be saved. Check the console for the database message.");
@@ -105,7 +104,7 @@ public class AddEmployee {
             return;
         }
 
-        if (!PGComms.delete_employee(existing.id_employee())) {
+        if (!model.delete(existing.id_employee())) {
             show_warning("The employee could not be deleted. Check the console for the database message.");
             return;
         }
@@ -117,4 +116,5 @@ public class AddEmployee {
     private void show_warning(String message) {
         new Alert(Alert.AlertType.WARNING, message).showAndWait();
     }
+
 }
