@@ -5,6 +5,15 @@ import model.CancellationPopUp;
 import model.OrderMenu;
 import model.TipPopUp;
 
+import dto.InvEdibleRowDTO;
+import dto.InvNonEdibleRowDTO;
+import dto.EmployeesRowDTO;
+import dto.MenuDrinksRowDTO;
+import dto.MenuToppingsRowDTO;
+import dto.JoinMenuDrinksAndInvEdibleRowDTO;
+import dto.JoinMenuToppingsAndInvEdibleRowDTO;
+import dto.OrdersRowDTO;
+
 import javafx.fxml.FXML;
 // import java.sql.*;
 import javafx.scene.control.Button;
@@ -51,7 +60,7 @@ public class CustomerController {
         tip_pop_up = base_menu.finish_order(this);
     }
     @FXML public void manager_view(){
-        base_menu.manager_view(this);
+        base_menu.manager_view(new ManagerController());
     }
 
     // CANCELLATION POP UP BUTTONS
@@ -245,11 +254,10 @@ public class CustomerController {
         tip_pop_up.tip(1.25);
     }
     @FXML public void tipdone(){
-        if (tip_pop_up.tipdone(order_total.toString())){
+        if (tip_pop_up.tipdone()){
             base_menu.reset_order();
         }
-        // TODO: update PSQL database, reset current_order data 
-        // TODO: close window
+        // TODO: update PSQL database
     }
 
 

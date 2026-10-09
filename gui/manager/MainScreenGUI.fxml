@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
+  All rights reserved. Use is subject to license terms.
+
+  This file is available and licensed under the following license:
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the distribution.
+  - Neither the name of Oracle Corporation nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ManagerController">
+   <children>
+      <ScrollPane layoutX="252.0" layoutY="35.0" prefHeight="172.0" prefWidth="314.0">
+         <content>
+            <AnchorPane fx:id="OHBox" minHeight="0.0" minWidth="0.0" onMouseClicked="#OHOpen" prefHeight="150.0" prefWidth="316.0">
+               <children>
+                  <TableView fx:id="TodayOHTable" layoutX="17.0" layoutY="48.0" prefHeight="94.0" prefWidth="282.0">
+                     <columns>
+                        <TableColumn fx:id="TodayOHID" prefWidth="57.599971771240234" text="ID" />
+                        <TableColumn fx:id="TodayOHOrder" prefWidth="149.60003662109375" text="Order" />
+                        <TableColumn fx:id="TodayOHTotal" prefWidth="75.99999084472654" text="Total" />
+                     </columns>
+                  </TableView>
+                  <Label layoutX="115.0" layoutY="14.0" prefHeight="34.0" prefWidth="86.0" text="Order History" textAlignment="CENTER">
+                     <font>
+                        <Font name="Calibri" size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
+      <AnchorPane fx:id="InventoryBox" layoutX="29.0" layoutY="53.0" onMouseClicked="#InventoryOpen" prefHeight="435.0" prefWidth="196.0">
+         <children>
+            <Label fx:id="InventoryLabel" layoutX="66.0" layoutY="1.0" prefHeight="26.0" prefWidth="62.0" text="Inventory">
+               <font>
+                  <Font name="Calibri" size="14.0" />
+               </font>
+            </Label>
+            <TableView id="OOSTable" fx:id="OOSTable" layoutX="13.0" layoutY="54.0" prefHeight="154.0" prefWidth="167.0">
+              <columns>
+                <TableColumn fx:id="OOSName" prefWidth="75.0" text="Name" />
+                <TableColumn fx:id="OOSAmount" prefWidth="91.19999999999999" text="Amount" />
+              </columns>
+            </TableView>
+            <Label fx:id="OOSLabel" layoutX="13.0" layoutY="27.0" prefHeight="26.0" prefWidth="70.0" text="Out Of Stock">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Label>
+            <TableView id="RLTable" fx:id="RLTable" layoutX="14.0" layoutY="245.0" prefHeight="189.0" prefWidth="167.0">
+               <columns>
+                  <TableColumn fx:id="RLName" prefWidth="75.0" text="Name" />
+                  <TableColumn fx:id="RLAmount" prefWidth="91.19999999999999" text="Amount" />
+               </columns>
+            </TableView>
+            <Label layoutX="13.0" layoutY="217.0" prefHeight="26.0" prefWidth="70.0" text="Running Low">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <Label fx:id="ManagerLabel" layoutX="29.0" layoutY="17.0" prefHeight="36.0" prefWidth="78.0" text="Manager">
+         <font>
+            <Font name="Calibri" size="18.0" />
+         </font>
+      </Label>
+      <AnchorPane fx:id="SalesBox" layoutX="225.0" layoutY="234.0" onMouseClicked="#SalesEntered" prefHeight="181.0" prefWidth="196.0">
+         <children>
+            <SplitPane fx:id="TodaysSales" dividerPositions="0.5" layoutX="14.0" layoutY="31.0" orientation="VERTICAL" prefHeight="62.0" prefWidth="167.0">
+              <items>
+                  <Label fx:id="TodaysSalesLabel" prefHeight="26.0" prefWidth="70.0" text="Today's Sales" textAlignment="CENTER">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="TodaysSalesAmount" layoutX="10.0" layoutY="10.0" prefHeight="26.0" prefWidth="70.0" text="\$$$">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Label>
+              </items>
+            </SplitPane>
+            <Label fx:id="SalesLabel" layoutX="83.0" layoutY="5.0" text="Sales">
+               <font>
+                  <Font name="Calibri" size="14.0" />
+               </font>
+            </Label>
+            <SplitPane fx:id="TotalSales" dividerPositions="0.5" layoutX="14.0" layoutY="106.0" orientation="VERTICAL" prefHeight="61.0" prefWidth="167.0">
+               <items>
+                  <Label fx:id="TotalSalesLabel" prefHeight="26.0" prefWidth="70.0" text="Total Sales" textAlignment="CENTER">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="TotalSalesAmount" layoutX="10.0" layoutY="10.0" prefHeight="26.0" prefWidth="70.0" text="\$$$">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Label>
+               </items>
+            </SplitPane>
+         </children>
+      </AnchorPane>
+      <Button fx:id="sales_analytics_button" layoutX="430.0" layoutY="275.0" mnemonicParsing="false" onMouseClicked="#SalesEntered" prefHeight="98.0" prefWidth="154.0" text="Sales Analytics" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Button>
+      <Button layoutX="239.0" layoutY="444.0" mnemonicParsing="false" onAction="#open_employee_view" prefHeight="30.0" prefWidth="167.0" text="Employees">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button layoutX="423.0" layoutY="444.0" mnemonicParsing="false" onAction="#open_menu_view" prefHeight="30.0" prefWidth="167.0" text="Menus">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
