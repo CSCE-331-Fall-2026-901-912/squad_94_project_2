@@ -550,13 +550,14 @@ public class PGComms {
     public static BigDecimal get_sales_total() {
         BigDecimal price = BigDecimal.ZERO;
 
-        String sql = "SELECT SUM(total_spent) AS sum_total FROM ( SELECT total_spent FROM orders WHERE completed = TRUE)";
+        String sql = "SELECT SUM(total_spent) AS sum_total FROM orders WHERE status = ?";
 
         if (!open_connection()) {
             return price;
         }
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, "completed");
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     BigDecimal p = rs.getBigDecimal("sum_total");
@@ -575,7 +576,7 @@ public class PGComms {
     public static BigDecimal get_sales_total_date(String date_input) {
         BigDecimal price = BigDecimal.ZERO;
 
-        String sql = "SELECT SUM(total_spent) AS sum_total FROM ( SELECT total_spent FROM orders WHERE completed = TRUE AND time_completed_at >= ? AND time_completed_at < ?)";
+        String sql = "SELECT SUM(total_spent) AS sum_total FROM orders WHERE status = ? AND time_created_at >= ? AND time_created_at < ?";
 
         if (!open_connection()) {
             return price;
@@ -583,8 +584,9 @@ public class PGComms {
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             LocalDate day = LocalDate.parse(date_input);
-            stmt.setObject(1, day.atStartOfDay());
-            stmt.setObject(2, day.plusDays(1).atStartOfDay());
+            stmt.setString(1, "completed");
+            stmt.setObject(2, day.atStartOfDay());
+            stmt.setObject(3, day.plusDays(1).atStartOfDay());
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     BigDecimal p = rs.getBigDecimal("sum_total");
@@ -612,8 +614,7 @@ public class PGComms {
         if (!open_connection()) {
             return;
         }
-        // int:1, boolean, timestamptz, timestamptz, numeric, int:employee_id, numeric, int:id_drink, int:id_topping1, int:id_topping2, int:ice_level (0,1,2), int:sugar_level (0,1,2,3,4), boolean:hot_chosen
-        String sql = "INSERT INTO orders (id_order, completed, time_created_at, time_completed_at, total_spent, id_employee, tip, id_drink, id_topping1, id_topping2, ice_level, sugar_level, hot_chosen) VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?)";
+        String sql = "INSERT INTO orders (id_order, status, time_created_at, total_spent, id_employee, tip, id_drink, id_topping1, id_topping2, ice_level, sugar_level, hot_chosen) VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             BigDecimal price;
             BigDecimal tip_amount;
@@ -622,26 +623,22 @@ public class PGComms {
 
             stmt.setInt(1, order_id);
 
-            // We take an order to be completed when it is added into the database.
-            stmt.setBoolean(2, true);
+            // Orders are completed when they are added into the database.
+            stmt.setString(2, "completed");
 
             // Created time.
-            Timestamp right_now = Timestamp.valueOf(LocalDateTime.now());
-            stmt.setTimestamp(3, right_now);
+            stmt.setObject(3, OffsetDateTime.now());
 
-            // Time completed (we take an order to be completed when it is added into the database).
-            stmt.setTimestamp(4, right_now);
-
-            stmt.setBigDecimal(5, price);
+            stmt.setBigDecimal(4, price);
             // TODO: GET CURRENT EMPLOYEE ID
-            stmt.setInt(6, 0);
-            stmt.setBigDecimal(7, tip_amount);
-            stmt.setInt(8, id_drink);
-            stmt.setInt(9, id_topping1);
-            stmt.setInt(10, id_topping2);
-            stmt.setInt(11, ice_level);
-            stmt.setInt(12, sugar_level);
-            stmt.setBoolean(13, hot_chosen);
+            stmt.setInt(5, 0);
+            stmt.setBigDecimal(6, tip_amount);
+            stmt.setInt(7, id_drink);
+            stmt.setInt(8, id_topping1);
+            stmt.setInt(9, id_topping2);
+            stmt.setInt(10, ice_level);
+            stmt.setInt(11, sugar_level);
+            stmt.setBoolean(12, hot_chosen);
 
             stmt.executeUpdate();
         }
