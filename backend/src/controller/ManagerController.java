@@ -10,7 +10,7 @@ import model.InventoryScreen;
 import model.MainScreenGUI;
 import model.OrderHistory;
 import model.SalesAnalytics;
-import model.Employee;
+import model.EmployeeModel;
 import model.ProcessingOrders;
 import database.PGComms;
 import java.util.ArrayList;
@@ -50,6 +50,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
 import javafx.stage.Stage;
+import javafx.scene.Node;
 import java.time.*;
 
 
@@ -274,23 +275,19 @@ public class ManagerController {
     @FXML 
     public void open_employee_view(ActionEvent event){
         try {
-            java.net.URL url = getClass().getResource("/gui/manager/EmployeeView.fxml");
-            if (url == null) {
-                System.out.println("EmployeeView.fxml not found");
-                return;
+            EmployeeModel model = new EmployeeModel();
+
+            EmployeeController controller =
+                new EmployeeController(model);
+
+            Stage stage = ViewLoader.open_window(
+                "/gui/manager/EmployeeView.fxml",
+                controller,
+                ((Node) event.getSource()).getScene().getWindow());
+
+            if (stage != null) {
+                stage.setTitle("Employees");
             }
-
-            FXMLLoader loader = new FXMLLoader(url);
-            Employee employee = new Employee();
-            loader.setController(employee);
-
-            Parent root = loader.load();
-            employee.load_employees();
-
-            Stage stage = new Stage();
-            stage.setTitle("Employees");
-            stage.setScene(new Scene(root));
-            stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
