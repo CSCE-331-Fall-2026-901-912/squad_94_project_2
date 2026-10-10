@@ -42,6 +42,8 @@ class CsvData:
         # High traffic of students on Texas A&M finals day no. 2.
         self.peak3_date = datetime.date(year=2026, month=5, day=5)
 
+    # Store data from existing csv scripts that aren't seeded in DataFrame objects.
+    # DataFrame provides an interface and functionality much the same as using an SQL database.
     def store_hardcoded_data(self):
         self.df_inv_edible = pd.read_csv("inv_edible.csv")
         self.df_inv_nonedible = pd.read_csv("inv_nonedible.csv")
@@ -51,20 +53,12 @@ class CsvData:
         self.df_join_menu_drinks_and_inv_edible = pd.read_csv("join_menu_drinks_and_inv_edible.csv")
         self.df_join_menu_toppings_and_inv_edible = pd.read_csv("join_menu_toppings_and_inv_edible.csv")
 
-        # Debug prints
-        # print(self.df_inv_edible)
-        # print(self.df_inv_nonedible)
-        # print(self.df_employees)
-        # print(self.df_menu_drinks)
-        # print(self.df_menu_toppings)
-        # print(self.df_join_menu_drinks_and_inv_edible)
-        # print(self.df_join_menu_toppings_and_inv_edible)
-
     def gen_orders_csv(self):
         curr_date = self.start_date
 
         # Iterate from start date to end date.
         while curr_date <= self.end_date:
+
             # Generate order entries within a day.
             self.gen_entries_today(curr_date)
 
@@ -77,6 +71,7 @@ class CsvData:
         orders_df.to_csv("orders.csv", index=False)
 
     def gen_entries_today(self, curr_date):
+
         # Adjust the number of orders made today to be of a "higher" range if the current date is a peak date.
         if curr_date == self.peak1_date or curr_date == self.peak2_date or curr_date == self.peak3_date:
             num_orders = random.randint(600, 700)
@@ -109,8 +104,6 @@ class CsvData:
         time_completed_at = time
         total_spent = decimal.Decimal('0.00')
 
-        # ignore_index is important than one might initially think. Because this is the first row,
-        # by default,
         id_employee = self.df_employees["id_employee"].sample().iloc[0]
         id_drink = self.df_menu_drinks["id_drink"].sample().iloc[0]
 
@@ -123,6 +116,7 @@ class CsvData:
         # Choose between no, one, or two toppings.
         top_choice = random.randint(0, 2)
         if top_choice == 2:
+
             # Retrieve two random toppings as a list (replace=False means they cannot be the same topping).
             list_toppings = self.df_menu_toppings["id_topping"].sample(n=2, replace=False).to_list()
             id_topping1 = int(list_toppings[0])
@@ -191,6 +185,7 @@ class CsvData:
                                          "hot_chosen": hot_chosen})
 
 def main():
+
     # Parse arguments
     parser = argparse.ArgumentParser(description = "Generates CSV data files which can be loaded into database.")
 
@@ -210,6 +205,7 @@ def main():
 
     # Only fill orders.csv with fictional data if --seed_orders_csv flag is present.
     if args.seed_orders_csv:
+
         # Class CSVData manages parsing hardcoded CSV files to create orders.csv file with seeded data.
         dynamic = CsvData()
 

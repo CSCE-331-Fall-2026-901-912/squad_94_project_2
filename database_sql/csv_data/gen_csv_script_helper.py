@@ -1,5 +1,7 @@
 import csv
 
+# This function exists to store and write the large amount of static data that will be put into most csv files.
+# orders.csv is the only file which has its data generated with randomness. It is the only "non-hardcoded" csv file.
 def gen_hardcoded_csv(csv_name):
     with open(csv_name + ".csv", 'w', newline='') as csvfile:
         if csv_name == "inv_edible":
