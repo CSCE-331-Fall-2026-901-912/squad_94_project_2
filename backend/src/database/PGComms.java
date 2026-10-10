@@ -426,6 +426,22 @@ public class PGComms {
     }
 
 
+    // Get all items from the edible and nonedible inventories which have an amount of 0.
+    public static List<IDNameValDTO> get_out_of_stock() {
+        List<InvNonEdibleRowDTO> inv_non_edible_select = issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible WHERE amount = 0 LIMIT 3");
+        List<InvEdibleRowDTO> inv_edible_select = issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE amount_servings = 0 LIMIT 3");
+        return get_inv_selection_common(inv_non_edible_select, inv_edible_select);
+    }
+
+    // Get all items from the edible and nonedible inventories which are close to being, but are not currently, out-of-stock.
+    public static List<IDNameValDTO> get_running_low_on() {
+        List<InvNonEdibleRowDTO> inv_non_edible_select = issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible WHERE amount > 0 ORDER BY amount LIMIT 3");
+        List<InvEdibleRowDTO> inv_edible_select = issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE amount_servings > 0 ORDER BY amount_servings LIMIT 3");
+        return get_inv_selection_common(inv_non_edible_select, inv_edible_select);
+    }
+
+    // Shared private helper function by get_out_of_stock() and get_running_low_on() to select items from both inv_edible and inv_nonedible row-by-row.
+    // Each public function differs in the conditions it uses in its SQL queries.
     private static List<IDNameValDTO> get_inv_selection_common(List<InvNonEdibleRowDTO> inv_non_edible_select, List<InvEdibleRowDTO> inv_edible_select) {
         List<IDNameValDTO> output = new ArrayList<>();
         for (InvNonEdibleRowDTO item : inv_non_edible_select) {
@@ -437,17 +453,6 @@ public class PGComms {
         }
 
         return output;
-    }
-    public static List<IDNameValDTO> get_out_of_stock() {
-        List<InvNonEdibleRowDTO> inv_non_edible_select = issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible WHERE amount = 0 LIMIT 3");
-        List<InvEdibleRowDTO> inv_edible_select = issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE amount_servings = 0 LIMIT 3");
-        return get_inv_selection_common(inv_non_edible_select, inv_edible_select);
-    }
-
-    public static List<IDNameValDTO> get_running_low_on() {
-        List<InvNonEdibleRowDTO> inv_non_edible_select = issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible WHERE amount > 0 ORDER BY amount LIMIT 3");
-        List<InvEdibleRowDTO> inv_edible_select = issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE amount_servings > 0 ORDER BY amount_servings LIMIT 3");
-        return get_inv_selection_common(inv_non_edible_select, inv_edible_select);
     }
 
     // Get all id_edible values that correspond to edible inventory that must be consumed for a specific drink (based on id_drink).
@@ -588,6 +593,11 @@ public class PGComms {
         return price;
     }
 
+    // Get the total sales from the orders table where status = 'completed' and where the order happened on date_input.
+    // Similar to get_sales_total(), but exists as a separate function due to the complexity of
+    // restricting by a date range.
+    // Though this function retrieves total price on a specific date, nuances of the LocalDate library have caused implementation
+    // to perform an SQL query with a date range (beginning of specified date to end of specified date).
     public static BigDecimal get_sales_total_date(String date_input) {
         BigDecimal price = BigDecimal.ZERO;
 
@@ -766,7 +776,7 @@ public class PGComms {
 
     // Add a new topping to the database with the provided details, along with its associated inventory item
     // to the inv_edible table and the join_menu_toppings_and_inv_edible table.
-    //  Returns true if the topping and its inventory item were successfully added, false otherwise.
+    // Returns true if the topping and its inventory item were successfully added, false otherwise.
     public static boolean add_topping_with_inventory(String name, BigDecimal price) {
         if (!issue_query_type_update(
                 "INSERT INTO menu_toppings (id_topping, name, price) "
@@ -851,6 +861,7 @@ public class PGComms {
         }
         return modify_topping_quantity_in_inventory(edible_id, val, "inv_edible");
     }
+
     /**
      * Modifies the quantity of a nonedible inventory item to the input value.
      * If you simply want to decrement, input -1.

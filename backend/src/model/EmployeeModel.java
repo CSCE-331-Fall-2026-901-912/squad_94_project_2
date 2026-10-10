@@ -8,7 +8,7 @@ import java.util.List;
 
 public class EmployeeModel {
 
-    // Retrieve all employees from the database (used to populat the table in EmployeeController).
+    // Retrieve all employees from the database (used to populate the table in EmployeeController).
     public List<EmployeesRowDTO> get_all() {
         return PGComms.issue_query_type_rows_Employees("SELECT * FROM employees ORDER BY id_employee;");
     }
