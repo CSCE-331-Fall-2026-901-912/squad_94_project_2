@@ -102,6 +102,8 @@ public class ProdSalesScreenController {
 
         whole_table.setItems(sorted);
 
+        sorted.comparatorProperty().bind(whole_table.comparatorProperty());
+
         // sortByOH.getItems().setAll("Order ID (low to high)", "Order ID (high to low)", "Drink name (A-Z)", "Total (low to high)", "Total (high to low)", "Newest first");
         // sortByOH.getSelectionModel().selectFirst();
 
