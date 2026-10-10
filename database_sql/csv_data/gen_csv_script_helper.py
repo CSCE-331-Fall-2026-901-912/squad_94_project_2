@@ -288,6 +288,8 @@ def gen_hardcoded_csv(csv_name):
             writer = csv.DictWriter(csvfile, fieldnames=header)
             writer.writeheader()
 
+# Called by gen_csv_script.py to generate all hardcoded CSV files.
+# Done to ensure only logic relating to generating orders.csv (most important functionality) is kept in non-helper.
 def gen_hardcoded_csv_all():
     gen_hardcoded_csv("inv_edible")
     gen_hardcoded_csv("inv_nonedible")
