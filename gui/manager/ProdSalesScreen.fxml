@@ -31,6 +31,6 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Button fx:id="sort" layoutX="23.0" layoutY="79.0" mnemonicParsing="false" text="Sort" />
+      <Button layoutX="23.0" layoutY="79.0" mnemonicParsing="false" onAction="#sort" text="Sort" />
    </children>
 </AnchorPane>
