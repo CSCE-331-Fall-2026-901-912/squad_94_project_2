@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="393.0" prefWidth="494.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TableView layoutX="23.0" layoutY="120.0" prefHeight="251.0" prefWidth="448.0">
+        <columns>
+          <TableColumn prefWidth="47.200008392333984" text="ID" />
+          <TableColumn prefWidth="184.0" text="Name" />
+            <TableColumn minWidth="0.0" prefWidth="80.00001525878906" text="Total Sales" />
+            <TableColumn minWidth="0.0" prefWidth="137.60003662109375" text="Total Inventory Used" />
+        </columns>
+      </TableView>
+      <TextField layoutX="242.0" layoutY="45.0" prefHeight="26.0" prefWidth="69.0" text="Year" />
+      <TextField layoutX="322.0" layoutY="45.0" prefHeight="26.0" prefWidth="69.0" text="Month" />
+      <Label layoutX="207.0" layoutY="45.0" prefHeight="26.0" prefWidth="35.0" text="From:" />
+      <TextField layoutX="401.0" layoutY="44.0" prefHeight="26.0" prefWidth="69.0" text="Day" />
+      <TextField layoutX="242.0" layoutY="79.0" prefHeight="26.0" prefWidth="69.0" text="Year" />
+      <TextField layoutX="322.0" layoutY="79.0" prefHeight="26.0" prefWidth="69.0" text="Month" />
+      <Label layoutX="221.0" layoutY="79.0" prefHeight="26.0" prefWidth="21.0" text="To:" />
+      <TextField layoutX="401.0" layoutY="78.0" prefHeight="26.0" prefWidth="69.0" text="Day" />
+      <Label layoutX="23.0" layoutY="14.0" prefHeight="42.0" prefWidth="149.0" text="Sales &amp; Product Usage">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
