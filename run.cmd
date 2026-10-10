@@ -1,4 +1,4 @@
 @echo off
 
-javac --module-path ./openjfx-27/lib --add-modules javafx.controls,javafx.base,javafx.fxml,javafx.graphics,javafx.media,javafx.web,javafx.swing --class-path ".;./backend/lib/postgresql-42.7.13.jar" backend/src/model/*.java backend/src/controller/*.java backend/src/database/*.java backend/src/dto/*.java backend/src/App.java
-java --module-path ./openjfx-27/lib --add-modules javafx.controls,javafx.base,javafx.fxml,javafx.graphics,javafx.media,javafx.web,javafx.swing --class-path ".;./backend/lib/postgresql-42.7.13.jar" backend/src/App.java DataBasePassword
+javac --module-path "\Users\natal\Downloads\javafx-sdk-25.0.1\lib" --add-modules javafx.controls,javafx.base,javafx.fxml,javafx.graphics,javafx.media,javafx.web,javafx.swing --class-path ".;./backend/lib/postgresql-42.7.13.jar" backend/src/model/*.java backend/src/controller/*.java backend/src/database/*.java backend/src/dto/*.java backend/src/App.java
+java --module-path "\Users\natal\Downloads\javafx-sdk-25.0.1\lib" --add-modules javafx.controls,javafx.base,javafx.fxml,javafx.graphics,javafx.media,javafx.web,javafx.swing --class-path ".;./backend/lib/postgresql-42.7.13.jar" backend/src/App.java DK94
