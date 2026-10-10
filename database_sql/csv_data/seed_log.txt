@@ -1,0 +1,3 @@
+Generated all hardcoded CSV files.
+There was a total of $1002544.61 made in sales.
+Generated randomly (seeded) a year's worth of orders for order.csv.

@@ -1,21 +1,21 @@
-id_drink,name,price,type,hot_available,is_non_caffeinated
-1,Classic Pearl Milk Tea,5.8,milk tea,TRUE,FALSE
-2,Honey Pearl Milk Tea,6,milk tea,TRUE,FALSE
-3,Coffee Crema,6.5,milk tea,TRUE,FALSE
-4,Coffee Milk Tea w/ Coffee Jelly,6.25,milk tea,TRUE,FALSE
-5,Hokkaido Pearl Milk Tea,6.25,milk tea,TRUE,FALSE
-6,Thai Pearl Milk Tea,6.25,milk tea,TRUE,FALSE
-7,Taro Pearl Milk Tea,6.25,milk tea,TRUE,FALSE
-8,Mango Green Milk Tea,6.5,milk tea,TRUE,FALSE
-9,Golden Retriever,6.75,milk tea,TRUE,FALSE
-10,Coconut Pearl Milk Tea,6.75,milk tea,TRUE,FALSE
-11,Classic Tea,4.65,fresh tea,TRUE,FALSE
-12,Honey Tea,4.85,fresh tea,TRUE,FALSE
-13,Mango Green Tea,5.8,fruit tea,FALSE,FALSE
-14,Passion Chess,6.25,fruit tea,FALSE,FALSE
-15,Berry Lychee Burst,6.25,fruit tea,FALSE,FALSE
-16,Peach Tea w/ Honey Jelly,6.25,fruit tea,FALSE,FALSE
-17,Mango & Passion Fruit Tea,6.25,fruit tea,FALSE,FALSE
-18,Honey Lemonade,5.2,no caff tea,FALSE,TRUE
-19,Tiger Boba,6.5,no caff tea,FALSE,TRUE
-20,Strawberry Coconut,6.5,no caff tea,TRUE,TRUE
+id_drink,name,price,hot_available,is_non_caffeinated
+1,Classic Pearl Milk Tea,5.8,True,False
+2,Honey Pearl Milk Tea,6.0,True,False
+3,Coffee Crema,6.5,True,False
+4,Coffee Milk Tea w/ Coffee Jelly,6.25,True,False
+5,Hokkaido Pearl Milk Tea,6.25,True,False
+6,Thai Pearl Milk Tea,6.25,True,False
+7,Taro Pearl Milk Tea,6.25,True,False
+8,Mango Green Milk Tea,6.5,True,False
+9,Golden Retriever,6.75,True,False
+10,Coconut Pearl Milk Tea,6.75,True,False
+11,Classic Tea,4.65,True,False
+12,Honey Tea,4.85,True,False
+13,Mango Green Tea,5.8,False,False
+14,Passion Chess,6.25,False,False
+15,Berry Lychee Burst,6.25,False,False
+16,Peach Tea w/ Honey Jelly,6.25,False,False
+17,Mango & Passion Fruit Tea,6.25,False,False
+18,Honey Lemonade,5.2,False,True
+19,Tiger Boba,6.5,False,True
+20,Strawberry Coconut,6.5,True,True

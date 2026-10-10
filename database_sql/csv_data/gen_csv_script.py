@@ -99,9 +99,8 @@ class CsvData:
     def gen_entry(self, time):
         self.order_num += 1
         id_order = self.order_num
-        completed = True
+        status = "completed"
         time_created_at = time
-        time_completed_at = time
         total_spent = decimal.Decimal('0.00')
 
         id_employee = self.df_employees["id_employee"].sample().iloc[0]
@@ -138,9 +137,6 @@ class CsvData:
             id_topping1 = ""
             id_topping2 = ""
 
-        # Add the total spent to the all-time sales total.
-        self.sales_total += total_spent
-
         # Calculate tip
         order_tip = decimal.Decimal('0.00')
         order_tip_percent = decimal.Decimal('0.00')
@@ -167,7 +163,6 @@ class CsvData:
 
         order_tip = decimal.Decimal.quantize(order_tip, decimal.Decimal('.01'), rounding=decimal.ROUND_DOWN)
         total_spent += order_tip
-        self.sales_total += order_tip
         ice_level = random.randint(0, 2)
         sugar_level = random.randint(0, 4)
         hot_chosen = False
@@ -177,8 +172,23 @@ class CsvData:
             if coinflip == 1:
                 hot_chosen = True
 
-        self.list_of_dict_orders.append({"id_order": id_order, "completed": completed,
-                                         "time_created_at": time_created_at, "time_completed_at": time_completed_at,
+        # Random chance to have an order with a non-completed status.
+        if random.randint(0, 70) == 70:
+            coinflip = random.randint(0, 1)
+
+            if coinflip == 1:
+                status = "void"
+            else:
+                status = "discard"
+        else:
+
+            # Only for an order with a completed status...
+            # Add the total spent to the all-time sales total.
+            self.sales_total += total_spent
+
+
+        self.list_of_dict_orders.append({"id_order": id_order, "status": status,
+                                         "time_created_at": time_created_at,
                                          "total_spent": total_spent, "id_employee": id_employee,
                                          "tip": order_tip_percent, "id_drink": id_drink, "id_topping1": id_topping1,
                                          "id_topping2": id_topping2, "ice_level": ice_level, "sugar_level": sugar_level,

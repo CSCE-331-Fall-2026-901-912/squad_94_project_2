@@ -13,7 +13,7 @@ Squad 94 is comprised of:
 - Natalie Gonzalez
 - Asher Blevins
 
-The generated orders.csv file currently lists $1,008,657.27 worth of sales made from September 30th, 2025 to September 30th, 2026.
+The generated orders.csv file currently lists $1,002,544.61 worth of sales made from September 30th, 2025 to September 30th, 2026.
 
 There are three peak days of notably higher numbers of orders made. These days are:
 August 24th, 2026 -- First day of Texas A&M semester.
