@@ -30,6 +30,11 @@ public class OrderHistoryModel {
         return drink_names.getOrDefault(order.id_drink(), "Unknown drink (" + order.id_drink() + ")");
     }
 
+
+    public String drink_name(Integer id) {
+        return drink_names.getOrDefault(id, "Unknown drink (" + id + ")");
+    }
+
     public boolean matches_search(OrdersRowDTO orders, String str) {
         if (str.isEmpty()) return true;
         return String.valueOf(orders.id_order()).contains(str) || drink_name(orders).toLowerCase().contains(str) || String.valueOf(orders.total_spent()).contains(str);
