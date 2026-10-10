@@ -16,6 +16,8 @@ import model.MenuModel;
 
 import java.math.BigDecimal;
 
+// This controller manages the menu view, populating the drinks and toppings tables.
+// It allows the user to add or edit drinks and toppings by opening the respective forms when a row is double-clicked or when the add buttons are clicked
 public class MenuController {
     private final MenuModel model;
 
@@ -34,6 +36,7 @@ public class MenuController {
         this.model = model;
     }
 
+    // Initialize the controller by configuring table columns, setting up row click events, and refreshing the data displayed in the tables.
     @FXML
     private void initialize() {
         configure_columns();
@@ -50,6 +53,7 @@ public class MenuController {
             FXCollections.observableArrayList(model.get_toppings()));
     }
 
+    // Populate the table columns with data from the model and set up cell value factories for each column.
     private void configure_columns() {
         drink_name.setCellValueFactory(data ->
             new ReadOnlyObjectWrapper<>(data.getValue().name()));
@@ -68,6 +72,8 @@ public class MenuController {
             new ReadOnlyObjectWrapper<>(data.getValue().price()));
     }
 
+    // Opening logic for the AddMenuDrinkController, 
+    // kept separate from the main open drink to allow for separate logic for adding vs editing drinks (e.g., setting the window title)
     private void open_drink_form(Window owner, MenuDrinksRowDTO existing) {
         AddMenuDrinkController controller =
             new AddMenuDrinkController(
@@ -86,11 +92,14 @@ public class MenuController {
         }
     }
 
+    // Open the AddMenuDrinkController form for adding a new drink
     @FXML
     public void open_add_menu_drink(ActionEvent event) {
         open_drink_form(((Node) event.getSource()).getScene().getWindow(), null);
     }
 
+    // Opening logic for the AddMenuDrinkController, 
+    // kept separate from the main open drink to allow for separate logic for adding vs editing drinks (e.g., setting the window title)
     private void open_topping_form(Window owner, MenuToppingsRowDTO existing) {
         AddMenuToppingController controller =
             new AddMenuToppingController(
@@ -109,11 +118,14 @@ public class MenuController {
         }
     }
 
+    // Open the AddMenuToppingController form for adding a new topping
     @FXML
     public void open_add_menu_topping(ActionEvent event) {
         open_topping_form(((Node) event.getSource()).getScene().getWindow(), null);
     }
 
+    // Set up double-click functionality (to prevent accidental opening) on table rows 
+    // to open the topping form in edit mode
     private void setup_drink_row_click() {
         menu_drinks_table.setRowFactory(table -> {
             TableRow<MenuDrinksRowDTO> row = new TableRow<>();

@@ -70,7 +70,7 @@ public class OrderMenuController {
         box.setItems(FXCollections.observableArrayList(menu_model.get_drink_names_by_type(type)));
     }
 
-    //allows for dynamic adding of toppings
+    //allows for dynamic adding of toppings to reflect current menu_toppings table
     public void populate_topping_buttons(){
         if (topping_grid == null) return;  
         selected_toppings.clear();         
@@ -100,7 +100,7 @@ public class OrderMenuController {
         refresh_topping_buttons();
     }
 
-    // Color the chosen buttons, and once the max is reached, grey out the rest.
+    // Color the chosen buttons, and once the max is reached (2), grey out the rest.
     private void refresh_topping_buttons(){
         boolean full = selected_toppings.size() >= MAX_TOPPINGS;
         for (Node n : topping_grid.getChildren()) {
@@ -118,6 +118,7 @@ public class OrderMenuController {
         return List.copyOf(selected_toppings);
     }
 
+    // Bind the sugar slider to the label so it updates in real time as the user moves the slider.
     public void setup_sugar_slider(){
         if (sugar_slider == null || sugar_label == null) return;   
         sugar_label.textProperty().bind(
@@ -172,6 +173,7 @@ public class OrderMenuController {
         }
     }
     
+    // When the user clicks "Finish" in the order menu, validate that a drink and ice level were chosen, then add the order line to the current order.
     @FXML public void finish_selection(ActionEvent event){
         System.out.println("drink=" + selected_drink + ", ice=" + selected_ice);
         if (selected_drink == null || selected_ice == null) {

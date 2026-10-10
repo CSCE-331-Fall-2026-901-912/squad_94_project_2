@@ -37,7 +37,8 @@ public class AddMenuDrinkController {
 
     private final MenuModel model;
     private final Runnable on_added;  
-    private final MenuDrinksRowDTO existing;                  
+    private final MenuDrinksRowDTO existing;
+    // Map to track selected ingredients and their corresponding IDs for updating logic                  
     private final Map<Button, Integer> selected_ingredients = new HashMap<>();
 
     public AddMenuDrinkController(MenuModel model, Runnable on_added, MenuDrinksRowDTO existing){
@@ -48,8 +49,10 @@ public class AddMenuDrinkController {
 
     @FXML
     private void initialize() {
+        // Populate the type dropdown with available drink types
         type_box.setItems(FXCollections.observableArrayList(
                 "milk tea", "fresh tea", "fruit tea", "no caff tea"));
+        // If editing an existing drink, populate the form with its details and show the delete button
         if (existing != null) {
             title_label.setText("Edit Drink");
             submit_button.setText("Save");
@@ -62,6 +65,7 @@ public class AddMenuDrinkController {
             caff_button.setSelected(existing.is_non_caffeinated());
         }
 
+        // Set up the ingredient grid with buttons for each available ingredient
         ingredient_grid.setHgap(8);
         ingredient_grid.setVgap(8);
 
@@ -80,7 +84,8 @@ public class AddMenuDrinkController {
                 row++;
             }
         }
-
+        // If editing an existing drink, pre-select its ingredients in the grid based on the 
+        // joined data from the database and update the button styles accordingly.
         if (existing != null) {
             List<Integer> ingredient_ids =
                 model.get_drink_ingredients(existing.id_drink())
@@ -99,6 +104,7 @@ public class AddMenuDrinkController {
         }
     }
 
+    // Toggle the selection of an ingredient button, adding or removing it from the selected ingredients map, and refresh the button styles accordingly.
     private void toggle_ingredient(Button ingredient_button) {
         if (selected_ingredients.containsKey(ingredient_button)) {
             selected_ingredients.remove(ingredient_button);
@@ -109,6 +115,7 @@ public class AddMenuDrinkController {
         refresh_ingredient_buttons();
     }
 
+    // Refresh the styles and disabled state of ingredient buttons based on the current selection and maximum allowed ingredients.
     private void refresh_ingredient_buttons() {
         boolean max_selected = selected_ingredients.size() == MAX_INGREDIENTS;
 
@@ -121,11 +128,12 @@ public class AddMenuDrinkController {
         }
     }
 
-    @FXML
-    private void submit() {
+    // Validate input and either add a new drink or update an existing one.
+    @FXML private void submit() {
         String name = name_field.getText().trim();
         String type = type_box.getValue();
 
+        // Validate that name, price, and type are provided and that price is a valid number to avoid DB errors
         if (name.isEmpty() || type == null || price_field.getText().trim().isEmpty()) {
             show_error("Name, price, and type are required.");
             return;

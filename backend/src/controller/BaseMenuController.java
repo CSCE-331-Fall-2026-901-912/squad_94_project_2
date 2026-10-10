@@ -9,6 +9,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
+// This class serves as a base controller for the cashier-related views in the application. 
+// It provides common functionality for managing the current order, displaying the order total, and opening various windows related to adding drinks, clearing orders, finishing orders, and accessing the manager view.
 public class BaseMenuController {
 
     @FXML private TextArea current_order;

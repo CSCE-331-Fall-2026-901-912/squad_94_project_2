@@ -9,6 +9,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
+// Keeps all of the code for loading FXML files in one place. 
+// This is useful because it allows us to easily change how we load FXML files in the future, and it also makes it easier to handle errors when loading FXML files.
+// Since the same format is used to open the files almost everywhere, this class is a good place to put the code for opening FXML files.
 public final class ViewLoader {
     private ViewLoader() {}
 

@@ -30,6 +30,7 @@ public class EmployeeController {
         this.model = model;
     }
 
+    // Initialize the table with employee data and set up double-click to edit functionality.
     @FXML 
     private void initialize() {
         emp_id.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().id_employee()));
@@ -47,11 +48,14 @@ public class EmployeeController {
         employee_table.setItems(FXCollections.observableArrayList(model.get_all()));
     }
 
+    // Open the AddEmployeeController form for adding a new employee 
+    // and set the owner to the current window to prevent multiple windows from being opened at once.
     @FXML
     public void open_add_employee(ActionEvent event) {
         Window owner = ((Node) event.getSource()).getScene().getWindow();
         open_employee_form(owner, null);
     }
+
     private void open_employee_form(Window owner, EmployeesRowDTO existing) {
         AddEmployeeController controller = new AddEmployeeController(model, this::refresh_table , existing);
         Stage stage = ViewLoader.open_window(
@@ -64,6 +68,9 @@ public class EmployeeController {
                 existing == null ? "Add New Employee" : "Edit Employee");
         }
     }
+
+    // Set up double-click functionality (to prevent accidental openning) on table rows 
+    // to open the employee form for editing.
     private void setup_row_click() {
         employee_table.setRowFactory(table -> {
             TableRow<EmployeesRowDTO> row = new TableRow<>();

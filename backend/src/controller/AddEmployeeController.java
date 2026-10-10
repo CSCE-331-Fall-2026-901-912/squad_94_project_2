@@ -33,6 +33,7 @@ public class AddEmployeeController {
         this.existing = existing;
     }
 
+    // Initialize the form with existing employee data & delete button if editing, otherwise leave fields blank for adding a new employee.
     @FXML private void initialize() {            
         if (existing == null) return;
         title_label.setText("Edit Employee");
@@ -46,13 +47,17 @@ public class AddEmployeeController {
         hours_field.setText(String.valueOf(existing.hours_worked_for_week()));
     }
 
+    // Validate input and either add a new employee or update an existing one.
     @FXML public void submit(ActionEvent event) {
+
         String name = name_field.getText().trim();
         String position = position_field.getText().trim();
         String phone = phone_field.getText().trim();
 
         BigDecimal pay;
         int hours;
+
+        // Validate pay and hours input is numeric and not negative, and that name and position are not empty.
         try {
             pay = new BigDecimal(pay_field.getText().trim());
             hours = Integer.parseInt(hours_field.getText().trim());
@@ -79,10 +84,12 @@ public class AddEmployeeController {
             return;
         }
 
-        on_added.run();                                    // reload the table
+        //reload the table in the main window and close this window
+        on_added.run();                                   
         ((Node) event.getSource()).getScene().getWindow().hide();
     }
 
+    // Confirm deletion of the employee and delete if confirmed.
     @FXML public void delete(ActionEvent event) {
         if (existing == null) {
             return;

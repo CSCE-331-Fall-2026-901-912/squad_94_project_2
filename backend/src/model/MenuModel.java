@@ -9,6 +9,7 @@ import dto.MenuToppingsRowDTO;
 import java.math.BigDecimal;
 import java.util.List;
 
+// Model class for managing menu-related data, including drinks, toppings, and their ingredients.
 public class MenuModel {
     public List<MenuDrinksRowDTO> get_drinks() {
         return PGComms.issue_query_type_rows_MenuDrinks("SELECT * FROM menu_drinks ORDER BY id_drink");
@@ -87,11 +88,12 @@ public class MenuModel {
         return PGComms.delete_topping(topping_id);
     }
 
-    //used for the cashier side
+    //used for the cashier side to get the names of drinks to populate the dropdowns
     public List<String> get_drink_names_by_type(String type) {
         return PGComms.get_drink_names_by_type(type);
     }
 
+    //used for the cashier side to get the names of toppings to populate the buttons
     public List<String> get_topping_names() {
         return PGComms.get_topping_names();
     }

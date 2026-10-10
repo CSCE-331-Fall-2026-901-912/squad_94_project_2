@@ -17,6 +17,7 @@ public class TipController {
     @FXML
     private Label tip_total;
 
+    // The current tip rate selected by the user, represented as a decimal (e.g., 0.15 for 15%).
     private BigDecimal tip_rate = BigDecimal.ZERO;
 
     public TipController(CurrentOrderModel order_model) {
@@ -28,6 +29,7 @@ public class TipController {
         update_total_display();
     }
 
+    // The following methods handle the selection of different tip rates by the user.
     @FXML
     public void tip0() {
         set_tip_rate(BigDecimal.ZERO);
@@ -53,6 +55,7 @@ public class TipController {
         set_tip_rate(new BigDecimal("0.25"));
     }
 
+    // Sets the tip rate and updates the total display accordingly. Throws an exception if the rate is negative.
     private void set_tip_rate(BigDecimal rate) {
         if (rate.signum() < 0) {
             throw new IllegalArgumentException(
@@ -79,6 +82,8 @@ public class TipController {
         tip_total.setText("Total: " + total);
     }
 
+    // Handles the completion of the order, including processing the tip and finalizing the checkout. 
+    // If any errors occur during checkout, a warning is displayed to the user from here.
     @FXML
     public void tipdone(ActionEvent event) {
         final boolean checkout_succeeded;

@@ -11,6 +11,9 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+// Controller for adding, editing, and deleting menu toppings
+// We keep this separate from the AddMenuDrinkController because toppings are simpler and don't have ingredients or types.
+// Everything here uses similar logic to the AddEmployeeController, but with fewer fields and no ingredient selection.
 public class AddMenuToppingController {
     @FXML private Label title_label;
     @FXML private TextField name_field;

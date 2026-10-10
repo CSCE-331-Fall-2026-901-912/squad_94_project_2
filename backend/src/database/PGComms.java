@@ -398,7 +398,7 @@ public class PGComms {
     }
 
     // A lot of these SQL queries were created before the generic query functions were implemented, so they are not using the generic functions
-    // They will eventually be refactored to use the generic functions at a later date
+    // They may eventually be refactored to use the generic functions at a later date
     
     // Return the names of all drinks in menu_drinks whose "type" column equals the given type,
     // ordered by id_drink. Returns an empty list if the database can't be reached or the query fails.
@@ -498,7 +498,8 @@ public class PGComms {
         return names;
     }
 
-    // Return true if the named drink has hot_available = true in menu_drinks.
+    // Return true if the named drink has hot_available = true in menu_drinks
+    // Used to determine if the hot button should be enabled for a drink in the order window
     public static boolean is_hot_available(String drink_name) {
         boolean hot = false;
 
@@ -523,6 +524,8 @@ public class PGComms {
         return hot;
     }
 
+    // Retrieves the price of a menu item (drink or topping) from the database based on its name.
+    // Used to calculate totals for order submission and to display the price in the order summary.
     private static BigDecimal get_price(String sql, String name) {
         BigDecimal price = BigDecimal.ZERO;
 
@@ -547,6 +550,18 @@ public class PGComms {
         return price;
     }
 
+    public static BigDecimal get_drink_price(String name) {
+        return get_price("SELECT price FROM menu_drinks WHERE name = ?", name);
+    }
+
+    public static BigDecimal get_topping_price(String name) {
+        return get_price("SELECT price FROM menu_toppings WHERE name = ?", name);
+    }
+
+
+    // Get the total sales from the orders table where status = 'completed'. 
+    // Returns 0 if the database can't be reached or the query fails.
+    // Used to calculate total sales in the reports window.
     public static BigDecimal get_sales_total() {
         BigDecimal price = BigDecimal.ZERO;
 
@@ -602,14 +617,8 @@ public class PGComms {
         return price;
     }
 
-    public static BigDecimal get_drink_price(String name) {
-        return get_price("SELECT price FROM menu_drinks WHERE name = ?", name);
-    }
-
-    public static BigDecimal get_topping_price(String name) {
-        return get_price("SELECT price FROM menu_toppings WHERE name = ?", name);
-    }
-
+    // Insert a new order into the orders table with the provided details.
+    // Used to record completed orders in the database.
     public static void insert_order_item(int order_id, double order_total, double tip, int id_drink, int id_topping1, int id_topping2, int ice_level, int sugar_level, boolean hot_chosen) {
         if (!open_connection()) {
             return;
@@ -649,11 +658,13 @@ public class PGComms {
         close_connection();
     }
 
-
+    // Helper function to clean SQL values, returns "NULL" for null values 
+    // and properly escaping single quotes for non-null strings.
     private static String sql_value(String value) {
         return value == null ? "NULL" : "'" + value.replace("'", "''") + "'";
     }
 
+    // Add a new employee to the database with the provided details.
     public static boolean add_employee(String name, String position, String phone,
                                    BigDecimal pay_rate, int hours) {
         String sql = "INSERT INTO employees "
@@ -664,6 +675,7 @@ public class PGComms {
         return issue_query_type_update(sql);
     }
 
+    // Update an existing employee's details in the database based on their ID.
     public static boolean update_employee(int id, String name, String position, String phone,
                                       BigDecimal pay, int hours) {
         String sql = "UPDATE employees SET name = " + sql_value(name)
@@ -674,11 +686,14 @@ public class PGComms {
                 + " WHERE id_employee = " + id;
         return issue_query_type_update(sql);
     }
-
+    // Delete an employee from the database based on their ID.
     public static boolean delete_employee(int id) {
         return issue_query_type_update("DELETE FROM employees WHERE id_employee = " + id);
     }
 
+    // Add a new drink to the database with the provided details, along with its associated ingredients
+    // to the join_menu_drinks_and_inv_edible table. 
+    // Returns true if the drink and its ingredients were successfully added, false otherwise.
     public static boolean add_drink_with_ingredients(
             String name, BigDecimal price, String type,
             boolean hot_available, boolean is_non_caffeinated,
@@ -711,6 +726,9 @@ public class PGComms {
         return true;
     }
 
+    // Update an existing drink's details in the database based on its ID, along with its associated ingredients
+    // in the join_menu_drinks_and_inv_edible table. 
+    // Returns true if the drink and its ingredients were successfully updated, false otherwise.
     public static boolean update_drink_with_ingredients(
             int drink_id, String name, BigDecimal price, String type,
             boolean hot_available, boolean is_non_caffeinated,
@@ -746,6 +764,9 @@ public class PGComms {
 
     }
 
+    // Add a new topping to the database with the provided details, along with its associated inventory item
+    // to the inv_edible table and the join_menu_toppings_and_inv_edible table.
+    //  Returns true if the topping and its inventory item were successfully added, false otherwise.
     public static boolean add_topping_with_inventory(String name, BigDecimal price) {
         if (!issue_query_type_update(
                 "INSERT INTO menu_toppings (id_topping, name, price) "
@@ -801,9 +822,6 @@ public class PGComms {
 
     private static boolean modify_topping_quantity_in_inventory(int topping_id, int val, String type) {
         if(type.equals("inv_edible")){
-            // ArrayList<JoinMenuToppingsAndInvEdibleRowDTO> edible_rows;
-            // edible_rows = PGComms.issue_query_type_rows_JoinMenuToppingsAndInvEdible("SELECT * FROM join_menu_toppings_and_inv_edible WHERE id_topping = " + topping_id);
-            // int edible_id = edible_rows.getFirst().id_edible();
 
             if (!issue_query_type_update(
                     "UPDATE inv_edible SET amount_servings = " + val
