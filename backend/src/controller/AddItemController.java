@@ -27,7 +27,9 @@ public class AddItemController {
         this.model = model;
         this.on_saved = on_saved;
     }
-    
+
+    // Handle visual warnings displayed if submit changes button is pressed and some user input is invalid.
+    // Otherwise, simply close the add item page to indicate success to the user.
     @FXML
     public void submit_changes_button(ActionEvent event) {
         String name = input_name.getText().trim();

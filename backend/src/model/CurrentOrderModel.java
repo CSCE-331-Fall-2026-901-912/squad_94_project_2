@@ -13,11 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 import database.PGComms;
 
+// Model class for managing current order-related data, including drinks, toppings, associated prices, IDs, and checkout procedures.
 public class CurrentOrderModel {
+
     // List to hold the current order lines, each representing an item in the order.
     private final List<OrderLineDTO> lines = new ArrayList<>();
+
     // StringProperty to hold the current order details for display purposes.
     private final StringProperty current_order = new SimpleStringProperty("Item1: ");
+
     // StringProperty to hold the total price of the current order for display purposes.
     private final StringProperty order_total = new SimpleStringProperty("Total: 0.00");
 
@@ -162,6 +166,7 @@ public class CurrentOrderModel {
 
         for(OrderLineDTO line : lines) {
             // Calculate tips individually to make it easier to insert each drink as its own line
+
             double price_with_tip = line.price().multiply(BigDecimal.ONE.add(tip_rate)).setScale(2, RoundingMode.HALF_UP).doubleValue();
             int next_order_id = get_last_orderID() + 1;
             int id_drink = find_drink(line.drink_name()).id_drink();
@@ -196,6 +201,7 @@ public class CurrentOrderModel {
                 topping2_id = topping2.id_topping();
                 PGComms.modify_topping_quantity_in_edible_inventory(topping2_id, -1);
             }
+
             // Convert ice level and sugar percent to integer representations for database storage.
             int ice_level;
             int sugar_level;
@@ -233,6 +239,7 @@ public class CurrentOrderModel {
                 sugar_level,
                 hot_chosen);
         }
+
         // If all order lines were successfully processed and inserted into the database, return true to indicate a successful checkout.
         return true;
     }

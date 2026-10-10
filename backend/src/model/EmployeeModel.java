@@ -22,6 +22,7 @@ public class EmployeeModel {
             int hours) {
         return PGComms.add_employee(name, position, phone, pay, hours);
     }
+
     // Update an existing employee's details in the database based on their ID.
     public boolean update(
             int id,
@@ -32,6 +33,7 @@ public class EmployeeModel {
             int hours) {
         return PGComms.update_employee(id, name, position, phone, pay, hours);
     }
+
     // Delete an employee from the database based on their ID.
     public boolean delete(int id) {
         return PGComms.delete_employee(id);

@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// Model class for managing order history-related data, including drinks, toppings, associated prices, IDs, and the times at which each order was created.
 public class OrderHistoryModel {
     private final Map<Integer, String> drink_names = new HashMap<>();
 

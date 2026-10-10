@@ -17,9 +17,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.Label;
 
-
-
-
+// Manages the opening of several pages which can be accessed by the manager on their specific interface.
 public class ManagerController {
 
     @FXML private TableView<IDNameValDTO> OOSTable;
@@ -40,6 +38,7 @@ public class ManagerController {
         refresh();
     }
 
+    // Opening logic for the EmployeeController.
     @FXML 
     public void open_employee_view(ActionEvent event){
         try{
@@ -60,6 +59,7 @@ public class ManagerController {
         }
     }
 
+    // Opening logic for the MenuController.
     @FXML
     public void open_menu_view(ActionEvent event){
         try {
@@ -79,6 +79,7 @@ public class ManagerController {
         }
     }
 
+    // Opening logic for the InventoryController.
     @FXML public void open_edit_inventory(ActionEvent event) {
         try {
             InventoryModel model = new InventoryModel();
@@ -98,6 +99,8 @@ public class ManagerController {
             e.printStackTrace();
         }
     }
+
+    // Opening logic for the OrderHistoryController.
     @FXML public void open_order_history(MouseEvent event) {
         try {
             OrderHistoryModel model = new OrderHistoryModel();
@@ -115,6 +118,8 @@ public class ManagerController {
             e.printStackTrace();
         }
     }
+
+    // Opening logic for the SalesAnalyticsController.
     @FXML private void open_sales_analytics(MouseEvent event){
         try {
            // TODO: fill in once sales analytics is implemented
@@ -124,12 +129,14 @@ public class ManagerController {
         }
     }
 
+    // Called to update elements on the manager main screen without reloading the entire page.
     private void refresh(){
         TodaysSalesAmount.setText("$" + sales_model.get_todays_sales().toString());
         TotalSalesAmount.setText("$" + sales_model.get_total_sales().toString());
         load_inventory_details_small();
     }
 
+    // Handles the loading of small tables which provide at-a-glance information to the manager on inventory status (in terms of amounts of items).
     public void load_inventory_details_small() {
         // Load out-of-stock table
         OOSName.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().name()));

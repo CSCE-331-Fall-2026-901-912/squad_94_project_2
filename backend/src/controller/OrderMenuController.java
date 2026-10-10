@@ -65,6 +65,8 @@ public class OrderMenuController {
         fill_box(fruit_tea_box, "fruit tea");
         fill_box(no_caff_box, "no caff tea");
     }
+
+    // Helper function to handle shared logic to populate all drink boxes. Called by populate_drink_boxes().
     private void fill_box(ComboBox<String> box, String type){
         if (box == null) return;
         box.setItems(FXCollections.observableArrayList(menu_model.get_drink_names_by_type(type)));
@@ -167,9 +169,13 @@ public class OrderMenuController {
     private String selected_ice;
     @FXML public void ice_selected(ActionEvent event){
         Button clicked = (Button) event.getSource();
-        selected_ice = clicked.getText();                    // "None", "Light", "Regular" or "Hot"
+
+        // "None", "Light", "Regular" or "Hot"
+        selected_ice = clicked.getText();
         for (Button b : List.of(no_ice_button, light_ice_button, regular_ice_button, hot_button)) {
-            b.setStyle(b == clicked ? SELECTED_STYLE : "");  // reuse the green from the toppings
+
+            // Reuse the green from the toppings.
+            b.setStyle(b == clicked ? SELECTED_STYLE : "");
         }
     }
     

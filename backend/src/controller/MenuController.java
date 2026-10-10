@@ -36,7 +36,6 @@ public class MenuController {
         this.model = model;
     }
 
-    // Initialize the controller by configuring table columns, setting up row click events, and refreshing the data displayed in the tables.
     @FXML
     private void initialize() {
         configure_columns();
@@ -45,6 +44,7 @@ public class MenuController {
         refresh();
     }
 
+    // Called to update elements on the manager's menu management screen without reloading the entire page.
     public void refresh() {
         menu_drinks_table.setItems(
             FXCollections.observableArrayList(model.get_drinks()));
@@ -125,7 +125,7 @@ public class MenuController {
     }
 
     // Set up double-click functionality (to prevent accidental opening) on table rows 
-    // to open the topping form in edit mode
+    // to open the drink form in edit mode
     private void setup_drink_row_click() {
         menu_drinks_table.setRowFactory(table -> {
             TableRow<MenuDrinksRowDTO> row = new TableRow<>();
@@ -140,6 +140,8 @@ public class MenuController {
         });
     }
 
+    // Set up double-click functionality (to prevent accidental opening) on table rows
+    // to open the topping form in edit mode
     private void setup_topping_row_click() {
         menu_toppings_table.setRowFactory(table -> {
             TableRow<MenuToppingsRowDTO> row = new TableRow<>();

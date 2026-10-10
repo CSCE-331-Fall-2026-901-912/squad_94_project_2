@@ -8,6 +8,8 @@ import dto.InvNonEdibleRowDTO;
 import java.util.List;
 
 public class InventoryModel {
+
+    // Get all edible items from the inv_edible table as one string. Order items by their amount of servings constituted in the inventory (greatest to least).
     public String get_edible() {
         List<InvEdibleRowDTO> edibles = PGComms.issue_query_type_rows_InvEdible("SELECT * FROM inv_edible ORDER BY amount_servings");
         String output = "";
@@ -17,6 +19,7 @@ public class InventoryModel {
         return output;
     }
 
+    // Get all non-edible items from the inv_nonedible table as one string. Order items by their amount in the inventory (greatest to least).
     public String get_non_edible() {
         List<InvNonEdibleRowDTO> non_edibles = PGComms.issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible ORDER BY amount");
         String output = "";

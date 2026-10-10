@@ -26,6 +26,7 @@ public class InventoryController {
         non_edible_text_area.setText(model.get_non_edible());
     }
 
+    // Handle activation of the AddItemController and transfer to the AddItemPopUp menu.
     @FXML private void change_item_button(ActionEvent event) {
         try {
             InventoryModel model = new InventoryModel();
