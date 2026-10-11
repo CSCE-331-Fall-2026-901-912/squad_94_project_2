@@ -41,53 +41,58 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ScrollPane layoutX="252.0" layoutY="35.0" prefHeight="172.0" prefWidth="314.0">
+      <ScrollPane layoutX="249.0" layoutY="25.0" prefHeight="209.0" prefWidth="314.0">
          <content>
-            <AnchorPane fx:id="OHBox" minHeight="0.0" minWidth="0.0" onMouseClicked="#open_order_history" prefHeight="150.0" prefWidth="316.0">
+            <AnchorPane fx:id="OHBox" minHeight="0.0" minWidth="0.0" onMouseClicked="#open_order_history" prefHeight="181.0" prefWidth="316.0">
                <children>
-                  <TableView fx:id="TodayOHTable" layoutX="17.0" layoutY="48.0" prefHeight="94.0" prefWidth="282.0">
+                  <TableView fx:id="TodayOHTable" layoutX="17.0" layoutY="73.0" prefHeight="94.0" prefWidth="282.0">
                      <columns>
                         <TableColumn fx:id="TodayOHID" prefWidth="57.599971771240234" text="ID" />
                         <TableColumn fx:id="TodayOHOrder" prefWidth="149.60003662109375" text="Order" />
                         <TableColumn fx:id="TodayOHTotal" prefWidth="75.99999084472654" text="Total" />
                      </columns>
                   </TableView>
-                  <Label layoutX="115.0" layoutY="14.0" prefHeight="34.0" prefWidth="86.0" text="Order History" textAlignment="CENTER">
+                  <Label layoutX="17.0" layoutY="21.0" prefHeight="34.0" prefWidth="86.0" text="Order History" textAlignment="CENTER">
                      <font>
                         <Font name="Calibri" size="14.0" />
                      </font>
                   </Label>
+                  <Button layoutX="176.0" layoutY="12.0" onAction="#open_prod_sales_screen" prefHeight="52.0" prefWidth="122.0" text="Ingredient Usage &amp; Total Sales" wrapText="true">
+                     <font>
+                        <Font name="Calibri" size="14.0" />
+                     </font>
+                  </Button>
                </children>
             </AnchorPane>
          </content>
       </ScrollPane>
       <AnchorPane fx:id="InventoryBox" layoutX="29.0" layoutY="53.0" prefHeight="435.0" prefWidth="196.0">
          <children>
-            <Button fx:id="InventoryLabel" layoutX="66.0" onAction="#open_edit_inventory" layoutY="1.0" prefHeight="26.0" prefWidth="90.0" text="Inventory">
+            <Button fx:id="InventoryLabel" layoutX="13.0" layoutY="14.0" onAction="#open_edit_inventory" prefHeight="27.0" prefWidth="167.0" text="Edit Inventory">
                <font>
                   <Font name="Calibri" size="14.0" />
                </font>
             </Button>
-            <TableView id="OOSTable" fx:id="OOSTable" layoutX="13.0" layoutY="54.0" prefHeight="154.0" prefWidth="167.0">
+            <TableView id="OOSTable" fx:id="OOSTable" layoutX="13.0" layoutY="81.0" prefHeight="154.0" prefWidth="167.0">
               <columns>
                 <TableColumn fx:id="OOSName" prefWidth="75.0" text="Name" />
                 <TableColumn fx:id="OOSAmount" prefWidth="91.19999999999999" text="Amount" />
               </columns>
             </TableView>
-            <Label fx:id="OOSLabel" layoutX="13.0" layoutY="27.0" prefHeight="26.0" prefWidth="70.0" text="Out Of Stock">
+            <Label fx:id="OOSLabel" layoutX="13.0" layoutY="54.0" prefHeight="26.0" prefWidth="70.0" text="Out Of Stock">
                <font>
                   <Font size="11.0" />
                </font>
             </Label>
-            <TableView id="RLTable" fx:id="RLTable" layoutX="14.0" layoutY="245.0" prefHeight="189.0" prefWidth="167.0">
+            <TableView id="RLTable" fx:id="RLTable" layoutX="14.0" layoutY="263.0" prefHeight="189.0" prefWidth="167.0">
                <columns>
                   <TableColumn fx:id="RLName" prefWidth="75.0" text="Name" />
                   <TableColumn fx:id="RLAmount" prefWidth="91.19999999999999" text="Amount" />
                </columns>
             </TableView>
-            <Label layoutX="13.0" layoutY="217.0" prefHeight="26.0" prefWidth="70.0" text="Running Low">
+            <Label layoutX="13.0" layoutY="236.0" prefHeight="26.0" prefWidth="70.0" text="Running Low">
                <font>
                   <Font size="11.0" />
                </font>

@@ -100,6 +100,27 @@ public class ManagerController {
         }
     }
 
+    // Opening logic for the ProductSalesController.
+    @FXML public void open_prod_sales_screen(ActionEvent event) {
+        try {
+            OrderHistoryModel model = new OrderHistoryModel();
+            ProdSalesScreenController controller =
+                new ProdSalesScreenController(model);
+
+            Stage stage = ViewLoader.open_window(
+                "/gui/manager/ProdSalesScreen.fxml",
+                controller,
+                ((Node) event.getSource()).getScene().getWindow());
+
+            if (stage != null) {
+                stage.setTitle("Product Sales & Usage");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     // Opening logic for the OrderHistoryController.
     @FXML public void open_order_history(MouseEvent event) {
         try {
