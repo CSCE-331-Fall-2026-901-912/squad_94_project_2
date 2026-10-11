@@ -36,6 +36,7 @@ public class OrderHistoryController {
         this.model = model;
     }
 
+    // Populates the tables, uses the drink ids to pull the drink name information from database, and creates the filtered and sorted lists based on the filters applied.
     @FXML public void initialize() {
         model.load_drink_names();
 

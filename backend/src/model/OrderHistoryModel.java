@@ -20,6 +20,7 @@ public class OrderHistoryModel {
         return PGComms.issue_query_type_rows_Orders("SELECT * FROM orders ORDER BY id_order");
     }
 
+    // Loads drink ids and names into hashmap.
     public void load_drink_names() {
         drink_names.clear();
         for (MenuDrinksRowDTO d : PGComms.issue_query_type_rows_MenuDrinks("SELECT * FROM menu_drinks")) {
@@ -27,6 +28,7 @@ public class OrderHistoryModel {
         }
     }
 
+    // Returns the drink name based on the drink ID.
     public String drink_name(OrdersRowDTO order) {
         return drink_names.getOrDefault(order.id_drink(), "Unknown drink (" + order.id_drink() + ")");
     }
@@ -36,6 +38,7 @@ public class OrderHistoryModel {
         return String.valueOf(orders.id_order()).contains(str) || drink_name(orders).toLowerCase().contains(str) || String.valueOf(orders.total_spent()).contains(str);
     }
 
+    // Checks timestamp and sorts it into the appropriate time period.
     public boolean in_period(OrdersRowDTO order,String period) {
         if (period == null || period.equals("All time")) {
             return true;
@@ -59,6 +62,7 @@ public class OrderHistoryModel {
         };
     }
 
+    // Sorts drinks based on the filters chosen on GUI.
     public Comparator<OrdersRowDTO> comparator_for(String choice) {
         return switch (choice) {
             case "Order ID (high to low)" -> Comparator.comparingInt(OrdersRowDTO::id_order).reversed();
