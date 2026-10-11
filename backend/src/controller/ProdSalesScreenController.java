@@ -4,11 +4,13 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.time.LocalDateTime;
 
 import database.PGComms;
 import dto.MenuDrinksRowDTO;
@@ -32,6 +34,7 @@ public class ProdSalesScreenController {
 
     // private SalesRecord prod_sales_record = populate_sales_record();
     private HashMap<Integer, Double> id_to_total_sales = new HashMap<>();
+    ObservableList<OrdersRowDTO> all_orders;
 
     @FXML private TextField from_year;
     @FXML private TextField from_month;
@@ -47,6 +50,11 @@ public class ProdSalesScreenController {
     @FXML private TableColumn<SalesRecord, String> name_column;
     @FXML private TableColumn<SalesRecord, Double> total_sales_column;
     // @FXML private TableColumn<ProdSalesRecord, String> inventory_used_column;
+    
+    @FXML public void sort(){
+        System.err.println("Sorting table by time...");
+        sort_table_by_time();
+    }
 
     private FilteredList<SalesRecord> filtered;
     private SortedList<SalesRecord> sorted;
@@ -57,16 +65,7 @@ public class ProdSalesScreenController {
     public ProdSalesScreenController(OrderHistoryModel model) {
         this.model = model;
     }
-
-    // ProdSalesRecord populate_record(){
-    //     return new ProdSalesRecord(
-    //         0,
-    //         "",
-    //         "",
-    //         ""
-    //     );
-    // }
-
+    
     @FXML public void initialize() {
         model.load_drink_names();
 
@@ -79,12 +78,12 @@ public class ProdSalesScreenController {
         total_sales_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().total_sales_drink()));
         setup_row_click();
 
-        ObservableList<OrdersRowDTO> all_orders = FXCollections.observableArrayList(PGComms.issue_query_type_rows_Orders("SELECT * FROM orders ORDER BY id_order"));
-
+        all_orders = FXCollections.observableArrayList(PGComms.issue_query_type_rows_Orders("SELECT * FROM orders ORDER BY id_order"));
 
         for (OrdersRowDTO order : all_orders) {
             id_to_total_sales.put(order.id_drink(), id_to_total_sales.getOrDefault(order.id_drink(), 0.0) + order.total_spent().doubleValue());
         }
+
 
         ObservableList<SalesRecord> sale_orders = FXCollections.observableArrayList();
 
@@ -103,17 +102,49 @@ public class ProdSalesScreenController {
         whole_table.setItems(sorted);
 
         sorted.comparatorProperty().bind(whole_table.comparatorProperty());
+    }
 
-        // sortByOH.getItems().setAll("Order ID (low to high)", "Order ID (high to low)", "Drink name (A-Z)", "Total (low to high)", "Total (high to low)", "Newest first");
-        // sortByOH.getSelectionModel().selectFirst();
+    private void sort_table_by_time(){
+        
+        OffsetDateTime start = OffsetDateTime.of(
+            Integer.parseInt(from_year.getText()),
+            Integer.parseInt(from_month.getText()),
+            Integer.parseInt(from_day.getText()),
+            0, 0, 0, 0,
+            ZoneOffset.systemDefault().getRules().getOffset(LocalDateTime.now())
+        );
 
-        // timePeriodOH.getItems().setAll("All time", "Today", "Last 7 days", "Last 30 days");
-        // timePeriodOH.getSelectionModel().selectFirst();
+        OffsetDateTime end = OffsetDateTime.of(
+            Integer.parseInt(to_year.getText()),
+            Integer.parseInt(to_month.getText()),
+            Integer.parseInt(to_day.getText()),
+            23, 59, 59, 999_999_999,
+            ZoneOffset.systemDefault().getRules().getOffset(LocalDateTime.now())
+        );
+        id_to_total_sales = new HashMap<>();
 
-        // searchOH.textProperty().addListener((o, a, b) -> apply_filters());
-        // timePeriodOH.valueProperty().addListener((o, a, b) -> apply_filters());
-        // sortByOH.valueProperty().addListener((o, a, b) -> apply_sort());
-        // apply_sort();
+        for (OrdersRowDTO order : all_orders) {
+            if (model.in_period(order,start,end)){
+                id_to_total_sales.put(order.id_drink(), id_to_total_sales.getOrDefault(order.id_drink(), 0.0) + order.total_spent().doubleValue());
+            }
+        }
+        ObservableList<SalesRecord> sale_orders = FXCollections.observableArrayList();
+
+        for (Integer id_drink : id_to_total_sales.keySet()) {
+            sale_orders.add(new SalesRecord(
+                id_drink,
+                model.drink_name(id_drink),
+                id_to_total_sales.get(id_drink)
+            ));
+        }
+
+
+        filtered = new FilteredList<>(sale_orders);
+        sorted = new SortedList<>(filtered);
+
+        whole_table.setItems(sorted);
+
+        sorted.comparatorProperty().bind(whole_table.comparatorProperty());
     }
 
     // private void apply_filters() {

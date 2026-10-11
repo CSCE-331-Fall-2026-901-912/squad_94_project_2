@@ -49,9 +49,7 @@ public class OrderHistoryModel {
         if (time == null) {
             return false;
         }
-        LocalDate day = time
-            .atZoneSameInstant(ZoneId.systemDefault())
-            .toLocalDate();
+        LocalDate day = time.atZoneSameInstant(ZoneId.systemDefault()).toLocalDate();
 
         LocalDate today = LocalDate.now();
 
@@ -61,6 +59,24 @@ public class OrderHistoryModel {
             case "Last 30 days" -> !day.isBefore(today.minusDays(29));
             default -> true;
         };
+    }
+
+    // Duplicate method for checking if an order is within a specified period, using a specified start and end time
+    public boolean in_period(OrdersRowDTO order, OffsetDateTime start, OffsetDateTime end) {
+        if (start == null || end == null) {
+            return false;
+        }
+        OffsetDateTime time = order_time(order);
+
+        if (time == null) {
+            return false;
+        }
+        
+        if(time.isAfter(start) && time.isBefore(end)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public Comparator<OrdersRowDTO> comparator_for(String choice) {
