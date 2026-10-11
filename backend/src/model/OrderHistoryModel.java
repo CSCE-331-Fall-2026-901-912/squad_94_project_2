@@ -17,10 +17,12 @@ public class OrderHistoryModel {
     private final Map<Integer, String> drink_names = new HashMap<>();
     private final Map<Integer, String> edible_names = new HashMap<>();
 
+    // Method for retrieving all orders from the database
     public List<OrdersRowDTO> get_orders() {
         return PGComms.issue_query_type_rows_Orders("SELECT * FROM orders ORDER BY id_order");
     }
 
+    // Method for putting all drink names into the drink_names map
     public void load_drink_names() {
         drink_names.clear();
         for (MenuDrinksRowDTO d : PGComms.issue_query_type_rows_MenuDrinks("SELECT * FROM menu_drinks")) {
@@ -28,6 +30,7 @@ public class OrderHistoryModel {
         }
     }
 
+    // Method for putting all edible names into the edible_names map
     public void load_edible_names() {
         edible_names.clear();
         for (InvEdibleRowDTO d : PGComms.issue_query_type_rows_InvEdible("SELECT * FROM inv_edible")) {
@@ -35,19 +38,22 @@ public class OrderHistoryModel {
         }
     }
 
+    // Method for retrieving the name of a drink given an order
     public String drink_name(OrdersRowDTO order) {
         return drink_names.getOrDefault(order.id_drink(), "Unknown drink (" + order.id_drink() + ")");
     }
 
-
+    // Method for retrieving the name of a drink given its ID
     public String drink_name(Integer id) {
         return drink_names.getOrDefault(id, "Unknown drink (" + id + ")");
     }
 
+    // Method for retrieving the name of an edible given its ID
     public String edible_name(Integer id) {
         return edible_names.getOrDefault(id, "Unknown edible (" + id + ")");
     }
 
+    
     public boolean matches_search(OrdersRowDTO orders, String str) {
         if (str.isEmpty()) return true;
         return String.valueOf(orders.id_order()).contains(str) || drink_name(orders).toLowerCase().contains(str) || String.valueOf(orders.total_spent()).contains(str);

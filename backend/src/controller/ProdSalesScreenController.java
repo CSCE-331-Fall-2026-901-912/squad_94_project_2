@@ -30,11 +30,8 @@ import model.OrderHistoryModel;
 
 public class ProdSalesScreenController {
 
-    private record SalesRecord(Integer id_drink, String name_drink, Double total_sales_drink) {}
 
-    // private SalesRecord prod_sales_record = populate_sales_record();
-    private HashMap<Integer, Double> id_to_total_sales = new HashMap<>();
-    ObservableList<OrdersRowDTO> all_orders;
+    // FXML Declarations
 
     @FXML private TextField from_year;
     @FXML private TextField from_month;
@@ -44,17 +41,26 @@ public class ProdSalesScreenController {
     @FXML private TextField to_month;
     @FXML private TextField to_day;
 
+    private record SalesRecord(Integer id_drink, String name_drink, Double total_sales_drink) {}
 
     @FXML private TableView<SalesRecord> sales_table;
     @FXML private TableColumn<SalesRecord, Integer> sales_id_column;
     @FXML private TableColumn<SalesRecord, String> sales_name_column;
     @FXML private TableColumn<SalesRecord, Double> total_sales_column;
-    
+
+    // Data Structures for Sales Records and Filtering
     private FilteredList<SalesRecord> filtered_sales;
     private SortedList<SalesRecord> sorted_sales;
+    private HashMap<Integer, Double> id_to_total_sales = new HashMap<>();
+
+    // All orders fetched from the database
+    ObservableList<OrdersRowDTO> all_orders;
+
+    // Model for accessing order history and related data
+    private OrderHistoryModel model;
     
     @FXML public void sort(){
-        
+        // Grab the start and end times from the text fields
         OffsetDateTime start = OffsetDateTime.of(
             Integer.parseInt(from_year.getText()),
             Integer.parseInt(from_month.getText()),
@@ -71,19 +77,17 @@ public class ProdSalesScreenController {
             ZoneOffset.systemDefault().getRules().getOffset(LocalDateTime.now())
         );
 
+        // Sort both tables based on the specified time range
         sort_sales_table_by_time(start, end);
         sort_prods_table_by_time(start, end);
     }
 
-    private OrderHistoryModel model;
-
-    
+    // Controller constructor for syncing the model with this controller
     public ProdSalesScreenController(OrderHistoryModel model) {
         this.model = model;
     }
     
     @FXML public void initialize() {
-        
         sales_setup();
         prods_setup();
     }
@@ -92,13 +96,17 @@ public class ProdSalesScreenController {
         
         id_to_total_sales = new HashMap<>();
 
+        // Get all orders within the specified time range
         for (OrdersRowDTO order : all_orders) {
             if (model.in_period(order,start,end)){
+                // Add together the total sales for each drink
                 id_to_total_sales.put(order.id_drink(), id_to_total_sales.getOrDefault(order.id_drink(), 0.0) + order.total_spent().doubleValue());
             }
         }
+
         ObservableList<SalesRecord> sale_orders = FXCollections.observableArrayList();
 
+        // Add the total sales for each drink to the observable list
         for (Integer id_drink : id_to_total_sales.keySet()) {
             sale_orders.add(new SalesRecord(
                 id_drink,
@@ -107,12 +115,10 @@ public class ProdSalesScreenController {
             ));
         }
 
-
+        // Wrap the observable list in a filtered and sorted list for the table view
         filtered_sales = new FilteredList<>(sale_orders);
         sorted_sales = new SortedList<>(filtered_sales);
-
         sales_table.setItems(sorted_sales);
-
         sorted_sales.comparatorProperty().bind(sales_table.comparatorProperty());
     }
 
@@ -151,6 +157,7 @@ public class ProdSalesScreenController {
         sorted_sales.comparatorProperty().bind(sales_table.comparatorProperty());
     }
 
+    // Set up row click behavior for the sales table
     private void sales_setup_row_click(){
         sales_table.setRowFactory(tv -> {
             TableRow <SalesRecord> row = new TableRow<>();
@@ -162,6 +169,7 @@ public class ProdSalesScreenController {
     // PROD USAGE
     /////////////////////////////////////////////////////////////////////////////////////////////
 
+    // FXML declarations
     private record ProdUseRecord(Integer id_edible, String name_edible, Integer inventory_used) {}
 
     @FXML private TableView<ProdUseRecord> prod_table;
@@ -169,7 +177,7 @@ public class ProdSalesScreenController {
     @FXML private TableColumn<ProdUseRecord, String> prod_name_column;
     @FXML private TableColumn<ProdUseRecord, Integer> total_prod_column;
 
-
+    // Data structures for formatting the table view
     private FilteredList<ProdUseRecord> filtered_prods;
     private SortedList<ProdUseRecord> sorted_prods;
     private HashMap<Integer, Integer> edible_id_to_prod = new HashMap<>();
@@ -180,8 +188,11 @@ public class ProdSalesScreenController {
 
         edible_id_to_prod = new HashMap<>();
 
+        // Get all orders within the specified time range
         for (OrdersRowDTO order : all_orders) {
             if (model.in_period(order,start,end)){
+                
+                // Iterate through the join table to find all edibles used in this order
                 for(JoinMenuDrinksAndInvEdibleRowDTO row : id_drink_to_id_edible){
                     if(row.id_drink() == order.id_drink()){
                         edible_id_to_prod.put(row.id_edible(), edible_id_to_prod.getOrDefault(row.id_edible(), 0) + 1);
@@ -201,11 +212,10 @@ public class ProdSalesScreenController {
         }
 
 
+        // Wrap the observable list in a filtered and sorted list for the table view
         filtered_prods = new FilteredList<>(prod_orders);
         sorted_prods = new SortedList<>(filtered_prods);
-
         prod_table.setItems(sorted_prods);
-
         sorted_prods.comparatorProperty().bind(prod_table.comparatorProperty());
     }
 
@@ -222,9 +232,9 @@ public class ProdSalesScreenController {
         ArrayList<JoinMenuDrinksAndInvEdibleRowDTO> id_drink_to_id_edible = PGComms.issue_query_type_rows_JoinMenuDrinksAndInvEdible("SELECT * FROM join_menu_drinks_and_inv_edible");
 
         
-
+        // Get all orders
         for (OrdersRowDTO order : all_orders) {
-
+            // Iterate through the join table to find all edibles used in this order
             for(JoinMenuDrinksAndInvEdibleRowDTO row : id_drink_to_id_edible){
                 if(row.id_drink() == order.id_drink()){
                     edible_id_to_prod.put(row.id_edible(), edible_id_to_prod.getOrDefault(row.id_edible(), 0) + 1);
@@ -236,6 +246,7 @@ public class ProdSalesScreenController {
 
         ObservableList<ProdUseRecord> prod_orders = FXCollections.observableArrayList();
 
+        // Add each edible with usage count to the observable list
         for (Integer id_edible : edible_id_to_prod.keySet()) {
             prod_orders.add(new ProdUseRecord(
                 id_edible,
@@ -244,15 +255,14 @@ public class ProdSalesScreenController {
             ));
         }
 
-
+        // Wrap the observable list in a filtered and sorted list for the table view
         filtered_prods = new FilteredList<>(prod_orders);
         sorted_prods = new SortedList<>(filtered_prods);
-
         prod_table.setItems(sorted_prods);
-
         sorted_prods.comparatorProperty().bind(prod_table.comparatorProperty());
     }
 
+    // Set up row click behavior for the product table
     private void prod_setup_row_click(){
         prod_table.setRowFactory(tv -> {
             TableRow <ProdUseRecord> row = new TableRow<>();
