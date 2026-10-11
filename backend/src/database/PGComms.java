@@ -629,9 +629,14 @@ public class PGComms {
 
     // Get a count of completed, void, and discard orders per hour for a specified day.
     public static String get_xreport_string(String date_input) {
-        String sql = "SELECT date_trunc('hour', time_created_at) AS sales_hour, COUNT(*) FILTER (WHERE status = 'completed') AS completed, " +
-                "COUNT(*) FILTER (WHERE status = 'void') AS void, COUNT(*) FILTER (WHERE status = 'discard') AS discard" +
-                "FROM orders WHERE time_created_at >= ? AND time_created_at < ? GROUP BY sales_hour" +
+        String sql = "SELECT\n" +
+                "    date_trunc('hour', time_created_at) AS sales_hour,\n" +
+                "    COUNT(*) FILTER (WHERE status = 'completed') AS completed,\n" +
+                "\tCOUNT(*) FILTER (WHERE status = 'void') AS void,\n" +
+                "\tCOUNT(*) FILTER (WHERE status = 'discard') AS discard\n" +
+                "FROM orders\n" +
+                "WHERE time_created_at >= ? AND time_created_at < ?\n" +
+                "GROUP BY sales_hour\n" +
                 "ORDER BY sales_hour;";
 
         String output = "";
@@ -645,13 +650,14 @@ public class PGComms {
             stmt.setObject(1, day.atStartOfDay());
             stmt.setObject(2, day.plusDays(1).atStartOfDay());
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    OffsetDateTime hour = rs.getObject(0, OffsetDateTime.class);
-                    String num_completed = rs.getString(1);
-                    String num_void = rs.getString(2);
-                    String num_discard = rs.getString(3);
-                    output += "--" + hour + "--\n" + "Orders completed: " + num_completed + "\n" + "Orders voided: " + num_void + "\n"
-                    + "Orders discarded: " + num_discard + "\n\n";
+                while (rs.next()) {
+                    OffsetDateTime time = rs.getObject(1, OffsetDateTime.class);
+                    String num_completed = rs.getString(2);
+                    String num_void = rs.getString(3);
+                    String num_discard = rs.getString(4);
+                    output += "-- By " + time.toLocalDate() + " " + time.toLocalTime() + " --\n" + "Orders completed: " +
+                    num_completed + "\n" + "Orders voided: " + num_void + "\n" + "Orders discarded: " + num_discard +
+                    "\n\n";
                 }
             }
         }
