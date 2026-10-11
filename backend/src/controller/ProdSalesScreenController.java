@@ -54,7 +54,6 @@ public class ProdSalesScreenController {
     private SortedList<SalesRecord> sorted_sales;
     
     @FXML public void sort(){
-        // System.err.println("Sorting table by time...");
         sort_sales_table_by_time();
         sort_prods_table_by_time();
     }
@@ -174,7 +173,53 @@ public class ProdSalesScreenController {
     private HashMap<Integer, Integer> edible_id_to_prod = new HashMap<>();
 
     private void sort_prods_table_by_time(){
+        OffsetDateTime start = OffsetDateTime.of(
+            Integer.parseInt(from_year.getText()),
+            Integer.parseInt(from_month.getText()),
+            Integer.parseInt(from_day.getText()),
+            0, 0, 0, 0,
+            ZoneOffset.systemDefault().getRules().getOffset(LocalDateTime.now())
+        );
 
+        OffsetDateTime end = OffsetDateTime.of(
+            Integer.parseInt(to_year.getText()),
+            Integer.parseInt(to_month.getText()),
+            Integer.parseInt(to_day.getText()),
+            23, 59, 59, 999_999_999,
+            ZoneOffset.systemDefault().getRules().getOffset(LocalDateTime.now())
+        );
+
+        ArrayList<JoinMenuDrinksAndInvEdibleRowDTO> id_drink_to_id_edible = PGComms.issue_query_type_rows_JoinMenuDrinksAndInvEdible("SELECT * FROM join_menu_drinks_and_inv_edible");
+
+        edible_id_to_prod = new HashMap<>();
+
+        for (OrdersRowDTO order : all_orders) {
+            if (model.in_period(order,start,end)){
+                for(JoinMenuDrinksAndInvEdibleRowDTO row : id_drink_to_id_edible){
+                    if(row.id_drink() == order.id_drink()){
+                        edible_id_to_prod.put(row.id_edible(), edible_id_to_prod.getOrDefault(row.id_edible(), 0) + 1);
+                    }
+                }
+            }
+        }
+
+        ObservableList<ProdUseRecord> prod_orders = FXCollections.observableArrayList();
+
+        for (Integer id_edible : edible_id_to_prod.keySet()) {
+            prod_orders.add(new ProdUseRecord(
+                id_edible,
+                model.edible_name(id_edible),
+                edible_id_to_prod.get(id_edible)
+            ));
+        }
+
+
+        filtered_prods = new FilteredList<>(prod_orders);
+        sorted_prods = new SortedList<>(filtered_prods);
+
+        prod_table.setItems(sorted_prods);
+
+        sorted_prods.comparatorProperty().bind(prod_table.comparatorProperty());
     }
 
     private void prods_setup(){
@@ -205,7 +250,6 @@ public class ProdSalesScreenController {
         ObservableList<ProdUseRecord> prod_orders = FXCollections.observableArrayList();
 
         for (Integer id_edible : edible_id_to_prod.keySet()) {
-            System.err.println(model.edible_name(id_edible));
             prod_orders.add(new ProdUseRecord(
                 id_edible,
                 model.edible_name(id_edible),

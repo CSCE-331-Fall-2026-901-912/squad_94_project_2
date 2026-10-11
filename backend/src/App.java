@@ -16,17 +16,14 @@ import controller.ProdSalesScreenController;
 public class App extends Application {
 
     public void start(Stage stage) throws Exception {
-        // CurrentOrderModel order_model = new CurrentOrderModel();
-        // MenuModel menu_model = new MenuModel();
+        CurrentOrderModel order_model = new CurrentOrderModel();
+        MenuModel menu_model = new MenuModel();
 
-        // BaseMenuController controller =
-        //     new BaseMenuController(order_model, menu_model);
-
-        OrderHistoryModel oh_model = new OrderHistoryModel();
-        ProdSalesScreenController controller = new ProdSalesScreenController(oh_model);
+        BaseMenuController controller =
+            new BaseMenuController(order_model, menu_model);
 
         FXMLLoader loader = new FXMLLoader(
-            getClass().getResource("/gui/manager/ProdSalesScreen.fxml"));
+            getClass().getResource("/gui/cashier/BaseMenu.fxml"));
         loader.setController(controller);
 
         Parent root = loader.load();
