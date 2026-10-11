@@ -1,6 +1,7 @@
 package model;
 
 import database.PGComms;
+import dto.InvEdibleRowDTO;
 import dto.MenuDrinksRowDTO;
 import dto.OrdersRowDTO;
 
@@ -15,7 +16,9 @@ import java.util.Map;
 // Model class for managing order history-related data, including drinks, toppings, associated prices, IDs, and the times at which each order was created.
 public class OrderHistoryModel {
     private final Map<Integer, String> drink_names = new HashMap<>();
+    private final Map<Integer, String> edible_names = new HashMap<>();
 
+    // Method for retrieving all orders from the database
     public List<OrdersRowDTO> get_orders() {
         return PGComms.issue_query_type_rows_Orders("SELECT * FROM orders ORDER BY id_order");
     }
@@ -33,6 +36,17 @@ public class OrderHistoryModel {
         return drink_names.getOrDefault(order.id_drink(), "Unknown drink (" + order.id_drink() + ")");
     }
 
+    // Method for retrieving the name of a drink given its ID
+    public String drink_name(Integer id) {
+        return drink_names.getOrDefault(id, "Unknown drink (" + id + ")");
+    }
+
+    // Method for retrieving the name of an edible given its ID
+    public String edible_name(Integer id) {
+        return edible_names.getOrDefault(id, "Unknown edible (" + id + ")");
+    }
+
+    
     public boolean matches_search(OrdersRowDTO orders, String str) {
         if (str.isEmpty()) return true;
         return String.valueOf(orders.id_order()).contains(str) || drink_name(orders).toLowerCase().contains(str) || String.valueOf(orders.total_spent()).contains(str);
@@ -48,9 +62,7 @@ public class OrderHistoryModel {
         if (time == null) {
             return false;
         }
-        LocalDate day = time
-            .atZoneSameInstant(ZoneId.systemDefault())
-            .toLocalDate();
+        LocalDate day = time.atZoneSameInstant(ZoneId.systemDefault()).toLocalDate();
 
         LocalDate today = LocalDate.now();
 
@@ -60,6 +72,24 @@ public class OrderHistoryModel {
             case "Last 30 days" -> !day.isBefore(today.minusDays(29));
             default -> true;
         };
+    }
+
+    // Duplicate method for checking if an order is within a specified period, using a specified start and end time
+    public boolean in_period(OrdersRowDTO order, OffsetDateTime start, OffsetDateTime end) {
+        if (start == null || end == null) {
+            return false;
+        }
+        OffsetDateTime time = order_time(order);
+
+        if (time == null) {
+            return false;
+        }
+        
+        if(time.isAfter(start) && time.isBefore(end)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // Sorts drinks based on the filters chosen on GUI.
