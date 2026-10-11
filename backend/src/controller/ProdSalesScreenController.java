@@ -54,24 +54,6 @@ public class ProdSalesScreenController {
     private SortedList<SalesRecord> sorted_sales;
     
     @FXML public void sort(){
-        sort_sales_table_by_time();
-        sort_prods_table_by_time();
-    }
-
-    private OrderHistoryModel model;
-
-    
-    public ProdSalesScreenController(OrderHistoryModel model) {
-        this.model = model;
-    }
-    
-    @FXML public void initialize() {
-        
-        sales_setup();
-        prods_setup();
-    }
-
-    private void sort_sales_table_by_time(){
         
         OffsetDateTime start = OffsetDateTime.of(
             Integer.parseInt(from_year.getText()),
@@ -88,6 +70,26 @@ public class ProdSalesScreenController {
             23, 59, 59, 999_999_999,
             ZoneOffset.systemDefault().getRules().getOffset(LocalDateTime.now())
         );
+
+        sort_sales_table_by_time(start, end);
+        sort_prods_table_by_time(start, end);
+    }
+
+    private OrderHistoryModel model;
+
+    
+    public ProdSalesScreenController(OrderHistoryModel model) {
+        this.model = model;
+    }
+    
+    @FXML public void initialize() {
+        
+        sales_setup();
+        prods_setup();
+    }
+
+    private void sort_sales_table_by_time(OffsetDateTime start, OffsetDateTime end){
+        
         id_to_total_sales = new HashMap<>();
 
         for (OrdersRowDTO order : all_orders) {
@@ -172,22 +174,7 @@ public class ProdSalesScreenController {
     private SortedList<ProdUseRecord> sorted_prods;
     private HashMap<Integer, Integer> edible_id_to_prod = new HashMap<>();
 
-    private void sort_prods_table_by_time(){
-        OffsetDateTime start = OffsetDateTime.of(
-            Integer.parseInt(from_year.getText()),
-            Integer.parseInt(from_month.getText()),
-            Integer.parseInt(from_day.getText()),
-            0, 0, 0, 0,
-            ZoneOffset.systemDefault().getRules().getOffset(LocalDateTime.now())
-        );
-
-        OffsetDateTime end = OffsetDateTime.of(
-            Integer.parseInt(to_year.getText()),
-            Integer.parseInt(to_month.getText()),
-            Integer.parseInt(to_day.getText()),
-            23, 59, 59, 999_999_999,
-            ZoneOffset.systemDefault().getRules().getOffset(LocalDateTime.now())
-        );
+    private void sort_prods_table_by_time(OffsetDateTime start, OffsetDateTime end){
 
         ArrayList<JoinMenuDrinksAndInvEdibleRowDTO> id_drink_to_id_edible = PGComms.issue_query_type_rows_JoinMenuDrinksAndInvEdible("SELECT * FROM join_menu_drinks_and_inv_edible");
 
