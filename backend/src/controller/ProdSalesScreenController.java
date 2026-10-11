@@ -49,23 +49,15 @@ public class ProdSalesScreenController {
     @FXML private TableColumn<SalesRecord, Integer> id_column;
     @FXML private TableColumn<SalesRecord, String> name_column;
     @FXML private TableColumn<SalesRecord, Double> total_sales_column;
-    // @FXML private TableColumn<ProdSalesRecord, String> inventory_used_column;
+    
+    private FilteredList<SalesRecord> filtered_sales;
+    private SortedList<SalesRecord> sorted_sales;
     
     @FXML public void sort(){
-        System.err.println("Sorting table by time...");
-        sort_table_by_time();
+        // System.err.println("Sorting table by time...");
+        sort_sales_table_by_time();
+        sort_prods_table_by_time();
     }
-
-    @FXML private TableView<ProdUseRecord> whole_table2;
-    @FXML private TableColumn<ProdUseRecord, Integer> id_column2;
-    @FXML private TableColumn<ProdUseRecord, String> name_column2;
-    @FXML private TableColumn<ProdUseRecord, Double> total_inv_column;
-
-    private FilteredList<SalesRecord> filtered;
-    private SortedList<SalesRecord> sorted;
-
-    private FilteredList<ProdUseRecord> filtered_prods;
-    private SortedList<ProdUseRecord> sorted_prods;
 
     private OrderHistoryModel model;
 
@@ -75,40 +67,11 @@ public class ProdSalesScreenController {
     }
     
     @FXML public void initialize() {
-        model.load_drink_names();
-
-        id_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().id_drink()));
-        name_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().name_drink()));
-        total_sales_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().total_sales_drink()));
-        setup_row_click();
-
-        all_orders = FXCollections.observableArrayList(PGComms.issue_query_type_rows_Orders("SELECT * FROM orders ORDER BY id_order"));
-
-        for (OrdersRowDTO order : all_orders) {
-            id_to_total_sales.put(order.id_drink(), id_to_total_sales.getOrDefault(order.id_drink(), 0.0) + order.total_spent().doubleValue());
-        }
-
-
-        ObservableList<SalesRecord> sale_orders = FXCollections.observableArrayList();
-
-        for (Integer id_drink : id_to_total_sales.keySet()) {
-            sale_orders.add(new SalesRecord(
-                id_drink,
-                model.drink_name(id_drink),
-                id_to_total_sales.get(id_drink)
-            ));
-        }
-
-
-        filtered = new FilteredList<>(sale_orders);
-        sorted = new SortedList<>(filtered);
-
-        whole_table.setItems(sorted);
-
-        sorted.comparatorProperty().bind(whole_table.comparatorProperty());
+       sales_setup();
+       prods_setup();
     }
 
-    private void sort_table_by_time(){
+    private void sort_sales_table_by_time(){
         
         OffsetDateTime start = OffsetDateTime.of(
             Integer.parseInt(from_year.getText()),
@@ -143,26 +106,95 @@ public class ProdSalesScreenController {
         }
 
 
-        filtered = new FilteredList<>(sale_orders);
-        sorted = new SortedList<>(filtered);
+        filtered_sales = new FilteredList<>(sale_orders);
+        sorted_sales = new SortedList<>(filtered_sales);
 
-        whole_table.setItems(sorted);
+        whole_table.setItems(sorted_sales);
 
-        sorted.comparatorProperty().bind(whole_table.comparatorProperty());
+        sorted_sales.comparatorProperty().bind(whole_table.comparatorProperty());
     }
 
-    // private void apply_filters() {
-    //     String text = searchOH.getText() == null ? "" : searchOH.getText().trim().toLowerCase();
-    //     String period = timePeriodOH.getValue();
-    //     filtered.setPredicate(o -> model.matches_search(o, text) && model.in_period(o, period));
-    // }
 
-    // private void apply_sort() {
-    //     String choice = sortByOH.getValue();
-    //     if (choice == null) return;
-    //     Comparator<OrdersRowDTO> c = model.comparator_for(choice);
-    //     sorted.setComparator(c);
-    // }
+    private void sales_setup(){
+        model.load_drink_names();
+
+        id_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().id_drink()));
+        name_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().name_drink()));
+        total_sales_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().total_sales_drink()));
+        setup_row_click();
+
+        all_orders = FXCollections.observableArrayList(PGComms.issue_query_type_rows_Orders("SELECT * FROM orders ORDER BY id_order"));
+
+        for (OrdersRowDTO order : all_orders) {
+            id_to_total_sales.put(order.id_drink(), id_to_total_sales.getOrDefault(order.id_drink(), 0.0) + order.total_spent().doubleValue());
+        }
+
+
+        ObservableList<SalesRecord> sale_orders = FXCollections.observableArrayList();
+
+        for (Integer id_drink : id_to_total_sales.keySet()) {
+            sale_orders.add(new SalesRecord(
+                id_drink,
+                model.drink_name(id_drink),
+                id_to_total_sales.get(id_drink)
+            ));
+        }
+
+
+        filtered_sales = new FilteredList<>(sale_orders);
+        sorted_sales = new SortedList<>(filtered_sales);
+
+        whole_table.setItems(sorted_sales);
+
+        sorted_sales.comparatorProperty().bind(whole_table.comparatorProperty());
+    }
+
+    @FXML private TableView<ProdUseRecord> whole_table2;
+    @FXML private TableColumn<ProdUseRecord, Integer> id_column2;
+    @FXML private TableColumn<ProdUseRecord, String> name_column2;
+    @FXML private TableColumn<ProdUseRecord, Double> total_inv_column;
+
+
+    private FilteredList<ProdUseRecord> filtered_prods;
+    private SortedList<ProdUseRecord> sorted_prods;
+
+    private void sort_prods_table_by_time(){
+
+    }
+
+    private void prods_setup(){
+        model.load_drink_names();
+
+        id_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().id_drink()));
+        name_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().name_drink()));
+        total_sales_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().total_sales_drink()));
+        setup_row_click();
+
+        all_orders = FXCollections.observableArrayList(PGComms.issue_query_type_rows_Orders("SELECT * FROM orders ORDER BY id_order"));
+
+        for (OrdersRowDTO order : all_orders) {
+            id_to_total_sales.put(order.id_drink(), id_to_total_sales.getOrDefault(order.id_drink(), 0.0) + order.total_spent().doubleValue());
+        }
+
+
+        ObservableList<SalesRecord> sale_orders = FXCollections.observableArrayList();
+
+        for (Integer id_drink : id_to_total_sales.keySet()) {
+            sale_orders.add(new SalesRecord(
+                id_drink,
+                model.drink_name(id_drink),
+                id_to_total_sales.get(id_drink)
+            ));
+        }
+
+
+        filtered_sales = new FilteredList<>(sale_orders);
+        sorted_sales = new SortedList<>(filtered_sales);
+
+        whole_table.setItems(sorted_sales);
+
+        sorted_sales.comparatorProperty().bind(whole_table.comparatorProperty());
+    }
 
     private void setup_row_click(){
         whole_table.setRowFactory(tv -> {
@@ -171,66 +203,4 @@ public class ProdSalesScreenController {
         });
     }
 
-
-
-    
-    private final Map<Integer, String> drink_names = new HashMap<>();
-
-    // public List<OrdersRowDTO> get_orders() {
-    //     return PGComms.issue_query_type_rows_Orders("SELECT * FROM orders ORDER BY id_order");
-    // }
-
-    // public void load_drink_names() {
-    //     drink_names.clear();
-    //     for (MenuDrinksRowDTO d : PGComms.issue_query_type_rows_MenuDrinks("SELECT * FROM menu_drinks")) {
-    //         drink_names.put(d.id_drink(), d.name());
-    //     }
-    // }
-
-    public String drink_name(SalesRecord order) {
-        return drink_names.getOrDefault(order.id_drink(), "Unknown drink (" + order.id_drink() + ")");
-    }
-
-    // public boolean matches_search(OrdersRowDTO orders, String str) {
-    //     if (str.isEmpty()) return true;
-    //     return String.valueOf(orders.id_order()).contains(str) || drink_name(orders).toLowerCase().contains(str) || String.valueOf(orders.total_spent()).contains(str);
-    // }
-
-    // public boolean in_period(OrdersRowDTO order,String period) {
-    //     if (period == null || period.equals("All time")) {
-    //         return true;
-    //     }
-    //     OffsetDateTime time = order_time(order);
-
-    //     if (time == null) {
-    //         return false;
-    //     }
-    //     LocalDate day = time
-    //         .atZoneSameInstant(ZoneId.systemDefault())
-    //         .toLocalDate();
-
-    //     LocalDate today = LocalDate.now();
-
-    //     return switch (period) {
-    //         case "Today" -> day.equals(today);
-    //         case "Last 7 days" -> !day.isBefore(today.minusDays(6));
-    //         case "Last 30 days" -> !day.isBefore(today.minusDays(29));
-    //         default -> true;
-    //     };
-    // }
-
-    // public Comparator<OrdersRowDTO> comparator_for(String choice) {
-    //     return switch (choice) {
-    //         case "Order ID (high to low)" -> Comparator.comparingInt(OrdersRowDTO::id_order).reversed();
-    //         case "Drink name (A-Z)" -> Comparator.comparing(o -> drink_name(o).toLowerCase());
-    //         case "Total (low to high)" -> Comparator.comparing(OrdersRowDTO::total_spent);
-    //         case "Total (high to low)" -> Comparator.comparing(OrdersRowDTO::total_spent).reversed();
-    //         case "Newest first" -> Comparator.comparing(this::order_time, Comparator.nullsLast(Comparator.reverseOrder()));
-    //         default -> Comparator.comparingInt(OrdersRowDTO::id_order);
-    //     };
-    // }
-
-    // private OffsetDateTime order_time(OrdersRowDTO order) {
-    //     return order.time_created_at();
-    // } 
 }
