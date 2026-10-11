@@ -84,7 +84,7 @@ public class ManagerController {
         try {
             InventoryModel model = new InventoryModel();
             InventoryController controller =
-                new InventoryController(model);
+                new InventoryController(model, this::refresh);
 
             Stage stage = ViewLoader.open_window(
                 "/gui/manager/InventoryScreen.fxml",

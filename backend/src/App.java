@@ -8,6 +8,8 @@ import model.MenuModel;
 import controller.BaseMenuController;
 import database.PGComms;
 
+import java.time.LocalDate;
+
 public class App extends Application {
 
     public void start(Stage stage) throws Exception {
@@ -36,6 +38,7 @@ public class App extends Application {
         // Identify and establish a reference to the PostgreSQL database.
         PGComms.initialize_database("csce-315-db.engr.tamu.edu", "squad_94_db", "squad_94", args[0]);
 
+        PGComms.get_xreport_string(LocalDate.now().toString());
         // Test if the database can be opened and closed normally. Terminate the program if this is not the case.
         if (!PGComms.test_connection()) {
             return;

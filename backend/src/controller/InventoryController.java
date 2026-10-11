@@ -9,12 +9,14 @@ import model.InventoryModel;
 
 public class InventoryController {
     private final InventoryModel model;
+    private final Runnable on_added;
 
     @FXML private TextArea edible_text_area;
     @FXML private TextArea non_edible_text_area;
 
-    public InventoryController(InventoryModel model) {
+    public InventoryController(InventoryModel model, Runnable on_added) {
         this.model = model;
+        this.on_added = on_added;
     }
 
     @FXML private void initialize() {
@@ -24,6 +26,7 @@ public class InventoryController {
     public void refresh() {
         edible_text_area.setText(model.get_edible());
         non_edible_text_area.setText(model.get_non_edible());
+        on_added.run();
     }
 
     // Handle activation of the AddItemController and transfer to the AddItemPopUp menu.
