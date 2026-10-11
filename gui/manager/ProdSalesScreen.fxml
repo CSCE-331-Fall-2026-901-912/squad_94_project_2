@@ -35,7 +35,7 @@
          <columns>
             <TableColumn fx:id="id_column2" prefWidth="47.200008392333984" text="ID" />
             <TableColumn fx:id="name_column2" prefWidth="283.2000274658203" text="Name" />
-            <TableColumn fx:id="total_sales_column2" minWidth="0.0" prefWidth="116.79998779296875" text="Total Inventory" />
+            <TableColumn fx:id="total_inv_column" minWidth="0.0" prefWidth="116.79998779296875" text="Total Inventory" />
          </columns>
       </TableView>
    </children>
