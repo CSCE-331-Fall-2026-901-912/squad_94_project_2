@@ -30,6 +30,14 @@ public class OrderHistoryModel {
             drink_names.put(d.id_drink(), d.name());
         }
     }
+    
+    // Method for putting all edible names into the edible_names map
+    public void load_edible_names() {
+        edible_names.clear();
+        for (InvEdibleRowDTO d : PGComms.issue_query_type_rows_InvEdible("SELECT * FROM inv_edible")) {
+            edible_names.put(d.id_edible(), d.name());
+        }
+    }
 
     // Returns the drink name based on the drink ID.
     public String drink_name(OrdersRowDTO order) {
