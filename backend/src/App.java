@@ -6,19 +6,27 @@ import javafx.stage.Stage;
 import model.CurrentOrderModel;
 import model.MenuModel;
 import controller.BaseMenuController;
+import controller.OrderHistoryController;
+import controller.ProdSalesScreenController;
 import database.PGComms;
+
+import model.OrderHistoryModel;
+import controller.ProdSalesScreenController;
 
 public class App extends Application {
 
     public void start(Stage stage) throws Exception {
-        CurrentOrderModel order_model = new CurrentOrderModel();
-        MenuModel menu_model = new MenuModel();
+        // CurrentOrderModel order_model = new CurrentOrderModel();
+        // MenuModel menu_model = new MenuModel();
 
-        BaseMenuController controller =
-            new BaseMenuController(order_model, menu_model);
+        // BaseMenuController controller =
+        //     new BaseMenuController(order_model, menu_model);
+
+        OrderHistoryModel oh_model = new OrderHistoryModel();
+        ProdSalesScreenController controller = new ProdSalesScreenController(oh_model);
 
         FXMLLoader loader = new FXMLLoader(
-            getClass().getResource("/gui/cashier/BaseMenu.fxml"));
+            getClass().getResource("/gui/manager/ProdSalesScreen.fxml"));
         loader.setController(controller);
 
         Parent root = loader.load();

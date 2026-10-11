@@ -1,6 +1,7 @@
 package model;
 
 import database.PGComms;
+import dto.InvEdibleRowDTO;
 import dto.MenuDrinksRowDTO;
 import dto.OrdersRowDTO;
 
@@ -14,6 +15,7 @@ import java.util.Map;
 
 public class OrderHistoryModel {
     private final Map<Integer, String> drink_names = new HashMap<>();
+    private final Map<Integer, String> edible_names = new HashMap<>();
 
     public List<OrdersRowDTO> get_orders() {
         return PGComms.issue_query_type_rows_Orders("SELECT * FROM orders ORDER BY id_order");
@@ -26,6 +28,13 @@ public class OrderHistoryModel {
         }
     }
 
+    public void load_edible_names() {
+        edible_names.clear();
+        for (InvEdibleRowDTO d : PGComms.issue_query_type_rows_InvEdible("SELECT * FROM inv_edible")) {
+            edible_names.put(d.id_edible(), d.name());
+        }
+    }
+
     public String drink_name(OrdersRowDTO order) {
         return drink_names.getOrDefault(order.id_drink(), "Unknown drink (" + order.id_drink() + ")");
     }
@@ -33,6 +42,10 @@ public class OrderHistoryModel {
 
     public String drink_name(Integer id) {
         return drink_names.getOrDefault(id, "Unknown drink (" + id + ")");
+    }
+
+    public String edible_name(Integer id) {
+        return edible_names.getOrDefault(id, "Unknown edible (" + id + ")");
     }
 
     public boolean matches_search(OrdersRowDTO orders, String str) {

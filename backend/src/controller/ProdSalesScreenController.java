@@ -13,6 +13,7 @@ import java.util.Map;
 import java.time.LocalDateTime;
 
 import database.PGComms;
+import dto.JoinMenuDrinksAndInvEdibleRowDTO;
 import dto.MenuDrinksRowDTO;
 import dto.OrdersRowDTO;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -30,7 +31,6 @@ import model.OrderHistoryModel;
 public class ProdSalesScreenController {
 
     private record SalesRecord(Integer id_drink, String name_drink, Double total_sales_drink) {}
-    private record ProdUseRecord(Integer id_drink, String name_drink, Double inventoryUsed) {}
 
     // private SalesRecord prod_sales_record = populate_sales_record();
     private HashMap<Integer, Double> id_to_total_sales = new HashMap<>();
@@ -45,9 +45,9 @@ public class ProdSalesScreenController {
     @FXML private TextField to_day;
 
 
-    @FXML private TableView<SalesRecord> whole_table;
-    @FXML private TableColumn<SalesRecord, Integer> id_column;
-    @FXML private TableColumn<SalesRecord, String> name_column;
+    @FXML private TableView<SalesRecord> sales_table;
+    @FXML private TableColumn<SalesRecord, Integer> sales_id_column;
+    @FXML private TableColumn<SalesRecord, String> sales_name_column;
     @FXML private TableColumn<SalesRecord, Double> total_sales_column;
     
     private FilteredList<SalesRecord> filtered_sales;
@@ -109,19 +109,19 @@ public class ProdSalesScreenController {
         filtered_sales = new FilteredList<>(sale_orders);
         sorted_sales = new SortedList<>(filtered_sales);
 
-        whole_table.setItems(sorted_sales);
+        sales_table.setItems(sorted_sales);
 
-        sorted_sales.comparatorProperty().bind(whole_table.comparatorProperty());
+        sorted_sales.comparatorProperty().bind(sales_table.comparatorProperty());
     }
 
 
     private void sales_setup(){
         model.load_drink_names();
 
-        id_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().id_drink()));
-        name_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().name_drink()));
+        sales_id_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().id_drink()));
+        sales_name_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().name_drink()));
         total_sales_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().total_sales_drink()));
-        setup_row_click();
+        sales_setup_row_click();
 
         all_orders = FXCollections.observableArrayList(PGComms.issue_query_type_rows_Orders("SELECT * FROM orders ORDER BY id_order"));
 
@@ -144,19 +144,33 @@ public class ProdSalesScreenController {
         filtered_sales = new FilteredList<>(sale_orders);
         sorted_sales = new SortedList<>(filtered_sales);
 
-        whole_table.setItems(sorted_sales);
+        sales_table.setItems(sorted_sales);
 
-        sorted_sales.comparatorProperty().bind(whole_table.comparatorProperty());
+        sorted_sales.comparatorProperty().bind(sales_table.comparatorProperty());
     }
 
-    @FXML private TableView<ProdUseRecord> whole_table2;
-    @FXML private TableColumn<ProdUseRecord, Integer> id_column2;
-    @FXML private TableColumn<ProdUseRecord, String> name_column2;
-    @FXML private TableColumn<ProdUseRecord, Double> total_inv_column;
+    private void sales_setup_row_click(){
+        sales_table.setRowFactory(tv -> {
+            TableRow <SalesRecord> row = new TableRow<>();
+            return row;
+        });
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    // PROD USAGE
+    /////////////////////////////////////////////////////////////////////////////////////////////
+
+    private record ProdUseRecord(Integer id_edible, String name_drink, Integer inventory_used) {}
+
+    @FXML private TableView<ProdUseRecord> prod_table;
+    @FXML private TableColumn<ProdUseRecord, Integer> prod_id_column;
+    @FXML private TableColumn<ProdUseRecord, String> prod_name_column;
+    @FXML private TableColumn<ProdUseRecord, Integer> total_prod_column;
 
 
     private FilteredList<ProdUseRecord> filtered_prods;
     private SortedList<ProdUseRecord> sorted_prods;
+    private HashMap<Integer, Integer> edible_id_to_prod = new HashMap<>();
 
     private void sort_prods_table_by_time(){
 
@@ -165,40 +179,48 @@ public class ProdSalesScreenController {
     private void prods_setup(){
         model.load_drink_names();
 
-        id_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().id_drink()));
-        name_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().name_drink()));
-        total_sales_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().total_sales_drink()));
-        setup_row_click();
+        prod_id_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().id_edible()));
+        prod_name_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().name_drink()));
+        total_prod_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().inventory_used()));
+        prod_setup_row_click();
 
         all_orders = FXCollections.observableArrayList(PGComms.issue_query_type_rows_Orders("SELECT * FROM orders ORDER BY id_order"));
 
+        int num_drinks = PGComms.issue_query_type_rows_MenuDrinks("SELECT * FROM menu_drinks").size();
+
         for (OrdersRowDTO order : all_orders) {
             id_to_total_sales.put(order.id_drink(), id_to_total_sales.getOrDefault(order.id_drink(), 0.0) + order.total_spent().doubleValue());
+
+            ArrayList<JoinMenuDrinksAndInvEdibleRowDTO> drink_ingredients = PGComms.issue_query_type_rows_JoinMenuDrinksAndInvEdible("SELECT * FROM join_menu_drinks_and_inv_edible WHERE id_drink = " + order.id_drink());
+
+            for(JoinMenuDrinksAndInvEdibleRowDTO drink : drink_ingredients) {
+                edible_id_to_prod.put(drink.id_edible(), edible_id_to_prod.getOrDefault(drink.id_edible(), 0) + 1);
+            }
         }
 
 
-        ObservableList<SalesRecord> sale_orders = FXCollections.observableArrayList();
+        ObservableList<ProdUseRecord> prod_orders = FXCollections.observableArrayList();
 
-        for (Integer id_drink : id_to_total_sales.keySet()) {
-            sale_orders.add(new SalesRecord(
-                id_drink,
-                model.drink_name(id_drink),
-                id_to_total_sales.get(id_drink)
+        for (Integer id_edible : edible_id_to_prod.keySet()) {
+            prod_orders.add(new ProdUseRecord(
+                id_edible,
+                model.edible_name(id_edible),
+                edible_id_to_prod.get(id_edible)
             ));
         }
 
 
-        filtered_sales = new FilteredList<>(sale_orders);
-        sorted_sales = new SortedList<>(filtered_sales);
+        filtered_prods = new FilteredList<>(prod_orders);
+        sorted_prods = new SortedList<>(filtered_prods);
 
-        whole_table.setItems(sorted_sales);
+        prod_table.setItems(sorted_prods);
 
-        sorted_sales.comparatorProperty().bind(whole_table.comparatorProperty());
+        sorted_prods.comparatorProperty().bind(prod_table.comparatorProperty());
     }
 
-    private void setup_row_click(){
-        whole_table.setRowFactory(tv -> {
-            TableRow <SalesRecord> row = new TableRow<>();
+    private void prod_setup_row_click(){
+        prod_table.setRowFactory(tv -> {
+            TableRow <ProdUseRecord> row = new TableRow<>();
             return row;
         });
     }
