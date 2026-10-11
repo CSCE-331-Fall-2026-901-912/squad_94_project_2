@@ -56,8 +56,16 @@ public class ProdSalesScreenController {
         sort_table_by_time();
     }
 
+    @FXML private TableView<ProdUseRecord> whole_table2;
+    @FXML private TableColumn<ProdUseRecord, Integer> id_column2;
+    @FXML private TableColumn<ProdUseRecord, String> name_column2;
+    @FXML private TableColumn<ProdUseRecord, Double> total_inv_column;
+
     private FilteredList<SalesRecord> filtered;
     private SortedList<SalesRecord> sorted;
+
+    private FilteredList<ProdUseRecord> filtered_prods;
+    private SortedList<ProdUseRecord> sorted_prods;
 
     private OrderHistoryModel model;
 
@@ -68,10 +76,6 @@ public class ProdSalesScreenController {
     
     @FXML public void initialize() {
         model.load_drink_names();
-
-        for(int i = 0; i < 20; i++){
-            System.out.println("Loaded drink names: " + model.drink_name(i));
-        }
 
         id_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().id_drink()));
         name_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().name_drink()));
