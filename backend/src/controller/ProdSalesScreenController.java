@@ -67,8 +67,9 @@ public class ProdSalesScreenController {
     }
     
     @FXML public void initialize() {
-       sales_setup();
-       prods_setup();
+        
+        sales_setup();
+        prods_setup();
     }
 
     private void sort_sales_table_by_time(){
@@ -160,7 +161,7 @@ public class ProdSalesScreenController {
     // PROD USAGE
     /////////////////////////////////////////////////////////////////////////////////////////////
 
-    private record ProdUseRecord(Integer id_edible, String name_drink, Integer inventory_used) {}
+    private record ProdUseRecord(Integer id_edible, String name_edible, Integer inventory_used) {}
 
     @FXML private TableView<ProdUseRecord> prod_table;
     @FXML private TableColumn<ProdUseRecord, Integer> prod_id_column;
@@ -177,31 +178,34 @@ public class ProdSalesScreenController {
     }
 
     private void prods_setup(){
-        model.load_drink_names();
+        model.load_edible_names();
 
         prod_id_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().id_edible()));
-        prod_name_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().name_drink()));
+        prod_name_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().name_edible()));
         total_prod_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().inventory_used()));
         prod_setup_row_click();
 
         all_orders = FXCollections.observableArrayList(PGComms.issue_query_type_rows_Orders("SELECT * FROM orders ORDER BY id_order"));
 
-        int num_drinks = PGComms.issue_query_type_rows_MenuDrinks("SELECT * FROM menu_drinks").size();
+        ArrayList<JoinMenuDrinksAndInvEdibleRowDTO> id_drink_to_id_edible = PGComms.issue_query_type_rows_JoinMenuDrinksAndInvEdible("SELECT * FROM join_menu_drinks_and_inv_edible");
+
+        
 
         for (OrdersRowDTO order : all_orders) {
-            id_to_total_sales.put(order.id_drink(), id_to_total_sales.getOrDefault(order.id_drink(), 0.0) + order.total_spent().doubleValue());
 
-            ArrayList<JoinMenuDrinksAndInvEdibleRowDTO> drink_ingredients = PGComms.issue_query_type_rows_JoinMenuDrinksAndInvEdible("SELECT * FROM join_menu_drinks_and_inv_edible WHERE id_drink = " + order.id_drink());
-
-            for(JoinMenuDrinksAndInvEdibleRowDTO drink : drink_ingredients) {
-                edible_id_to_prod.put(drink.id_edible(), edible_id_to_prod.getOrDefault(drink.id_edible(), 0) + 1);
+            for(JoinMenuDrinksAndInvEdibleRowDTO row : id_drink_to_id_edible){
+                if(row.id_drink() == order.id_drink()){
+                    edible_id_to_prod.put(row.id_edible(), edible_id_to_prod.getOrDefault(row.id_edible(), 0) + 1);
+                }
             }
         }
+
 
 
         ObservableList<ProdUseRecord> prod_orders = FXCollections.observableArrayList();
 
         for (Integer id_edible : edible_id_to_prod.keySet()) {
+            System.err.println(model.edible_name(id_edible));
             prod_orders.add(new ProdUseRecord(
                 id_edible,
                 model.edible_name(id_edible),
