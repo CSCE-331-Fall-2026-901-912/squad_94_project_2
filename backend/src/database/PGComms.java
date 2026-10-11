@@ -813,7 +813,6 @@ public class PGComms {
         }
         return issue_query_type_update(
                 "DELETE FROM join_menu_drinks_and_inv_edible WHERE id_drink = " + drink_id);
-
     }
 
     // Add a new topping to the database with the provided details, along with its associated inventory item
@@ -913,6 +912,15 @@ public class PGComms {
             val= PGComms.issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible WHERE id_nonedible = " + nonedible_id).getFirst().amount() - 1;
         }
         return modify_topping_quantity_in_inventory(nonedible_id, val, "inv_nonedible");
+    }
+
+    public static boolean modify_order_status_in_orders(int order_id, String status) {
+        if (!issue_query_type_update(
+                "UPDATE orders SET status = " + sql_value(status)
+                        + " WHERE id_order = " + order_id)) {
+            return false;
+        }
+        return true;
     }
 
     public static boolean delete_topping(int topping_id) {
