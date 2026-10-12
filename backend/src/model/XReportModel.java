@@ -13,12 +13,10 @@ import java.time.ZoneOffset;
 public class XReportModel {
     
 
-
+    //Grab the current date in utc then grab the void, completed, and discard totals from the database. Return a string including all the totals by hour.
     public String get_xreport() {
-        //ArrayList<OrdersRowDTO> issue_query_type_rows_Orders(String query)
-
-        //List<OrdersRowDTO> last_order = PGComms.issue_query_type_rows_Orders("SELECT * FROM orders ORDER BY time_completed_at DESC LIMIT 1");
-        String curr_date = ""+LocalDate.now(ZoneOffset.UTC);//.minusDays(1);
+    
+        String curr_date = ""+LocalDate.now(ZoneOffset.UTC);
         System.out.println("curr date: " +curr_date);
         String report = PGComms.get_xreport_string(curr_date); 
         System.out.println("xreport: " +report);       

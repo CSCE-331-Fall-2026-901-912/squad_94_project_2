@@ -27,7 +27,7 @@ public class XReportController {
         refresh();
     }
     
-
+    //Updates text area on XReport gui
     public void refresh() {
         xreport_text_area.setText(model.get_xreport());
         on_added.run();
