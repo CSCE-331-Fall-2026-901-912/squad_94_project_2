@@ -51,6 +51,7 @@ public class CurrentOrderModel {
     }
 
     public void clear() {
+        checkout(BigDecimal.ZERO, true);
         lines.clear();
         refresh_display();
     }
@@ -157,16 +158,23 @@ public class CurrentOrderModel {
 
     // Checkout the current order by inserting each order line into the database, updating inventory quantities for drinks and toppings, and applying a tip rate to the total price. 
     // This method ensures that all necessary database operations are performed to finalize the order.
-    public boolean checkout(BigDecimal tip_rate) {
+    public boolean checkout(BigDecimal tip_rate, boolean discard) {
+
+        // If discard=true, this is a special case. We say an order that was about to be considered completed is discarded.
+        // The order will still be logged, but will have the status discard. Additionally, no ingredients will be consumed.
 
         // Ensure that the order is not empty before proceeding with checkout.
         if(lines.isEmpty()) {
-            throw new IllegalStateException("Cannot checkout an empty order.");
+            if(discard) {
+                throw new IllegalStateException("Cannot discard an empty order.");
+            }
+            else {
+                throw new IllegalStateException("Cannot checkout an empty order.");
+            }
         }
 
         for(OrderLineDTO line : lines) {
             // Calculate tips individually to make it easier to insert each drink as its own line
-
             double price_with_tip = line.price().multiply(BigDecimal.ONE.add(tip_rate)).setScale(2, RoundingMode.HALF_UP).doubleValue();
             int next_order_id = get_last_orderID() + 1;
             int id_drink = find_drink(line.drink_name()).id_drink();
@@ -174,7 +182,9 @@ public class CurrentOrderModel {
             int topping1_id = 0;
             int topping2_id = 0;
 
-            decrement_drink_ingredients(id_drink);
+            if (!discard) {
+                decrement_drink_ingredients(id_drink);
+            }
 
             // Decrement the inventory quantities for the toppings used in the order, if they are not "No topping".
             // This ensures that the inventory accurately reflects the consumption of toppings for each order.
@@ -187,7 +197,9 @@ public class CurrentOrderModel {
                         "Topping not found: " + line.topping1_name());
                 }
                 topping1_id = topping1.id_topping();
-                PGComms.modify_topping_quantity_in_edible_inventory(topping1_id, -1);
+                if (!discard) {
+                    PGComms.modify_topping_quantity_in_edible_inventory(topping1_id, -1);
+                }
             }
 
             if (!line.topping2_name().equals("No topping")) {
@@ -199,7 +211,9 @@ public class CurrentOrderModel {
                         "Topping not found: " + line.topping2_name());
                 }
                 topping2_id = topping2.id_topping();
-                PGComms.modify_topping_quantity_in_edible_inventory(topping2_id, -1);
+                if (!discard) {
+                    PGComms.modify_topping_quantity_in_edible_inventory(topping2_id, -1);
+                }
             }
 
             // Convert ice level and sugar percent to integer representations for database storage.
@@ -223,13 +237,22 @@ public class CurrentOrderModel {
             }
 
             // Decrement the inventory quantities for the non edible items used in the order.
-            PGComms.modify_topping_quantity_in_nonedible_inventory(1,-1);
-            PGComms.modify_topping_quantity_in_nonedible_inventory(2,-1);
-            PGComms.modify_topping_quantity_in_nonedible_inventory(3,-1);
-            PGComms.modify_topping_quantity_in_nonedible_inventory(4,-1);
+            if (!discard) {
+                PGComms.modify_topping_quantity_in_nonedible_inventory(1,-1);
+                PGComms.modify_topping_quantity_in_nonedible_inventory(2,-1);
+                PGComms.modify_topping_quantity_in_nonedible_inventory(3,-1);
+                PGComms.modify_topping_quantity_in_nonedible_inventory(4,-1);
+            }
+
+            String status = "completed";
+
+            if (discard) {
+                status = "discard";
+            }
 
             PGComms.insert_order_item(
                 next_order_id,
+                status,
                 price_with_tip,
                 tip_rate.doubleValue(),
                 id_drink,

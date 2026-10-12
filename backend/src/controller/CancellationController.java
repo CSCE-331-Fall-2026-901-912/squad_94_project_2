@@ -21,7 +21,7 @@ public class CancellationController {
     }
 
     // Handle closing of any pop-up window involved with the ordering process.
-    // Ensure the pop-up is closed cleanly, and that cancellation is in some way tied to a pop-up menu.
+    // Ensure the pop-up is closed cleanly, and that cancellation is tied to the cancellation window.
     private void close_window(ActionEvent event) {
         Node source = (Node) event.getSource();
         if (source.getScene() == null || source.getScene().getWindow() == null) {

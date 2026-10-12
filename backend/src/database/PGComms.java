@@ -671,7 +671,7 @@ public class PGComms {
 
     // Insert a new order into the orders table with the provided details.
     // Used to record completed orders in the database.
-    public static void insert_order_item(int order_id, double order_total, double tip, int id_drink, int id_topping1, int id_topping2, int ice_level, int sugar_level, boolean hot_chosen) {
+    public static void insert_order_item(int order_id, String status, double order_total, double tip, int id_drink, int id_topping1, int id_topping2, int ice_level, int sugar_level, boolean hot_chosen) {
         if (!open_connection()) {
             return;
         }
@@ -685,7 +685,7 @@ public class PGComms {
             stmt.setInt(1, order_id);
 
             // Orders are completed when they are added into the database.
-            stmt.setString(2, "completed");
+            stmt.setString(2, status);
 
             // Created time.
             stmt.setObject(3, OffsetDateTime.now());
