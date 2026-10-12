@@ -123,6 +123,17 @@ public class ManagerController {
     @FXML private void open_sales_analytics(MouseEvent event){
         try {
            // TODO: fill in once sales analytics is implemented
+            SalesModel model = new SalesModel();
+            InventoryController controller = new SalesAnalyticsController(model);
+
+            Stage stage = ViewLoader.open_window(
+                "/gui/manager/XReport.fxml",
+                controller,
+                ((Node) event.getSource()).getScene().getWindow());
+
+            if (stage != null) {
+                stage.setTitle("XReport");
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
