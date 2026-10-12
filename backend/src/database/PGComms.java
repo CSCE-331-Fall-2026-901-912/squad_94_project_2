@@ -5,6 +5,7 @@ import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.math.BigDecimal;
+
 import dto.*;
 import org.postgresql.ds.PGSimpleDataSource;
 
@@ -630,7 +631,7 @@ public class PGComms {
     // Get a count of completed, void, and discard orders per hour for a specified day.
     public static String get_xreport_string(String date_input) {
         String sql = "SELECT\n" +
-                "    date_trunc('hour', time_created_at) AS sales_hour,\n" +
+                "    date_trunc('hour', time_created_at AT TIME ZONE 'America/Chicago') AS sales_hour,\n" +
                 "    COUNT(*) FILTER (WHERE status = 'completed') AS completed,\n" +
                 "\tCOUNT(*) FILTER (WHERE status = 'void') AS void,\n" +
                 "\tCOUNT(*) FILTER (WHERE status = 'discard') AS discard\n" +
@@ -647,11 +648,16 @@ public class PGComms {
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             LocalDate day = LocalDate.parse(date_input);
-            stmt.setObject(1, day.atStartOfDay());
-            stmt.setObject(2, day.plusDays(1).atStartOfDay());
+            ZoneId centralTime = ZoneId.of("America/Chicago");
+
+            Instant start = day.atStartOfDay(centralTime).toInstant();
+            Instant end = day.plusDays(1).atStartOfDay(centralTime).toInstant();
+
+            stmt.setTimestamp(1, Timestamp.from(start));
+            stmt.setTimestamp(2, Timestamp.from(end));
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    OffsetDateTime time = rs.getObject(1, OffsetDateTime.class);
+                    LocalDateTime time = rs.getObject(1, LocalDateTime.class);
                     String num_completed = rs.getString(2);
                     String num_void = rs.getString(3);
                     String num_discard = rs.getString(4);
