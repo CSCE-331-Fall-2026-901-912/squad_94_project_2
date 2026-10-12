@@ -13,16 +13,24 @@ import model.XReportModel;
 public class XReportController {
 
     private final XReportModel model;
+    private final Runnable on_added;
 
     @FXML private TextArea xreport_text_area;
 
 
-    public XReportController(XReportModel model) {
+    public XReportController(XReportModel model, Runnable on_added) {
         this.model = model;
+        this.on_added = on_added;
     }
 
-
+    @FXML private void initialize() {
+        refresh();
+    }
     
-   
+
+    public void refresh() {
+        xreport_text_area.setText(model.get_xreport());
+        on_added.run();
+    }
     
 }

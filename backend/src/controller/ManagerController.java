@@ -122,9 +122,9 @@ public class ManagerController {
     // Opening logic for the SalesAnalyticsController.
     @FXML private void open_sales_analytics(MouseEvent event){
         try {
-           // TODO: fill in once sales analytics is implemented
+           
             XReportModel model = new XReportModel();
-            XReportController controller = new XReportController(model);
+            XReportController controller = new XReportController(model, this::refresh);
             
             Stage stage = ViewLoader.open_window(
                 "/gui/manager/XReport.fxml",
