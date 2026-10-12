@@ -89,7 +89,7 @@ public class TipController {
         final boolean checkout_succeeded;
 
         try {
-            checkout_succeeded = order_model.checkout(tip_rate);
+            checkout_succeeded = order_model.checkout(tip_rate, false);
         } catch (RuntimeException exception) {
             String message = exception.getMessage();
 
