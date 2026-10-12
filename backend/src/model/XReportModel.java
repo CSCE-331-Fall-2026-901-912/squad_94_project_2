@@ -17,9 +17,7 @@ public class XReportModel {
     public String get_xreport() {
         ZoneId centralTime = ZoneId.of("America/Chicago");
         String curr_date = LocalDate.now(centralTime).minusDays(30).toString(); 
-        System.out.println("curr date: " +curr_date);
-        String report = PGComms.get_xreport_string(curr_date); 
-        System.out.println("xreport: " +report);       
+        String report = PGComms.get_xreport_string(curr_date);       
         return report;
     }
 }
