@@ -13,6 +13,7 @@ import java.util.Map;
 import java.time.LocalDateTime;
 
 import database.PGComms;
+import dto.InvNonEdibleRowDTO;
 import dto.JoinMenuDrinksAndInvEdibleRowDTO;
 import dto.MenuDrinksRowDTO;
 import dto.OrdersRowDTO;
@@ -80,6 +81,7 @@ public class ProdSalesScreenController {
         // Sort both tables based on the specified time range
         sort_sales_table_by_time(start, end);
         sort_prods_table_by_time(start, end);
+        nonedible_sort_prods_table_by_time(start, end);
     }
 
     // Controller constructor for syncing the model with this controller
@@ -90,6 +92,7 @@ public class ProdSalesScreenController {
     @FXML public void initialize() {
         sales_setup();
         prods_setup();
+        nonedible_prods_setup();
     }
 
     private void sort_sales_table_by_time(OffsetDateTime start, OffsetDateTime end){
@@ -140,11 +143,14 @@ public class ProdSalesScreenController {
 
         ObservableList<SalesRecord> sale_orders = FXCollections.observableArrayList();
 
+        int decimalPlaces = 2;
+        double scale = Math.pow(10, decimalPlaces);
+
         for (Integer id_drink : id_to_total_sales.keySet()) {
             sale_orders.add(new SalesRecord(
                 id_drink,
                 model.drink_name(id_drink),
-                id_to_total_sales.get(id_drink)
+                Math.floor(id_to_total_sales.get(id_drink) * scale) / scale
             ));
         }
 
@@ -266,6 +272,109 @@ public class ProdSalesScreenController {
     private void prod_setup_row_click(){
         prod_table.setRowFactory(tv -> {
             TableRow <ProdUseRecord> row = new TableRow<>();
+            return row;
+        });
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////// INEDIBLE TABLE /////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    
+    private record NonedibleProdUseRecord(Integer id_nonedible, String name_nonedible, Integer inventory_used) {}
+
+    @FXML private TableView<NonedibleProdUseRecord> nonedible_prod_table;
+    @FXML private TableColumn<NonedibleProdUseRecord, Integer> nonedible_prod_id_column;
+    @FXML private TableColumn<NonedibleProdUseRecord, String> nonedible_prod_name_column;
+    @FXML private TableColumn<NonedibleProdUseRecord, Integer> nonedible_total_prod_column;
+
+    // Data structures for formatting the table view
+    private FilteredList<NonedibleProdUseRecord> nonedible_filtered_prods;
+    private SortedList<NonedibleProdUseRecord> nonedible_sorted_prods;
+    private HashMap<Integer, Integer> nonedible_id_to_prod = new HashMap<>();
+
+    private void nonedible_sort_prods_table_by_time(OffsetDateTime start, OffsetDateTime end){
+
+        ArrayList<InvNonEdibleRowDTO> id_nonedible = PGComms.issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible");
+
+        nonedible_id_to_prod = new HashMap<>();
+
+        // Get all orders within the specified time range
+        ObservableList<NonedibleProdUseRecord> nonedible_prod_orders = FXCollections.observableArrayList();
+
+        for (OrdersRowDTO order : all_orders) {
+            if (model.in_period(order,start,end)){
+                nonedible_id_to_prod.put(1, nonedible_id_to_prod.getOrDefault(1, 0) + 1);
+                nonedible_id_to_prod.put(2, nonedible_id_to_prod.getOrDefault(2, 0) + 1);
+                nonedible_id_to_prod.put(3, nonedible_id_to_prod.getOrDefault(3, 0) + 1);
+                nonedible_id_to_prod.put(4, nonedible_id_to_prod.getOrDefault(4, 0) + 1);
+            }
+        }
+
+
+        for (InvNonEdibleRowDTO row : id_nonedible) {
+            nonedible_prod_orders.add(new NonedibleProdUseRecord(
+                row.id_nonedible(),
+                row.name(),
+                nonedible_id_to_prod.getOrDefault(row.id_nonedible(), 0)
+            ));        
+        }
+
+
+        // Wrap the observable list in a filtered and sorted list for the table view
+        nonedible_filtered_prods = new FilteredList<>(nonedible_prod_orders);
+        nonedible_sorted_prods = new SortedList<>(nonedible_filtered_prods);
+        nonedible_prod_table.setItems(nonedible_sorted_prods);
+        nonedible_sorted_prods.comparatorProperty().bind(nonedible_prod_table.comparatorProperty());
+    }
+
+    private void nonedible_prods_setup(){
+
+        nonedible_prod_id_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().id_nonedible()));
+        nonedible_prod_name_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().name_nonedible()));
+        nonedible_total_prod_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().inventory_used()));
+        nonedible_prod_setup_row_click();
+
+        all_orders = FXCollections.observableArrayList(PGComms.issue_query_type_rows_Orders("SELECT * FROM orders ORDER BY id_order"));
+
+        ArrayList<InvNonEdibleRowDTO> id_nonedible = PGComms.issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible");
+
+        nonedible_id_to_prod = new HashMap<>();
+
+        // Get all orders within the specified time range
+        ObservableList<NonedibleProdUseRecord> nonedible_prod_orders = FXCollections.observableArrayList();
+
+        for (OrdersRowDTO order : all_orders) {
+            nonedible_id_to_prod.put(1, nonedible_id_to_prod.getOrDefault(1, 0) + 1);
+            nonedible_id_to_prod.put(2, nonedible_id_to_prod.getOrDefault(2, 0) + 1);
+            nonedible_id_to_prod.put(3, nonedible_id_to_prod.getOrDefault(3, 0) + 1);
+            nonedible_id_to_prod.put(4, nonedible_id_to_prod.getOrDefault(4, 0) + 1);
+        }
+
+
+        for (InvNonEdibleRowDTO row : id_nonedible) {
+            if(row.id_nonedible() <= 4) {
+                nonedible_prod_orders.add(new NonedibleProdUseRecord(
+                    row.id_nonedible(),
+                    row.name(),
+                    nonedible_id_to_prod.getOrDefault(row.id_nonedible(), 0)
+                ));
+            }  
+        }
+
+
+        // Wrap the observable list in a filtered and sorted list for the table view
+        nonedible_filtered_prods = new FilteredList<>(nonedible_prod_orders);
+        nonedible_sorted_prods = new SortedList<>(nonedible_filtered_prods);
+        nonedible_prod_table.setItems(nonedible_sorted_prods);
+        nonedible_sorted_prods.comparatorProperty().bind(nonedible_prod_table.comparatorProperty());
+    }
+
+    // Set up row click behavior for the product table
+    private void nonedible_prod_setup_row_click(){
+        nonedible_prod_table.setRowFactory(tv -> {
+            TableRow <NonedibleProdUseRecord> row = new TableRow<>();
             return row;
         });
     }

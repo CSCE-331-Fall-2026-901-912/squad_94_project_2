@@ -10,33 +10,43 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TableView fx:id="sales_table" layoutX="23.0" layoutY="120.0" prefHeight="170.0" prefWidth="555.0">
+      <TableView fx:id="sales_table" layoutX="131.0" layoutY="100.0" prefHeight="125.0" prefWidth="450.0">
         <columns>
           <TableColumn fx:id="sales_id_column" prefWidth="47.200008392333984" text="ID" />
           <TableColumn fx:id="sales_name_column" prefWidth="283.2000274658203" text="Name" />
-            <TableColumn fx:id="total_sales_column" minWidth="0.0" prefWidth="116.79998779296875" text="Total Sales" />
+            <TableColumn fx:id="total_sales_column" minWidth="0.0" prefWidth="121.60001220703123" text="Total Sales" />
         </columns>
       </TableView>
-      <TextField fx:id="from_year" layoutX="349.0" layoutY="49.0" prefHeight="26.0" prefWidth="69.0" promptText="Year" />
-      <TextField fx:id="from_month" layoutX="429.0" layoutY="49.0" prefHeight="26.0" prefWidth="69.0" promptText="Month" />
-      <Label layoutX="314.0" layoutY="49.0" prefHeight="26.0" prefWidth="35.0" text="From:" />
-      <TextField fx:id="from_day" layoutX="508.0" layoutY="48.0" prefHeight="26.0" prefWidth="69.0" promptText="Day" />
-      <TextField fx:id="to_year" layoutX="349.0" layoutY="83.0" prefHeight="26.0" prefWidth="69.0" promptText="Year" />
-      <TextField fx:id="to_month" layoutX="429.0" layoutY="83.0" prefHeight="26.0" prefWidth="69.0" promptText="Month" />
-      <Label layoutX="328.0" layoutY="83.0" prefHeight="26.0" prefWidth="21.0" text="To:" />
-      <TextField fx:id="to_day" layoutX="508.0" layoutY="82.0" prefHeight="26.0" prefWidth="69.0" promptText="Day" />
+      <TextField fx:id="from_year" layoutX="349.0" layoutY="26.0" prefHeight="26.0" prefWidth="69.0" promptText="Year" />
+      <TextField fx:id="from_month" layoutX="429.0" layoutY="26.0" prefHeight="26.0" prefWidth="69.0" promptText="Month" />
+      <Label layoutX="314.0" layoutY="26.0" prefHeight="26.0" prefWidth="35.0" text="From:" />
+      <TextField fx:id="from_day" layoutX="508.0" layoutY="25.0" prefHeight="26.0" prefWidth="69.0" promptText="Day" />
+      <TextField fx:id="to_year" layoutX="349.0" layoutY="60.0" prefHeight="26.0" prefWidth="69.0" promptText="Year" />
+      <TextField fx:id="to_month" layoutX="429.0" layoutY="60.0" prefHeight="26.0" prefWidth="69.0" promptText="Month" />
+      <Label layoutX="328.0" layoutY="60.0" prefHeight="26.0" prefWidth="21.0" text="To:" />
+      <TextField fx:id="to_day" layoutX="508.0" layoutY="59.0" prefHeight="26.0" prefWidth="69.0" promptText="Day" />
       <Label layoutX="23.0" layoutY="14.0" prefHeight="42.0" prefWidth="183.0" text="Total Sales &amp; Product Usage">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Button layoutX="23.0" layoutY="79.0" mnemonicParsing="false" onAction="#sort" text="Sort" />
-      <TableView fx:id="prod_table" layoutX="22.0" layoutY="312.0" prefHeight="170.0" prefWidth="555.0">
+      <Button layoutX="23.0" layoutY="60.0" mnemonicParsing="false" onAction="#sort" text="Sort" />
+      <TableView fx:id="prod_table" layoutX="131.0" layoutY="237.0" prefHeight="125.0" prefWidth="450.0">
          <columns>
             <TableColumn fx:id="prod_id_column" prefWidth="47.200008392333984" text="ID" />
             <TableColumn fx:id="prod_name_column" prefWidth="283.2000274658203" text="Name" />
-            <TableColumn fx:id="total_prod_column" minWidth="0.0" prefWidth="116.79998779296875" text="Total Inventory" />
+            <TableColumn fx:id="total_prod_column" minWidth="0.0" prefWidth="121.60001220703123" text="Total Inventory" />
          </columns>
       </TableView>
+      <TableView fx:id="nonedible_prod_table" layoutX="131.0" layoutY="375.0" prefHeight="125.0" prefWidth="450.0">
+         <columns>
+            <TableColumn fx:id="nonedible_prod_id_column" prefWidth="47.200008392333984" text="ID" />
+            <TableColumn fx:id="nonedible_prod_name_column" prefWidth="283.2000274658203" text="Name" />
+            <TableColumn fx:id="nonedible_total_prod_column" minWidth="0.0" prefWidth="121.60001220703123" text="Total Inventory" />
+         </columns>
+      </TableView>
+      <Label alignment="CENTER" layoutX="14.0" layoutY="278.0" prefHeight="42.0" prefWidth="110.0" text="Edible Inventory" textAlignment="CENTER" />
+      <Label alignment="CENTER" layoutX="14.0" layoutY="416.0" prefHeight="42.0" prefWidth="110.0" text="Inedible Inventory" textAlignment="CENTER" />
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="141.0" prefHeight="42.0" prefWidth="110.0" text="Total Sales" textAlignment="CENTER" />
    </children>
 </AnchorPane>
