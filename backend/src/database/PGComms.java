@@ -5,6 +5,7 @@ import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.math.BigDecimal;
+
 import dto.*;
 import org.postgresql.ds.PGSimpleDataSource;
 
@@ -428,15 +429,15 @@ public class PGComms {
 
     // Get all items from the edible and nonedible inventories which have an amount of 0.
     public static List<IDNameValDTO> get_out_of_stock() {
-        List<InvNonEdibleRowDTO> inv_non_edible_select = issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible WHERE amount = 0 LIMIT 3");
-        List<InvEdibleRowDTO> inv_edible_select = issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE amount_servings = 0 LIMIT 3");
+        List<InvNonEdibleRowDTO> inv_non_edible_select = issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible WHERE amount = 0");
+        List<InvEdibleRowDTO> inv_edible_select = issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE amount_servings = 0");
         return get_inv_selection_common(inv_non_edible_select, inv_edible_select);
     }
 
     // Get all items from the edible and nonedible inventories which are close to being, but are not currently, out-of-stock.
     public static List<IDNameValDTO> get_running_low_on() {
-        List<InvNonEdibleRowDTO> inv_non_edible_select = issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible WHERE amount > 0 ORDER BY amount LIMIT 3");
-        List<InvEdibleRowDTO> inv_edible_select = issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE amount_servings > 0 ORDER BY amount_servings LIMIT 3");
+        List<InvNonEdibleRowDTO> inv_non_edible_select = issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible WHERE amount > 0 AND amount <= 500 ORDER BY amount");
+        List<InvEdibleRowDTO> inv_edible_select = issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE amount_servings > 0 AND amount_servings <= 500 ORDER BY amount_servings");
         return get_inv_selection_common(inv_non_edible_select, inv_edible_select);
     }
 
@@ -627,9 +628,56 @@ public class PGComms {
         return price;
     }
 
+    // Get a count of completed, void, and discard orders per hour for a specified day.
+    public static String get_xreport_string(String date_input) {
+        String sql = "SELECT\n" +
+                "    date_trunc('hour', time_created_at AT TIME ZONE 'America/Chicago') AS sales_hour,\n" +
+                "    COUNT(*) FILTER (WHERE status = 'completed') AS completed,\n" +
+                "\tCOUNT(*) FILTER (WHERE status = 'void') AS void,\n" +
+                "\tCOUNT(*) FILTER (WHERE status = 'discard') AS discard\n" +
+                "FROM orders\n" +
+                "WHERE time_created_at >= ? AND time_created_at < ?\n" +
+                "GROUP BY sales_hour\n" +
+                "ORDER BY sales_hour;";
+
+        String output = "";
+
+        if (!open_connection()) {
+            return output;
+        }
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            LocalDate day = LocalDate.parse(date_input);
+            ZoneId centralTime = ZoneId.of("America/Chicago");
+
+            Instant start = day.atStartOfDay(centralTime).toInstant();
+            Instant end = day.plusDays(1).atStartOfDay(centralTime).toInstant();
+
+            stmt.setTimestamp(1, Timestamp.from(start));
+            stmt.setTimestamp(2, Timestamp.from(end));
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    LocalDateTime time = rs.getObject(1, LocalDateTime.class);
+                    String num_completed = rs.getString(2);
+                    String num_void = rs.getString(3);
+                    String num_discard = rs.getString(4);
+                    output += "-- By " + time.toLocalDate() + " " + time.toLocalTime() + " --\n" + "Orders completed: " +
+                    num_completed + "\n" + "Orders voided: " + num_void + "\n" + "Orders discarded: " + num_discard +
+                    "\n\n";
+                }
+            }
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        close_connection();
+        return output;
+    }
+
     // Insert a new order into the orders table with the provided details.
     // Used to record completed orders in the database.
-    public static void insert_order_item(int order_id, double order_total, double tip, int id_drink, int id_topping1, int id_topping2, int ice_level, int sugar_level, boolean hot_chosen) {
+    public static void insert_order_item(int order_id, String status, double order_total, double tip, int id_drink, int id_topping1, int id_topping2, int ice_level, int sugar_level, boolean hot_chosen) {
         if (!open_connection()) {
             return;
         }
@@ -643,7 +691,7 @@ public class PGComms {
             stmt.setInt(1, order_id);
 
             // Orders are completed when they are added into the database.
-            stmt.setString(2, "completed");
+            stmt.setString(2, status);
 
             // Created time.
             stmt.setObject(3, OffsetDateTime.now());
@@ -771,7 +819,6 @@ public class PGComms {
         }
         return issue_query_type_update(
                 "DELETE FROM join_menu_drinks_and_inv_edible WHERE id_drink = " + drink_id);
-
     }
 
     // Add a new topping to the database with the provided details, along with its associated inventory item
@@ -873,6 +920,15 @@ public class PGComms {
         return modify_topping_quantity_in_inventory(nonedible_id, val, "inv_nonedible");
     }
 
+    public static boolean modify_order_status_in_orders(int order_id, String status) {
+        if (!issue_query_type_update(
+                "UPDATE orders SET status = " + sql_value(status)
+                        + " WHERE id_order = " + order_id)) {
+            return false;
+        }
+        return true;
+    }
+
     public static boolean delete_topping(int topping_id) {
         if(!issue_query_type_update("DELETE FROM menu_toppings WHERE id_topping = " + topping_id)){ 
             return false;
@@ -884,4 +940,25 @@ public class PGComms {
         return issue_query_type_update(
                 "DELETE FROM join_menu_toppings_and_inv_edible WHERE id_topping = " + topping_id);
     }
+
+
+    // Add a new edible item to the database with the provided details.
+    public static boolean add_edible_item_to_inventory(String name, int quantity) {
+        String sql = "INSERT INTO inv_edible (id_edible, name, amount_servings) "
+                + "VALUES ((SELECT COALESCE(MAX(id_edible), 0) + 1 FROM inv_edible), "
+                + sql_value(name) + ", " + quantity + ")";
+        return issue_query_type_update(sql);
+    }
+
+    // Add a new nonedible item to the database with the provided details.
+    public static boolean add_nonedible_item_to_inventory(String name, int quantity) {
+        String sql = "INSERT INTO inv_nonedible (id_nonedible, name, amount) "
+                + "VALUES ((SELECT COALESCE(MAX(id_nonedible), 0) + 1 FROM inv_nonedible), "
+                + sql_value(name) + ", " + quantity + ")";
+        return issue_query_type_update(sql);
+    }
+
+
+
+    
 }

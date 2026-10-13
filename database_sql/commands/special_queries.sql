@@ -27,7 +27,7 @@ FROM (
 
 -- Realistic Sales History
 SELECT
-    EXTRACT(HOUR FROM time_completed_at) AS sale_hour, 
+    EXTRACT(HOUR FROM time_created_at) AS sale_hour, 
     COUNT(DISTINCT id_order) AS order_count,
     SUM(total_spent) AS total_sales
 FROM orders

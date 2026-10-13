@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.stage.Stage;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.Label;
+import model.XReportModel;
 
 // Manages the opening of several pages which can be accessed by the manager on their specific interface.
 public class ManagerController {
@@ -83,8 +84,7 @@ public class ManagerController {
     @FXML public void open_edit_inventory(ActionEvent event) {
         try {
             InventoryModel model = new InventoryModel();
-            InventoryController controller =
-                new InventoryController(model);
+            InventoryController controller = new InventoryController(model,this::refresh);
 
             Stage stage = ViewLoader.open_window(
                 "/gui/manager/InventoryScreen.fxml",
@@ -143,7 +143,18 @@ public class ManagerController {
     // Opening logic for the SalesAnalyticsController.
     @FXML private void open_sales_analytics(MouseEvent event){
         try {
-           // TODO: fill in once sales analytics is implemented
+           
+            XReportModel model = new XReportModel();
+            XReportController controller = new XReportController(model, this::refresh);
+            
+            Stage stage = ViewLoader.open_window(
+                "/gui/manager/XReport.fxml",
+                controller,
+                ((Node) event.getSource()).getScene().getWindow());
+            
+            if (stage != null) {
+                stage.setTitle("X Report");
+            }
         }
         catch (Exception e) {
             e.printStackTrace();

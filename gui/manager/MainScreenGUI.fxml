@@ -141,7 +141,7 @@
             </SplitPane>
          </children>
       </AnchorPane>
-      <Button fx:id="sales_analytics_button" layoutX="430.0" layoutY="275.0" mnemonicParsing="false" onMouseClicked="#open_sales_analytics" prefHeight="98.0" prefWidth="154.0" text="Sales Analytics" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
+      <Button layoutX="430.0" layoutY="275.0" mnemonicParsing="false" onMouseClicked="#open_sales_analytics" prefHeight="98.0" prefWidth="154.0" text="X-Report" textAlignment="CENTER" textOverrun="CLIP" wrapText="true" fx:id="xreport_button">
          <font>
             <Font size="25.0" />
          </font>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="190.0" prefWidth="247.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox alignment="CENTER" layoutX="58.0" layoutY="14.0" prefHeight="25.0" prefWidth="134.0">
+         <children>
+            <TextField fx:id="input_new_item_name" prefHeight="25.0" prefWidth="131.0" promptText="Input New Item Name" />
+         </children>
+      </VBox>
+      <VBox layoutX="30.0" layoutY="101.0" prefHeight="64.0" prefWidth="188.0">
+         <children>
+            <VBox prefHeight="64.0" prefWidth="152.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="185.0" text="Input New Supply Quantity:" />
+                  <TextField fx:id="input_new_item_quantity" alignment="CENTER" prefHeight="32.0" prefWidth="188.0" promptText="Input New Quantity" />
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+      <VBox alignment="CENTER" layoutY="182.0" prefHeight="8.0" prefWidth="247.0" />
+      <Button layoutX="71.0" layoutY="156.0" mnemonicParsing="false" onAction="#submit_new_item_button" text="Submit New Item" />
+      <TextField fx:id="input_new_item_type" layoutX="61.0" layoutY="68.0" prefHeight="25.0" prefWidth="131.0" promptText="Edible or Nonedible?" />
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="37.0" layoutY="46.0" prefHeight="17.0" prefWidth="185.0" text="Input Edible or Nonedible:" />
+   </children>
+</AnchorPane>

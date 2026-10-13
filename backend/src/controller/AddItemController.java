@@ -83,8 +83,8 @@ public class AddItemController {
         Node source = (Node) event.getSource();
         source.getScene().getWindow().hide();
         on_saved.run();
-
     }
+
     private void show_warning(String message) {
         new Alert(
             Alert.AlertType.WARNING,

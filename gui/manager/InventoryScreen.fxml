@@ -15,6 +15,11 @@
             <HBox alignment="BOTTOM_CENTER" prefHeight="120.0" prefWidth="600.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#change_item_button" prefHeight="39.0" prefWidth="120.0" text="Change Item" />
+                  <Button mnemonicParsing="false" onAction="#add_item_button" prefHeight="39.0" prefWidth="120.0" text="Add Item">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </Button>
                </children>
             </HBox>
             <HBox prefHeight="400.0" prefWidth="495.0">

@@ -114,5 +114,9 @@ public class OrderHistoryModel {
 
     private OffsetDateTime order_time(OrdersRowDTO order) {
         return order.time_created_at();
-    } 
+    }
+
+    public boolean change_order_status(int order_id, String status) {
+        return PGComms.modify_order_status_in_orders(order_id, status);
+    }
 }
