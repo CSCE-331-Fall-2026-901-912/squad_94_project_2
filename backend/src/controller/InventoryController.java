@@ -48,4 +48,24 @@ public class InventoryController {
             e.printStackTrace();
         }
     }
+
+    // Handle activation of the NewItemController and transfer to the NewItemPopUp menu.
+    @FXML private void add_item_button(ActionEvent event) {
+        try {
+            InventoryModel model = new InventoryModel();
+            NewItemController controller = new NewItemController(model, this::refresh);
+
+            Stage stage = ViewLoader.open_window(
+                "/gui/manager/NewItemPopUp.fxml",
+                controller,
+                ((Node) event.getSource()).getScene().getWindow());
+
+            if (stage != null) {
+                stage.setTitle("New Item Item");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

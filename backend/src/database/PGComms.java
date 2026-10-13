@@ -940,4 +940,25 @@ public class PGComms {
         return issue_query_type_update(
                 "DELETE FROM join_menu_toppings_and_inv_edible WHERE id_topping = " + topping_id);
     }
+
+
+    // Add a new edible item to the database with the provided details.
+    public static boolean add_edible_item_to_inventory(String name, int quantity) {
+        String sql = "INSERT INTO inv_edible (id_edible, name, amount_servings) "
+                + "VALUES ((SELECT COALESCE(MAX(id_edible), 0) + 1 FROM inv_edible), "
+                + sql_value(name) + ", " + quantity + ")";
+        return issue_query_type_update(sql);
+    }
+
+    // Add a new nonedible item to the database with the provided details.
+    public static boolean add_nonedible_item_to_inventory(String name, int quantity) {
+        String sql = "INSERT INTO inv_nonedible (id_nonedible, name, amount) "
+                + "VALUES ((SELECT COALESCE(MAX(id_nonedible), 0) + 1 FROM inv_nonedible), "
+                + sql_value(name) + ", " + quantity + ")";
+        return issue_query_type_update(sql);
+    }
+
+
+
+    
 }
