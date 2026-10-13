@@ -2,14 +2,10 @@ package controller;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
-import java.util.List;
 
 import database.PGComms;
-import dto.InvEdibleRowDTO;
-import dto.InvNonEdibleRowDTO;
 import dto.OrdersRowDTO;
 import javafx.event.ActionEvent;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import model.OrderHistoryModel;
 import javafx.beans.property.ReadOnlyObjectWrapper;
