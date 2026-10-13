@@ -1,21 +1,14 @@
 package controller;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.time.LocalDateTime;
 
 import database.PGComms;
 import dto.InvNonEdibleRowDTO;
 import dto.JoinMenuDrinksAndInvEdibleRowDTO;
-import dto.MenuDrinksRowDTO;
 import dto.OrdersRowDTO;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -30,8 +23,6 @@ import javafx.scene.control.TableRow;
 import model.OrderHistoryModel;
 
 public class ProdSalesScreenController {
-
-
     // FXML Declarations
 
     @FXML private TextField from_year;

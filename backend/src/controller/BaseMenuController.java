@@ -6,8 +6,11 @@ import javafx.scene.control.TextArea;
 import model.CurrentOrderModel;
 import model.MenuModel;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import database.PGComms;
 
 // This class serves as a base controller for the cashier-related views in the application. 
 // It provides common functionality for managing the current order, displaying the order total, and opening various windows related to adding drinks, clearing orders, finishing orders, and accessing the manager view.
@@ -15,6 +18,7 @@ public class BaseMenuController {
 
     @FXML private TextArea current_order;
     @FXML private Label order_total;
+    @FXML private Button add_drink_button;
 
     private final CurrentOrderModel order_model;
     private final MenuModel menu_model;
@@ -27,9 +31,15 @@ public class BaseMenuController {
     @FXML public void initialize() {
         current_order.textProperty().bind(order_model.get_current_order());
         order_total.textProperty().bind(order_model.get_order_total());
+        update_add_drink_button();
     }
 
     @FXML public void open_add_drink(ActionEvent event) {
+        if (!PGComms.are_required_nonedible_items_available(1)) {
+            update_add_drink_button();
+            return;
+        }
+
         try{
             OrderMenuController controller = new OrderMenuController(order_model, menu_model);
 
@@ -43,6 +53,16 @@ public class BaseMenuController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void update_add_drink_button() {
+        boolean available = PGComms.are_required_nonedible_items_available(1);
+        if (!available) {
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "Drinks cannot be added because one or more required non-edible inventory items (IDs 1-4) are out of stock.")
+                    .showAndWait();
         }
     }
     @FXML public void clear_order(ActionEvent event){

@@ -51,7 +51,7 @@ public class AddMenuDrinkController {
     private void initialize() {
         // Populate the type dropdown with available drink types
         type_box.setItems(FXCollections.observableArrayList(
-                "milk tea", "fresh tea", "fruit tea", "no caff tea"));
+                "milk tea", "fresh tea", "fruit tea", "no caff tea", "seasonal"));
         // If editing an existing drink, populate the form with its details and show the delete button
         if (existing != null) {
             title_label.setText("Edit Drink");
