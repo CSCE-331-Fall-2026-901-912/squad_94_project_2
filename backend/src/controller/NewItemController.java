@@ -38,8 +38,7 @@ public class NewItemController {
             return;
         }
 
-        System.out.println("tpye: "+type);
-        System.out.println("typelower: "+type.toLowerCase());
+       
 
         if (type.toLowerCase().equals("edible") && type.toLowerCase().equals("nonedible")) {
             show_warning("Type is incorrect. Try Edible or Nonedible.");
