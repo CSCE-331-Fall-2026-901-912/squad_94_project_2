@@ -31,6 +31,8 @@
                   </ComboBox>
                   <ComboBox fx:id="no_caff_box" prefWidth="150.0" promptText="Non Caffeine Teas">
                   </ComboBox>
+                  <ComboBox fx:id="seasonal_box" prefWidth="150.0" promptText="Seasonal Drinks">
+                  </ComboBox>
                   <Label fx:id="selected_drink_label" text="No drink selected" wrapText="true" />
                </children>
             </VBox>

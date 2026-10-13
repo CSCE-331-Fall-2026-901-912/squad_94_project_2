@@ -17,7 +17,7 @@ CREATE TABLE inv_edible(
 CREATE TABLE inv_nonedible(
     id_nonedible int PRIMARY KEY,
     name text,
-    amount int
+    amount int CHECK (amount >= 0)
 );
 
 
