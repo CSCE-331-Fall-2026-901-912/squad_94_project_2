@@ -97,7 +97,7 @@ public class OrderMenuController {
             @Override
             protected void updateItem(String name, boolean empty) {
                 super.updateItem(name, empty);
-                setText(empty ? null : name);
+                setText(empty ? box.getPromptText() : name);
                 setStyle(!empty && name != null && sold_out_drinks.contains(name)
                         ? "-fx-text-fill: grey;" : "");
             }
