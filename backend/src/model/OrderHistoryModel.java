@@ -13,7 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// Model class for managing order history-related data, including drinks, toppings, associated prices, IDs, and the times at which each order was created.
+
+/**
+ * Model class for managing order history-related data, including drinks, toppings, associated prices, IDs, and the times at which each order was created.
+ *
+ * @author Squad 94 - Natalie Gonzalez
+ */
 public class OrderHistoryModel {
     private final Map<Integer, String> drink_names = new HashMap<>();
     private final Map<Integer, String> edible_names = new HashMap<>();
@@ -39,28 +44,50 @@ public class OrderHistoryModel {
         }
     }
 
-    // Returns the drink name based on the drink ID.
+    /**
+     * Returns the drink name based on the drink ID.
+     *
+     * @param order DTO for retrieving information row-by-row from the orders table in the SQL database.
+     */
     public String drink_name(OrdersRowDTO order) {
         return drink_names.getOrDefault(order.id_drink(), "Unknown drink (" + order.id_drink() + ")");
     }
 
-    // Method for retrieving the name of a drink given its ID
+    /**
+     * Retrieves the name of a drink given its ID
+     *
+     * @param id Drink ID
+     */
     public String drink_name(Integer id) {
         return drink_names.getOrDefault(id, "Unknown drink (" + id + ")");
     }
 
-    // Method for retrieving the name of an edible given its ID
+    /**
+     * Retrieves the name of an edible given its ID
+     *
+     * @param id Edible item ID
+     */
     public String edible_name(Integer id) {
         return edible_names.getOrDefault(id, "Unknown edible (" + id + ")");
     }
 
-    
+    /**
+     * Returns rows associated with input from the search bar
+     *
+     * @param orders DTO for retrieving information row-by-row from the orders table in the SQL database.
+     * @param str Search bar user input
+     */
     public boolean matches_search(OrdersRowDTO orders, String str) {
         if (str.isEmpty()) return true;
         return String.valueOf(orders.id_order()).contains(str) || drink_name(orders).toLowerCase().contains(str) || String.valueOf(orders.total_spent()).contains(str);
     }
 
-    // Checks timestamp and sorts it into the appropriate time period.
+    /**
+     * Checks timestamp and sorts it into the appropriate time period.
+     *
+     * @param orders DTO for retrieving information row-by-row from the orders table in the SQL database.
+     * @param period Time period filter option
+     */
     public boolean in_period(OrdersRowDTO order,String period) {
         if (period == null || period.equals("All time")) {
             return true;
@@ -82,7 +109,13 @@ public class OrderHistoryModel {
         };
     }
 
-    // Duplicate method for checking if an order is within a specified period, using a specified start and end time
+    /**
+     * Duplicate method for checking if an order is within a specified period, using a specified start and end time
+     *
+     * @param orders DTO for retrieving information row-by-row from the orders table in the SQL database.
+     * @param start Start date from user input
+     * @param end End date from user input
+     */
     public boolean in_period(OrdersRowDTO order, OffsetDateTime start, OffsetDateTime end) {
         if (start == null || end == null) {
             return false;
@@ -100,7 +133,11 @@ public class OrderHistoryModel {
         }
     }
 
-    // Sorts drinks based on the filters chosen on GUI.
+    /**
+     * Sorts drinks based on the filters chosen on GUI.
+     *
+     * @param choice Filter on GUI
+     */
     public Comparator<OrdersRowDTO> comparator_for(String choice) {
         return switch (choice) {
             case "Order ID (high to low)" -> Comparator.comparingInt(OrdersRowDTO::id_order).reversed();
@@ -112,10 +149,21 @@ public class OrderHistoryModel {
         };
     }
 
+    /**
+     * Returns the creation timestamp
+     *
+     * @param order DTO for retrieving information row-by-row from the orders table in the SQL database.
+     */
     private OffsetDateTime order_time(OrdersRowDTO order) {
         return order.time_created_at();
     }
 
+    /**
+     * Modifies an order's order status
+     *
+     * @param order_id item_ID
+     * @param status status the order will change to
+     */
     public boolean change_order_status(int order_id, String status) {
         return PGComms.modify_order_status_in_orders(order_id, status);
     }
