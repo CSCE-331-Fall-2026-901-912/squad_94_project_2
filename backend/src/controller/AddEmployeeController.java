@@ -36,7 +36,7 @@ public class AddEmployeeController {
      * Creates an employee form controller.
      *
      * @param model the employee model used to save and delete employee records
-     * @param on_saved callback invoked after an employee is saved or deleted
+     * @param on_saved refresh invoked after an employee is saved or deleted
      * @param existing the employee being edited, or {@code null} when adding an employee
      */
     public AddEmployeeController(EmployeeModel model, Runnable on_saved, EmployeesRowDTO existing) {
@@ -47,6 +47,7 @@ public class AddEmployeeController {
 
     /**
      * Initializes the form with existing employee data when editing an employee.
+     * Otherwise leaves fields blank
      */
     @FXML private void initialize() {            
         if (existing == null) return;

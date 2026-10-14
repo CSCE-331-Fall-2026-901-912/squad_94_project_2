@@ -19,7 +19,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
-
+/**
+ * Controller for adding, editing, and deleting drink menu items from the table.
+ *
+ * @author Squad 94 - Sanjana Ram
+ */
 public class AddMenuDrinkController {
     private static final int MAX_INGREDIENTS = 8;
     private static final String SELECTED_STYLE =
@@ -41,12 +45,22 @@ public class AddMenuDrinkController {
     // Map to track selected ingredients and their corresponding IDs for updating logic                  
     private final Map<Button, Integer> selected_ingredients = new HashMap<>();
 
+    /**
+     * Creates a drink menu form controller
+     * @param model the menu model used to save and delete records
+     * @param on_added model refresh invoked after an item is added, modified, or deleted
+     * @param existing the drink item being edited, or {@code null} when adding a drink
+     */
     public AddMenuDrinkController(MenuModel model, Runnable on_added, MenuDrinksRowDTO existing){
         this.model = model;
         this.on_added = on_added;
         this.existing = existing;
     }
 
+    /**
+     * Initializes the form with existing drink information when adding a drink
+     * Otherwise leaves fields blank and buttons un selected
+     */
     @FXML
     private void initialize() {
         // Populate the type dropdown with available drink types
@@ -104,7 +118,10 @@ public class AddMenuDrinkController {
         }
     }
 
-    // Toggle the selection of an ingredient button, adding or removing it from the selected ingredients map, and refresh the button styles accordingly.
+    /**
+     * Toggle the selection of an ingredient button, adding or removing it from the selected ingredients map, and refresh the button styles accordingly.
+     * @param ingredient_button the button currently being pressed by the user
+     */
     private void toggle_ingredient(Button ingredient_button) {
         if (selected_ingredients.containsKey(ingredient_button)) {
             selected_ingredients.remove(ingredient_button);
@@ -115,7 +132,9 @@ public class AddMenuDrinkController {
         refresh_ingredient_buttons();
     }
 
-    // Refresh the styles and disabled state of ingredient buttons based on the current selection and maximum allowed ingredients.
+    /**
+     * Refresh the styles and disabled state of ingredient buttons based on the current selection and maximum allowed ingredients.
+     */
     private void refresh_ingredient_buttons() {
         boolean max_selected = selected_ingredients.size() == MAX_INGREDIENTS;
 
@@ -128,7 +147,9 @@ public class AddMenuDrinkController {
         }
     }
 
-    // Validate input and either add a new drink or update an existing one.
+    /**
+     * Validate user input/changes and either add a new drink or update an existing one.
+     */
     @FXML private void submit() {
         String name = name_field.getText().trim();
         String type = type_box.getValue();
@@ -163,6 +184,9 @@ public class AddMenuDrinkController {
         ((Node) submit_button).getScene().getWindow().hide();
     }
 
+    /**
+     * Confirms and deletes the drink item currently being edited.
+     */
     @FXML
     private void delete() {
         if (existing == null) {
@@ -191,6 +215,11 @@ public class AddMenuDrinkController {
         ((Node) submit_button).getScene().getWindow().hide();
     }
 
+    /**
+     * Displays a warning message to the user.
+     *
+     * @param message the warning text to display
+     */
     private void show_error(String message) {
         new Alert(Alert.AlertType.ERROR, message).showAndWait();
     }
