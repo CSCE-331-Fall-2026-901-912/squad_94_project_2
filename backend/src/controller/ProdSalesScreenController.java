@@ -1,21 +1,14 @@
 package controller;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.time.LocalDateTime;
 
 import database.PGComms;
 import dto.InvNonEdibleRowDTO;
 import dto.JoinMenuDrinksAndInvEdibleRowDTO;
-import dto.MenuDrinksRowDTO;
 import dto.OrdersRowDTO;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -29,9 +22,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TableRow;
 import model.OrderHistoryModel;
 
+/**
+ * Controller for viewing product usage, edible and inedible, and total sales based on time period input from user
+ *
+ * @author Squad 94 - Natalie Gonzalez, Asher Blevins
+ */
 public class ProdSalesScreenController {
-
-
     // FXML Declarations
 
     @FXML private TextField from_year;
@@ -84,7 +80,11 @@ public class ProdSalesScreenController {
         nonedible_sort_prods_table_by_time(start, end);
     }
 
-    // Controller constructor for syncing the model with this controller
+    /**
+     * Creates controller constructor for syncing the model with this controller.
+     *
+     * @param model the order history model used to display orders and filters
+     */
     public ProdSalesScreenController(OrderHistoryModel model) {
         this.model = model;
     }
@@ -95,6 +95,13 @@ public class ProdSalesScreenController {
         nonedible_prods_setup();
     }
 
+    /**
+     * Sorts the orders based on user input range
+     * Calculates total sales of each drink
+     *
+     * @param start start date user input
+     * @param end end date user input
+     */
     private void sort_sales_table_by_time(OffsetDateTime start, OffsetDateTime end){
         
         id_to_total_sales = new HashMap<>();
@@ -188,6 +195,13 @@ public class ProdSalesScreenController {
     private SortedList<ProdUseRecord> sorted_prods;
     private HashMap<Integer, Integer> edible_id_to_prod = new HashMap<>();
 
+    /**
+     * Sorts the orders based on user input range
+     * Calculates total edible items of each drink
+     *
+     * @param start start date user input
+     * @param end end date user input
+     */
     private void sort_prods_table_by_time(OffsetDateTime start, OffsetDateTime end){
 
         ArrayList<JoinMenuDrinksAndInvEdibleRowDTO> id_drink_to_id_edible = PGComms.issue_query_type_rows_JoinMenuDrinksAndInvEdible("SELECT * FROM join_menu_drinks_and_inv_edible");
@@ -294,6 +308,13 @@ public class ProdSalesScreenController {
     private SortedList<NonedibleProdUseRecord> nonedible_sorted_prods;
     private HashMap<Integer, Integer> nonedible_id_to_prod = new HashMap<>();
 
+    /**
+     * Sorts the orders based on user input range
+     * Calculates total inedible items of each drink
+     *
+     * @param start start date user input
+     * @param end end date user input
+     */
     private void nonedible_sort_prods_table_by_time(OffsetDateTime start, OffsetDateTime end){
 
         ArrayList<InvNonEdibleRowDTO> id_nonedible = PGComms.issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible");

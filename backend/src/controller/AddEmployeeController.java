@@ -3,7 +3,6 @@ package controller;
 import java.math.BigDecimal;
 
 import dto.EmployeesRowDTO;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -13,6 +12,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 
+/**
+ * Controller for adding, editing, and deleting employees from the table.
+ *
+ * @author Squad 94 - Sanjana Ram
+ */
 public class AddEmployeeController {
     private final EmployeeModel model;
     private final Runnable on_added;
@@ -27,13 +31,23 @@ public class AddEmployeeController {
     @FXML private Button submit_button;
     @FXML private Button delete_button;
 
+    /**
+     * Creates an employee form controller.
+     *
+     * @param model the employee model used to save and delete employee records
+     * @param on_saved refresh invoked after an employee is saved or deleted
+     * @param existing the employee being edited, or {@code null} when adding an employee
+     */
     public AddEmployeeController(EmployeeModel model, Runnable on_saved, EmployeesRowDTO existing) {
         this.model = model;
         this.on_added = on_saved;
         this.existing = existing;
     }
 
-    // Initialize the form with existing employee data & delete button if editing, otherwise leave fields blank for adding a new employee.
+    /**
+     * Initializes the form with existing employee data when editing an employee.
+     * Otherwise leaves fields blank
+     */
     @FXML private void initialize() {            
         if (existing == null) return;
         title_label.setText("Edit Employee");
@@ -47,8 +61,10 @@ public class AddEmployeeController {
         hours_field.setText(String.valueOf(existing.hours_worked_for_week()));
     }
 
-    // Validate input and either add a new employee or update an existing one.
-    @FXML public void submit(ActionEvent event) {
+    /**
+     * Validates the form input and adds or updates an employee record.
+     */
+    @FXML public void submit() {
 
         String name = name_field.getText().trim();
         String position = position_field.getText().trim();
@@ -86,11 +102,13 @@ public class AddEmployeeController {
 
         //reload the table in the main window and close this window
         on_added.run();                                   
-        ((Node) event.getSource()).getScene().getWindow().hide();
+        ((Node) submit_button).getScene().getWindow().hide();
     }
 
-    // Confirm deletion of the employee and delete if confirmed.
-    @FXML public void delete(ActionEvent event) {
+    /**
+     * Confirms and deletes the employee currently being edited.
+     */
+    @FXML public void delete() {
         if (existing == null) {
             return;
         }
@@ -114,9 +132,14 @@ public class AddEmployeeController {
         }
 
         on_added.run();
-        ((Node) event.getSource()).getScene().getWindow().hide();
+        ((Node) delete_button).getScene().getWindow().hide();
     }
 
+    /**
+     * Displays a warning message to the user.
+     *
+     * @param message the warning text to display
+     */
     private void show_warning(String message) {
         new Alert(Alert.AlertType.WARNING, message).showAndWait();
     }

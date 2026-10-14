@@ -93,6 +93,10 @@ public class MenuModel {
         return PGComms.get_drink_names_by_type(type);
     }
 
+    public List<String> get_sold_out_drink_names_by_type(String type) {
+        return PGComms.get_sold_out_drink_names_by_type(type);
+    }
+
     //used for the cashier side to get the names of toppings to populate the buttons
     public List<String> get_topping_names() {
         return PGComms.get_topping_names();

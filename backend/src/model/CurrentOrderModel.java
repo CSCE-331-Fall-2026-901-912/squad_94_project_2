@@ -173,6 +173,11 @@ public class CurrentOrderModel {
             }
         }
 
+        if (!PGComms.are_required_nonedible_items_available(lines.size())) {
+            throw new IllegalStateException(
+                "Cannot complete the order because one or more required non-edible inventory items (IDs 1-4) do not have enough stock.");
+        }
+
         for(OrderLineDTO line : lines) {
             // Calculate tips individually to make it easier to insert each drink as its own line
             double price_with_tip = line.price().multiply(BigDecimal.ONE.add(tip_rate)).setScale(2, RoundingMode.HALF_UP).doubleValue();
@@ -236,12 +241,15 @@ public class CurrentOrderModel {
                 default: sugar_level = 4; break;
             }
 
-            // Decrement the inventory quantities for the non edible items used in the order.
             if (!discard) {
-                PGComms.modify_topping_quantity_in_nonedible_inventory(1,-1);
-                PGComms.modify_topping_quantity_in_nonedible_inventory(2,-1);
-                PGComms.modify_topping_quantity_in_nonedible_inventory(3,-1);
-                PGComms.modify_topping_quantity_in_nonedible_inventory(4,-1);
+                // Decrement the inventory quantities for the non edible items used in the order.
+                if (!PGComms.modify_topping_quantity_in_nonedible_inventory(1,-1)
+                        || !PGComms.modify_topping_quantity_in_nonedible_inventory(2,-1)
+                        || !PGComms.modify_topping_quantity_in_nonedible_inventory(3,-1)
+                        || !PGComms.modify_topping_quantity_in_nonedible_inventory(4,-1)) {
+                    throw new IllegalStateException(
+                        "Could not update required non-edible inventory.");
+                }
             }
 
             String status = "completed";

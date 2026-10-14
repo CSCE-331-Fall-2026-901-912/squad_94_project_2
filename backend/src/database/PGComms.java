@@ -426,6 +426,34 @@ public class PGComms {
         return names;
     }
 
+    public static List<String> get_sold_out_drink_names_by_type(String type) {
+        List<String> names = new ArrayList<>();
+        if (!open_connection()) {
+            return names;
+        }
+
+        String sql = "SELECT d.name FROM menu_drinks d "
+                + "WHERE d.type = ? AND EXISTS ("
+                + "SELECT 1 FROM join_menu_drinks_and_inv_edible j "
+                + "JOIN inv_edible i ON i.id_edible = j.id_edible "
+                + "WHERE j.id_drink = d.id_drink AND i.amount_servings <= 0"
+                + ") ORDER BY d.id_drink";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, type);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    names.add(rs.getString("name"));
+                }
+            }
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        close_connection();
+        return names;
+    }
+
 
     // Get all items from the edible and nonedible inventories which have an amount of 0.
     public static List<IDNameValDTO> get_out_of_stock() {
@@ -439,6 +467,29 @@ public class PGComms {
         List<InvNonEdibleRowDTO> inv_non_edible_select = issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible WHERE amount > 0 AND amount <= 500 ORDER BY amount");
         List<InvEdibleRowDTO> inv_edible_select = issue_query_type_rows_InvEdible("SELECT * FROM inv_edible WHERE amount_servings > 0 AND amount_servings <= 500 ORDER BY amount_servings");
         return get_inv_selection_common(inv_non_edible_select, inv_edible_select);
+    }
+
+    // Return true only when all required non-edible inventory items have enough stock.
+    public static boolean are_required_nonedible_items_available(int required_quantity) {
+        if (required_quantity < 1) {
+            throw new IllegalArgumentException("Required quantity must be positive.");
+        }
+
+        List<InvNonEdibleRowDTO> required_items =
+                issue_query_type_rows_InvNonEdible(
+                        "SELECT * FROM inv_nonedible "
+                        + "WHERE id_nonedible IN (1, 2, 3, 4)");
+
+        if (required_items.size() != 4) {
+            return false;
+        }
+
+        for (InvNonEdibleRowDTO item : required_items) {
+            if (item.amount() < required_quantity) {
+                return false;
+            }
+        }
+        return true;
     }
 
     // Shared private helper function by get_out_of_stock() and get_running_low_on() to select items from both inv_edible and inv_nonedible row-by-row.
@@ -915,7 +966,10 @@ public class PGComms {
      */
     public static boolean modify_topping_quantity_in_nonedible_inventory(int nonedible_id, int val){
         if(val == -1){
-            val= PGComms.issue_query_type_rows_InvNonEdible("SELECT * FROM inv_nonedible WHERE id_nonedible = " + nonedible_id).getFirst().amount() - 1;
+            return issue_query_type_update(
+                    "UPDATE inv_nonedible SET amount = amount - 1 "
+                    + "WHERE id_nonedible = " + nonedible_id
+                    + " AND amount > 0");
         }
         return modify_topping_quantity_in_inventory(nonedible_id, val, "inv_nonedible");
     }

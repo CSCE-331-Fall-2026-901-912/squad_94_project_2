@@ -11,9 +11,13 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-// Controller for adding, editing, and deleting menu toppings
-// We keep this separate from the AddMenuDrinkController because toppings are simpler and don't have ingredients or types.
-// Everything here uses similar logic to the AddEmployeeController, but with fewer fields and no ingredient selection.
+/**
+ * Controller for adding, editing, and deleting menu toppings
+ * We keep this separate from the AddMenuDrinkController because toppings are simpler and don't have ingredients or types.
+ * Everything here uses similar logic to the AddEmployeeController, but with fewer fields and no ingredient selection.
+ * 
+ * @author Squad 94 - Sanjana Ram
+ */
 public class AddMenuToppingController {
     @FXML private Label title_label;
     @FXML private TextField name_field;
@@ -25,12 +29,22 @@ public class AddMenuToppingController {
     private final Runnable on_saved;
     private final MenuToppingsRowDTO existing;
 
+    /**
+     * Creates a topping menu form controller
+     * @param model the menu model used to save and delete records
+     * @param on_added model refresh invoked after an item is added, modified, or deleted
+     * @param existing the topping item being edited, or {@code null} when adding a new topping
+     */
     public AddMenuToppingController(MenuModel model, Runnable on_saved, MenuToppingsRowDTO existing) {
         this.model = model;
         this.on_saved = on_saved;
         this.existing = existing;
     }
 
+    /**
+     * Initializes the form with existing topping information when adding a topping
+     * Otherwise leaves fields blank and buttons un selected
+     */
     @FXML
     private void initialize() {
         if (existing == null) {
@@ -44,6 +58,9 @@ public class AddMenuToppingController {
         price_field.setText(existing.price().toPlainString());
     }
 
+    /**
+     * Validate user input/changes and either add a new topping or update an existing one.
+     */
     @FXML
     private void submit() {
         String name = name_field.getText().trim();
@@ -72,6 +89,9 @@ public class AddMenuToppingController {
         ((Node) submit_button).getScene().getWindow().hide();
     }
 
+    /**
+     * Confirms and deletes the drink item currently being edited.
+     */
     @FXML
     private void delete() {
         if (existing == null) {
@@ -100,6 +120,11 @@ public class AddMenuToppingController {
         ((Node) submit_button).getScene().getWindow().hide();
     }
 
+    /**
+     * Displays a warning message to the user.
+     *
+     * @param message the warning text to display
+     */
     private void show_error(String message) {
         new Alert(Alert.AlertType.ERROR, message).showAndWait();
     }

@@ -2,7 +2,9 @@ package controller;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -29,12 +31,14 @@ public class OrderMenuController {
     @FXML private ComboBox<String> fresh_tea_box;
     @FXML private ComboBox<String> fruit_tea_box;
     @FXML private ComboBox<String> no_caff_box;
+    @FXML private ComboBox<String> seasonal_box;
 
     @FXML private GridPane topping_grid;
     private static final int MAX_TOPPINGS = 2;
     private static final String SELECTED_STYLE =
         "-fx-background-color: #2e9e5b; -fx-text-fill: white; -fx-font-weight: bold;";
     private final List<String> selected_toppings = new ArrayList<>();
+    private final Set<String> sold_out_drinks = new HashSet<>();
 
     @FXML private Slider sugar_slider;
     @FXML private Label sugar_label;
@@ -64,12 +68,40 @@ public class OrderMenuController {
         fill_box(fresh_tea_box, "fresh tea");
         fill_box(fruit_tea_box, "fruit tea");
         fill_box(no_caff_box, "no caff tea");
+        fill_box(seasonal_box, "seasonal");
     }
 
     // Helper function to handle shared logic to populate all drink boxes. Called by populate_drink_boxes().
     private void fill_box(ComboBox<String> box, String type){
         if (box == null) return;
-        box.setItems(FXCollections.observableArrayList(menu_model.get_drink_names_by_type(type)));
+        List<String> drink_names = menu_model.get_drink_names_by_type(type);
+        sold_out_drinks.addAll(menu_model.get_sold_out_drink_names_by_type(type));
+        box.setItems(FXCollections.observableArrayList(drink_names));
+        configure_drink_cells(box);
+    }
+
+    private void configure_drink_cells(ComboBox<String> box) {
+        box.setCellFactory(list -> new javafx.scene.control.ListCell<>() {
+            @Override
+            protected void updateItem(String name, boolean empty) {
+                super.updateItem(name, empty);
+                boolean sold_out = !empty && name != null && sold_out_drinks.contains(name);
+                setText(empty ? null : name);
+                setDisable(sold_out);
+                setMouseTransparent(sold_out);
+                setStyle(sold_out
+                        ? "-fx-text-fill: grey;" : "");
+            }
+        });
+        box.setButtonCell(new javafx.scene.control.ListCell<>() {
+            @Override
+            protected void updateItem(String name, boolean empty) {
+                super.updateItem(name, empty);
+                setText(empty ? box.getPromptText() : name);
+                setStyle(!empty && name != null && sold_out_drinks.contains(name)
+                        ? "-fx-text-fill: grey;" : "");
+            }
+        });
     }
 
     //allows for dynamic adding of toppings to reflect current menu_toppings table
@@ -136,7 +168,7 @@ public class OrderMenuController {
     
     private String selected_drink;
     private List<ComboBox<String>> drink_boxes(){
-        return List.of(milk_tea_box, fresh_tea_box, fruit_tea_box, no_caff_box);
+        return List.of(milk_tea_box, fresh_tea_box, fruit_tea_box, no_caff_box, seasonal_box);
     }
 
     // Wire all four combo boxes to the same handler.
@@ -151,7 +183,15 @@ public class OrderMenuController {
 
     private void drink_picked(ComboBox<String> source){
         String name = source.getValue();
-        if (name == null) return;                 
+        if (name == null) return;
+        if (sold_out_drinks.contains(name)) {
+            source.setValue(null);
+            new Alert(
+                    Alert.AlertType.WARNING,
+                    "This drink cannot be selected because one or more ingredients are out of stock.")
+                    .showAndWait();
+            return;
+        }
 
         // Only one drink can be chosen, so clear the other three boxes.
         for (ComboBox<String> box : drink_boxes()) {
