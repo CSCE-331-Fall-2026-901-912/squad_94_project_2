@@ -942,7 +942,14 @@ public class PGComms {
     }
 
 
-    // Add a new edible item to the database with the provided details.
+    
+    /**
+     * Add a new edible item to the database with the provided details.
+     * @param name The name of the edible item being added to inventory.
+     * @param quantity The amount of servings in stock.
+     * 
+     * @author Squad94 - Mairead Finnerty
+     */
     public static boolean add_edible_item_to_inventory(String name, int quantity) {
         String sql = "INSERT INTO inv_edible (id_edible, name, amount_servings) "
                 + "VALUES ((SELECT COALESCE(MAX(id_edible), 0) + 1 FROM inv_edible), "
@@ -950,7 +957,14 @@ public class PGComms {
         return issue_query_type_update(sql);
     }
 
-    // Add a new nonedible item to the database with the provided details.
+
+    /**
+     * Add a new nonedible item to the database with the provided details.
+     * @param name The name of the nonedible item being added to inventory.
+     * @param quantity The amount in stock.
+     * 
+     * @author Squad94 - Mairead Finnerty
+     */
     public static boolean add_nonedible_item_to_inventory(String name, int quantity) {
         String sql = "INSERT INTO inv_nonedible (id_nonedible, name, amount) "
                 + "VALUES ((SELECT COALESCE(MAX(id_nonedible), 0) + 1 FROM inv_nonedible), "
