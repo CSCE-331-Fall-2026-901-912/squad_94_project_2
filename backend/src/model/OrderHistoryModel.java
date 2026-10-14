@@ -22,13 +22,17 @@ import java.util.Map;
 public class OrderHistoryModel {
     private final Map<Integer, String> drink_names = new HashMap<>();
     private final Map<Integer, String> edible_names = new HashMap<>();
-
-    // Method for retrieving all orders from the database
+ 
+    /**
+     * Method for retrieving all orders from the database
+     */
     public List<OrdersRowDTO> get_orders() {
         return PGComms.issue_query_type_rows_Orders("SELECT * FROM orders ORDER BY id_order");
     }
 
-    // Loads drink ids and names into hashmap.
+    /**
+     * Loads drink ids and names into hashmap.
+     */
     public void load_drink_names() {
         drink_names.clear();
         for (MenuDrinksRowDTO d : PGComms.issue_query_type_rows_MenuDrinks("SELECT * FROM menu_drinks")) {
@@ -36,7 +40,9 @@ public class OrderHistoryModel {
         }
     }
     
-    // Method for putting all edible names into the edible_names map
+    /**
+     * Method for putting all edible names into the edible_names map
+     */
     public void load_edible_names() {
         edible_names.clear();
         for (InvEdibleRowDTO d : PGComms.issue_query_type_rows_InvEdible("SELECT * FROM inv_edible")) {

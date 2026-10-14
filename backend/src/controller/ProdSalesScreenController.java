@@ -89,6 +89,9 @@ public class ProdSalesScreenController {
         this.model = model;
     }
     
+    /**
+     * Calls the logic for total sales and product usage
+     */
     @FXML public void initialize() {
         sales_setup();
         prods_setup();
@@ -132,7 +135,10 @@ public class ProdSalesScreenController {
         sorted_sales.comparatorProperty().bind(sales_table.comparatorProperty());
     }
 
-
+    /**
+     * Creates the table for total sales
+     * Populates and sorts the tables according to user's date input
+     */
     private void sales_setup(){
         model.load_drink_names();
 
@@ -170,7 +176,9 @@ public class ProdSalesScreenController {
         sorted_sales.comparatorProperty().bind(sales_table.comparatorProperty());
     }
 
-    // Set up row click behavior for the sales table
+    /**
+     * Set up row click behavior for the sales table
+     */
     private void sales_setup_row_click(){
         sales_table.setRowFactory(tv -> {
             TableRow <SalesRecord> row = new TableRow<>();
@@ -239,6 +247,10 @@ public class ProdSalesScreenController {
         sorted_prods.comparatorProperty().bind(prod_table.comparatorProperty());
     }
 
+    /**
+     * Creates the table for edible product usage
+     * Populates and sorts the tables according to user's date input
+     */
     private void prods_setup(){
         model.load_edible_names();
 
@@ -282,7 +294,9 @@ public class ProdSalesScreenController {
         sorted_prods.comparatorProperty().bind(prod_table.comparatorProperty());
     }
 
-    // Set up row click behavior for the product table
+    /**
+     * Set up row click behavior for the sales table
+     */
     private void prod_setup_row_click(){
         prod_table.setRowFactory(tv -> {
             TableRow <ProdUseRecord> row = new TableRow<>();
@@ -350,6 +364,10 @@ public class ProdSalesScreenController {
         nonedible_sorted_prods.comparatorProperty().bind(nonedible_prod_table.comparatorProperty());
     }
 
+    /**
+     * Creates the table for inedible product usage
+     * Populates and sorts the tables according to user's date input
+     */
     private void nonedible_prods_setup(){
 
         nonedible_prod_id_column.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().id_nonedible()));
@@ -392,7 +410,9 @@ public class ProdSalesScreenController {
         nonedible_sorted_prods.comparatorProperty().bind(nonedible_prod_table.comparatorProperty());
     }
 
-    // Set up row click behavior for the product table
+    /**
+     * Set up row click behavior for the sales table
+     */
     private void nonedible_prod_setup_row_click(){
         nonedible_prod_table.setRowFactory(tv -> {
             TableRow <NonedibleProdUseRecord> row = new TableRow<>();
