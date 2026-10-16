@@ -23,16 +23,24 @@ import model.CurrentOrderModel;
 import model.MenuModel;
 import dto.OrderLineDTO;
 
+/**
+ * Controller for the order menu, allowing users to select a drink, toppings, sugar level, and ice level.
+ * The controller populates the drink and topping options from the menu model, manages user selections, and adds the selected order line to the current order model.
+ * 
+ * @author Squad 94 - Sanjana Ram
+ */
 public class OrderMenuController {
     private final CurrentOrderModel order_model;
     private final MenuModel menu_model;
 
+    // ComboBoxes for drink selection
     @FXML private ComboBox<String> milk_tea_box;
     @FXML private ComboBox<String> fresh_tea_box;
     @FXML private ComboBox<String> fruit_tea_box;
     @FXML private ComboBox<String> no_caff_box;
     @FXML private ComboBox<String> seasonal_box;
 
+    // GridPane for topping buttons
     @FXML private GridPane topping_grid;
     private static final int MAX_TOPPINGS = 2;
     private static final String SELECTED_STYLE =
@@ -40,20 +48,30 @@ public class OrderMenuController {
     private final List<String> selected_toppings = new ArrayList<>();
     private final Set<String> sold_out_drinks = new HashSet<>();
 
+    // Slider and Label for sugar level selection
     @FXML private Slider sugar_slider;
     @FXML private Label sugar_label;
 
+    // Buttons for ice level selection
     @FXML private Label selected_drink_label;
     @FXML private Button no_ice_button;
     @FXML private Button light_ice_button;
     @FXML private Button regular_ice_button;
     @FXML private Button hot_button;
 
+    /**
+     * Creates an order menu controller with the given current order model and menu model.
+     * @param order_model the current order model used to add the selected order line
+     * @param menu_model the menu model used to retrieve drink and topping options
+     */
     public OrderMenuController(CurrentOrderModel order_model, MenuModel menu_model) {
         this.order_model = order_model;
         this.menu_model = menu_model;
     }
 
+    /**
+     * Initializes the order menu view by populating the drink combo boxes, topping buttons, setting up the sugar slider, and setting up drink selection handling.
+     */
     @FXML
     private void initialize() {
         populate_drink_boxes();
@@ -62,7 +80,9 @@ public class OrderMenuController {
         setup_drink_selection();
     }
 
-    // Fill each combo box with the menu_drinks rows of the matching type (dynamic adding)
+    /**
+     * Populates the drink combo boxes with available drinks from the menu model, grouped by type.
+     */
     public void populate_drink_boxes(){
         fill_box(milk_tea_box, "milk tea");
         fill_box(fresh_tea_box, "fresh tea");
@@ -71,7 +91,11 @@ public class OrderMenuController {
         fill_box(seasonal_box, "seasonal");
     }
 
-    // Helper function to handle shared logic to populate all drink boxes. Called by populate_drink_boxes().
+    /**
+     * Populates a given combo box with drink names of a specific type from the menu model, and configures the combo box to disable sold-out drinks.
+     * @param box the combo box to populate
+     * @param type the type of drinks to populate the combo box with (e.g., "milk tea", "fresh tea")
+     */
     private void fill_box(ComboBox<String> box, String type){
         if (box == null) return;
         List<String> drink_names = menu_model.get_drink_names_by_type(type);
@@ -80,6 +104,10 @@ public class OrderMenuController {
         configure_drink_cells(box);
     }
 
+    /**
+     * Configures the cells of a combo box to disable and grey out sold-out drinks, preventing users from selecting them.
+     * @param box the combo box to configure
+     */
     private void configure_drink_cells(ComboBox<String> box) {
         box.setCellFactory(list -> new javafx.scene.control.ListCell<>() {
             @Override
@@ -104,7 +132,9 @@ public class OrderMenuController {
         });
     }
 
-    //allows for dynamic adding of toppings to reflect current menu_toppings table
+    /**
+     * Populates the topping buttons in the grid pane with available toppings from the menu model
+     */
     public void populate_topping_buttons(){
         if (topping_grid == null) return;  
         selected_toppings.clear();         
@@ -125,6 +155,11 @@ public class OrderMenuController {
         }
     }
 
+    /**
+     * Handles the selection of a topping button, adding or removing the topping from the selected toppings list and 
+     * refreshing the button styles as long as the maximum number of toppings has not been reached.
+     * @param name the name of the topping that was selected or deselected
+     */
     private void topping_selected(String name){
         if (selected_toppings.contains(name)) {
             selected_toppings.remove(name);               
@@ -134,7 +169,9 @@ public class OrderMenuController {
         refresh_topping_buttons();
     }
 
-    // Color the chosen buttons, and once the max is reached (2), grey out the rest.
+    /**
+     * Refreshes the styles and enabled/disabled state of the topping buttons based on the current selection of toppings and the maximum allowed toppings.
+     */
     private void refresh_topping_buttons(){
         boolean full = selected_toppings.size() >= MAX_TOPPINGS;
         for (Node n : topping_grid.getChildren()) {
@@ -147,12 +184,18 @@ public class OrderMenuController {
         }
     }
 
-    // For saving the order later: 0, 1 or 2 topping names, in the order they were picked.
+    /**
+     * Returns a copy of the list of selected toppings.
+     * @return a list of selected topping names
+     */
     public List<String> get_selected_toppings(){
         return List.copyOf(selected_toppings);
     }
 
-    // Bind the sugar slider to the label so it updates in real time as the user moves the slider.
+    /**
+     * Sets up the sugar slider to display the current sugar level as a percentage in the associated label.
+     * The label is updated whenever the slider value changes.
+     */
     public void setup_sugar_slider(){
         if (sugar_slider == null || sugar_label == null) return;   
         sugar_label.textProperty().bind(
@@ -161,17 +204,28 @@ public class OrderMenuController {
                 sugar_slider.valueProperty()));
     }
 
-    // Use this when you save the order. It is always 0, 25, 50, 75 or 100.
+    /**
+     * Returns the current sugar level selected by the user, rounded to the nearest integer (should always be 0, 25, 50, 75, or 100).
+     * @return the sugar level as an integer percentage (0-100)
+     */
     public int get_sugar_level(){
         return (int) Math.round(sugar_slider.getValue());
     }
     
+
     private String selected_drink;
+    /**
+     * Returns a list of all the drink combo boxes in the order menu, allowing for easy iteration and management of drink selection.
+     * @return
+     */
     private List<ComboBox<String>> drink_boxes(){
         return List.of(milk_tea_box, fresh_tea_box, fruit_tea_box, no_caff_box, seasonal_box);
     }
 
-    // Wire all four combo boxes to the same handler.
+    /**
+     * Sets up the event handlers for the drink combo boxes to manage drink selection, ensuring that only one drink can be selected at a time and that sold-out drinks cannot be selected.
+     * When a drink is selected, the other combo boxes are cleared, and the selected drink is stored in the controller's state.
+     */
     public void setup_drink_selection(){
            selected_drink = null;
             selected_ice = null;
@@ -181,6 +235,7 @@ public class OrderMenuController {
         }
     }
 
+    // When a drink is selected, this method is called to handle the selection, ensuring that only one drink can be selected at a time and that sold-out drinks cannot be selected.
     private void drink_picked(ComboBox<String> source){
         String name = source.getValue();
         if (name == null) return;
@@ -207,6 +262,10 @@ public class OrderMenuController {
     }
 
     private String selected_ice;
+    /**
+     * Handles the selection of an ice level button, updating the selected ice level and refreshing the styles of the ice level buttons to indicate which one is currently selected.
+     * @param event the action event triggered by clicking an ice level button
+     */
     @FXML public void ice_selected(ActionEvent event){
         Button clicked = (Button) event.getSource();
 
@@ -219,7 +278,12 @@ public class OrderMenuController {
         }
     }
     
-    // When the user clicks "Finish" in the order menu, validate that a drink and ice level were chosen, then add the order line to the current order.
+    /**
+     * Finalizes the selection of the drink, toppings, sugar level, and ice level, creating a new order line and adding it to the current order model.
+     * If the user has not selected a drink or ice level, a warning alert is shown and the order is not added.
+     * The order menu window is closed after the order line is added to the current order model.
+     * @param event the action event triggered by clicking the "Finish Selection" button
+     */
     @FXML public void finish_selection(ActionEvent event){
         System.out.println("drink=" + selected_drink + ", ice=" + selected_ice);
         if (selected_drink == null || selected_ice == null) {
@@ -248,6 +312,10 @@ public class OrderMenuController {
         ((Node) event.getSource()).getScene().getWindow().hide();
     }
 
+    /**
+     * Closes the order menu window without adding an order line to the current order model.
+     * @param event the action event triggered by clicking the "Cancel Order" button
+     */
     @FXML
     public void cancel_order(ActionEvent event) {
         ((Node) event.getSource()).getScene().getWindow().hide();
