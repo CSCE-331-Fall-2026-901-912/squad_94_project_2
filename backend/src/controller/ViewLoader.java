@@ -9,13 +9,24 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-// Keeps all the code for loading FXML files in one place.
-// This is useful because it allows us to easily change how we load FXML files in the future, and it also makes it easier to handle errors when loading FXML files.
-// Since the same format is used to open the files almost everywhere, this class is a good place to put the code for opening FXML files.
+/**
+ * Keeps all the code for loading FXML files in one place.
+ * This is useful because it allows us to easily change how we load FXML files in the future, and it also makes it easier to handle errors when loading FXML files.
+ * 
+ * @author Squad 94 - Sanjana Ram
+ */
 public final class ViewLoader {
+    /** 
+     * Private constructor to prevent instantiation. 
+     */
     private ViewLoader() {}
 
-    /** Loads an FXML file and attaches the given controller. Returns null on failure. */
+    /** 
+     * Loads an FXML file and attaches the given controller. Returns null on failure. 
+     * @param fxml_path the path to the FXML file, relative to the classpath
+     * @param controller the controller to attach to the FXML file
+     * @return the root node of the loaded FXML file, or null if loading failed
+     */
     public static Parent load(String fxml_path, Object controller) {
         URL url = ViewLoader.class.getResource(fxml_path);
         if (url == null) {
@@ -33,7 +44,13 @@ public final class ViewLoader {
         }
     }
 
-    /** Opens the FXML file in a new window; owner may be null. */
+    /** 
+     * Opens the FXML file in a new window; owner may be null.
+     * @param fxml_path the path to the FXML file, relative to the classpath
+     * @param controller the controller to attach to the FXML file
+     * @param owner the window that owns the new window, or null if there is no owner
+     * @return the new stage, or null if loading failed
+     */
     public static Stage open_window(String fxml_path, Object controller, Window owner) {
         Parent root = load(fxml_path, controller);
         if (root == null) return null;

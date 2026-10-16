@@ -16,8 +16,12 @@ import model.MenuModel;
 
 import java.math.BigDecimal;
 
-// This controller manages the menu view, populating the drinks and toppings tables.
-// It allows the user to add or edit drinks and toppings by opening the respective forms when a row is double-clicked or when the add buttons are clicked
+/**
+ * This controller manages the menu view, populating the drinks and toppings tables. 
+ * It allows the user to add or edit drinks and toppings by opening the respective forms when a row is double-clicked or when the add buttons are clicked
+ * 
+ * @author Squad 94 - Sanjana Ram
+ */
 public class MenuController {
     private final MenuModel model;
 
@@ -32,10 +36,19 @@ public class MenuController {
     @FXML private TableColumn<MenuToppingsRowDTO, String> topping_name;
     @FXML private TableColumn<MenuToppingsRowDTO, BigDecimal> topping_price;
 
+
+    /**
+     * Creates a new MenuController with the given model.
+     * @param model the model used to retrieve and update menu data
+     */
     public MenuController(MenuModel model) {
         this.model = model;
     }
 
+    /**
+     * Initializes the menu view by configuring the table columns, setting up row click handlers, and refreshing the data displayed in the tables.
+     * This method is called automatically after the FXML file has been loaded.
+     */
     @FXML
     private void initialize() {
         configure_columns();
@@ -44,7 +57,10 @@ public class MenuController {
         refresh();
     }
 
-    // Called to update elements on the manager's menu management screen without reloading the entire page.
+    /**
+     * Refreshes the data displayed in the drinks and toppings tables by retrieving the latest data from the model.
+     * This method is called after a drink or topping is added, edited, or deleted.
+     */
     public void refresh() {
         menu_drinks_table.setItems(
             FXCollections.observableArrayList(model.get_drinks()));
@@ -53,7 +69,10 @@ public class MenuController {
             FXCollections.observableArrayList(model.get_toppings()));
     }
 
-    // Populate the table columns with data from the model and set up cell value factories for each column.
+    /**
+     * Configures the columns of the drinks and toppings tables to display the appropriate data from the model.
+     * This method is called during initialization of the controller.
+     */
     private void configure_columns() {
         drink_name.setCellValueFactory(data ->
             new ReadOnlyObjectWrapper<>(data.getValue().name()));
@@ -72,8 +91,11 @@ public class MenuController {
             new ReadOnlyObjectWrapper<>(data.getValue().price()));
     }
 
-    // Opening logic for the AddMenuDrinkController, 
-    // kept separate from the main open drink to allow for separate logic for adding vs editing drinks (e.g., setting the window title)
+    /**
+     * Opening logic for the AddMenuDrinkController, kept separate from the main open drink to allow for separate logic for adding vs editing drinks 
+     * @param owner the window that owns the form to prevent multiple windows from being opened at once
+     * @param existing the drink being edited, or {@code null} when adding a drink
+     */
     private void open_drink_form(Window owner, MenuDrinksRowDTO existing) {
         AddMenuDrinkController controller =
             new AddMenuDrinkController(
@@ -92,14 +114,20 @@ public class MenuController {
         }
     }
 
-    // Open the AddMenuDrinkController form for adding a new drink
+    /**
+     * Open the AddMenuDrinkController form specifically for adding a new drink
+     * @param event the action event triggered by the button click
+     */
     @FXML
     public void open_add_menu_drink(ActionEvent event) {
         open_drink_form(((Node) event.getSource()).getScene().getWindow(), null);
     }
 
-    // Opening logic for the AddMenuDrinkController, 
-    // kept separate from the main open drink to allow for separate logic for adding vs editing drinks (e.g., setting the window title)
+    /**
+     * Opening logic for the AddMenuToppingController, kept separate from the main open topping to allow for separate logic for adding vs editing toppings
+     * @param owner the window that owns the form to prevent multiple windows from being opened at once
+     * @param existing the topping being edited, or {@code null} when adding a topping
+     */
     private void open_topping_form(Window owner, MenuToppingsRowDTO existing) {
         AddMenuToppingController controller =
             new AddMenuToppingController(
@@ -118,14 +146,18 @@ public class MenuController {
         }
     }
 
-    // Open the AddMenuToppingController form for adding a new topping
+    /**
+     * Open the AddMenuToppingController form specifically for adding a new topping
+     * @param event the action event triggered by the button click
+     */
     @FXML
     public void open_add_menu_topping(ActionEvent event) {
         open_topping_form(((Node) event.getSource()).getScene().getWindow(), null);
     }
 
-    // Set up double-click functionality (to prevent accidental opening) on table rows 
-    // to open the drink form in edit mode
+    /**
+     * Set up double-click functionality (to prevent accidental opening) on table rows to open the drink form in edit mode
+     */
     private void setup_drink_row_click() {
         menu_drinks_table.setRowFactory(table -> {
             TableRow<MenuDrinksRowDTO> row = new TableRow<>();
@@ -140,8 +172,9 @@ public class MenuController {
         });
     }
 
-    // Set up double-click functionality (to prevent accidental opening) on table rows
-    // to open the topping form in edit mode
+    /**
+     * Set up double-click functionality (to prevent accidental opening) on table rows to open the topping form in edit mode
+     */
     private void setup_topping_row_click() {
         menu_toppings_table.setRowFactory(table -> {
             TableRow<MenuToppingsRowDTO> row = new TableRow<>();
