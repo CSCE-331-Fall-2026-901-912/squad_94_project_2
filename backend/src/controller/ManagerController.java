@@ -189,14 +189,18 @@ public class ManagerController {
         }
     }
 
-    // Called to update elements on the manager main screen without reloading the entire page.
+    /**
+     * Called to update elements on the manager main screen without reloading the entire page.
+     */
     private void refresh(){
         TodaysSalesAmount.setText("$" + sales_model.get_todays_sales().toString());
         TotalSalesAmount.setText("$" + sales_model.get_total_sales().toString());
         load_inventory_details_small();
     }
 
-    // Handles the loading of small tables which provide at-a-glance information to the manager on inventory status (in terms of amounts of items).
+    /**
+     * Handles the loading of small tables which provide at-a-glance information to the manager on inventory status (in terms of amounts of items).
+     */
     public void load_inventory_details_small() {
         // Load out-of-stock table
         OOSName.setCellValueFactory(d -> new ReadOnlyObjectWrapper<>(d.getValue().name()));

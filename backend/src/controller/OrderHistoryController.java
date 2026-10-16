@@ -50,7 +50,9 @@ public class OrderHistoryController {
         this.model = model;
     }
 
-    // Populates the tables, uses the drink ids to pull the drink name information from database, and creates the filtered and sorted lists based on the filters applied.
+    /**
+     * Populates the tables, uses the drink ids to pull the drink name information from database, and creates the filtered and sorted lists based on the filters applied.
+     */
     @FXML public void initialize() {
         model.load_drink_names();
 
@@ -79,18 +81,25 @@ public class OrderHistoryController {
         apply_sort();
     }
 
+    /**
+     * Reinitializes order history window
+     */
     public void refresh_status() {
         initialize();
     }
 
-    // Apply search filter based upon user text input into the OrderHistory page's search bar.
+    /**
+     * Apply search filter based upon user text input into the OrderHistory page's search bar.
+     */
     private void apply_filters() {
         String text = searchOH.getText() == null ? "" : searchOH.getText().trim().toLowerCase();
         String period = timePeriodOH.getValue();
         filtered.setPredicate(o -> model.matches_search(o, text) && model.in_period(o, period));
     }
 
-    // Apply a sorting filter based upon user choice of a button option on the OrderHistory page.
+    /**
+     * Apply a sorting filter based upon user choice of a button option on the OrderHistory page.
+     */
     private void apply_sort() {
         String choice = sortByOH.getValue();
         if (choice == null) return;
@@ -98,7 +107,9 @@ public class OrderHistoryController {
         sorted.setComparator(c);
     }
 
-    // Handle click-based behavior on OrderHistory's orders table.
+    /**
+     * Handle click-based behavior on OrderHistory's orders table.
+     */
     private void setup_row_click(){
         order_table.setRowFactory(tv -> {
             TableRow <OrdersRowDTO> row = new TableRow<>();
