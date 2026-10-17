@@ -15,7 +15,6 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 
-
 /**
  * Controller for viewing orders based on filters (time period, alphabetical order, etc.) and voiding orders.
  *

@@ -748,7 +748,7 @@ public class PGComms {
             stmt.setObject(3, OffsetDateTime.now());
 
             stmt.setBigDecimal(4, price);
-            // TODO: GET CURRENT EMPLOYEE ID
+            // Possible future feature -- add ability to set employee who completed order for current orders.
             stmt.setInt(5, 0);
             stmt.setBigDecimal(6, tip_amount);
             stmt.setInt(7, id_drink);
