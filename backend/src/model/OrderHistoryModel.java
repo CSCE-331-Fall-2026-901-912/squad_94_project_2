@@ -54,7 +54,7 @@ public class OrderHistoryModel {
      * Returns the drink name based on the drink ID.
      *
      * @param order DTO for retrieving information row-by-row from the orders table in the SQL database.
-     * @returns Drink name associated with ID or default string
+     * @return Drink name associated with ID or default string
      */
     public String drink_name(OrdersRowDTO order) {
         return drink_names.getOrDefault(order.id_drink(), "Unknown drink (" + order.id_drink() + ")");
@@ -64,7 +64,7 @@ public class OrderHistoryModel {
      * Retrieves the name of a drink given its ID
      *
      * @param id Drink ID
-     * @returns Drink name associated with ID or default string
+     * @return Drink name associated with ID or default string
      */
     public String drink_name(Integer id) {
         return drink_names.getOrDefault(id, "Unknown drink (" + id + ")");
@@ -74,7 +74,7 @@ public class OrderHistoryModel {
      * Retrieves the name of an edible given its ID
      *
      * @param id Edible item ID
-     * @returns Edible item name associated with ID or default string
+     * @return Edible item name associated with ID or default string
      */
     public String edible_name(Integer id) {
         return edible_names.getOrDefault(id, "Unknown edible (" + id + ")");
@@ -85,7 +85,7 @@ public class OrderHistoryModel {
      *
      * @param orders DTO for retrieving information row-by-row from the orders table in the SQL database.
      * @param str Search bar user input
-     * @returns truth value of if the search found row(s) with user input
+     * @return truth value of if the search found row(s) with user input
      */
     public boolean matches_search(OrdersRowDTO orders, String str) {
         if (str.isEmpty()) return true;
@@ -95,11 +95,11 @@ public class OrderHistoryModel {
     /**
      * Checks timestamp and sorts it into the appropriate time period.
      *
-     * @param orders DTO for retrieving information row-by-row from the orders table in the SQL database.
+     * @param order DTO for retrieving information row-by-row from the orders table in the SQL database.
      * @param period Time period filter option
-     * @returns truth value of if the order is in the time period
+     * @return truth value of if the order is in the time period
      */
-    public boolean in_period(OrdersRowDTO order,String period) {
+    public boolean in_period(OrdersRowDTO order, String period) {
         if (period == null || period.equals("All time")) {
             return true;
         }
@@ -123,10 +123,10 @@ public class OrderHistoryModel {
     /**
      * Duplicate method for checking if an order is within a specified period, using a specified start and end time
      *
-     * @param orders DTO for retrieving information row-by-row from the orders table in the SQL database.
+     * @param order DTO for retrieving information row-by-row from the orders table in the SQL database.
      * @param start Start date from user input
      * @param end End date from user input
-     * @returns truth value of if the order is in the time period
+     * @return truth value of if the order is in the time period
      */
     public boolean in_period(OrdersRowDTO order, OffsetDateTime start, OffsetDateTime end) {
         if (start == null || end == null) {
@@ -138,7 +138,7 @@ public class OrderHistoryModel {
             return false;
         }
         
-        if(time.isAfter(start) && time.isBefore(end)) {
+        if (time.isAfter(start) && time.isBefore(end)) {
             return true;
         } else {
             return false;
@@ -149,7 +149,7 @@ public class OrderHistoryModel {
      * Sorts drinks based on the filters chosen on GUI.
      *
      * @param choice Filter on GUI
-     * @returns a comparator determining the filter for the table
+     * @return a comparator determining the filter for the table
      */
     public Comparator<OrdersRowDTO> comparator_for(String choice) {
         return switch (choice) {
@@ -166,7 +166,7 @@ public class OrderHistoryModel {
      * Returns the creation timestamp
      *
      * @param order DTO for retrieving information row-by-row from the orders table in the SQL database.
-     * @returns the time created timestamp
+     * @return the time created timestamp
      */
     private OffsetDateTime order_time(OrdersRowDTO order) {
         return order.time_created_at();
@@ -177,7 +177,7 @@ public class OrderHistoryModel {
      *
      * @param order_id item_ID
      * @param status status the order will change to
-     * @returns the truth value of the order's status
+     * @return the truth value of the order's status
      */
     public boolean change_order_status(int order_id, String status) {
         return PGComms.modify_order_status_in_orders(order_id, status);

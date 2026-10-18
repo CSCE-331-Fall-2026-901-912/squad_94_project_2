@@ -32,7 +32,7 @@ public class AddMenuToppingController {
     /**
      * Creates a topping menu form controller
      * @param model the menu model used to save and delete records
-     * @param on_added model refresh invoked after an item is added, modified, or deleted
+     * @param on_saved model refresh invoked after an item is added, modified, or deleted
      * @param existing the topping item being edited, or {@code null} when adding a new topping
      */
     public AddMenuToppingController(MenuModel model, Runnable on_saved, MenuToppingsRowDTO existing) {
