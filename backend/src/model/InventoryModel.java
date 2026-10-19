@@ -32,7 +32,7 @@ public class InventoryModel {
     public boolean change_edible_quantity(
             int edible_id,
             int quantity) {
-        return PGComms.modify_topping_quantity_in_edible_inventory(
+        return PGComms.modify_quantity_in_edible_inventory(
             edible_id,
             quantity);
     }
@@ -40,7 +40,7 @@ public class InventoryModel {
     public boolean change_non_edible_quantity(
             int non_edible_id,
             int quantity) {
-        return PGComms.modify_topping_quantity_in_nonedible_inventory(
+        return PGComms.modify_quantity_in_nonedible_inventory(
             non_edible_id,
             quantity);
     }

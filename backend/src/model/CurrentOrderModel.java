@@ -226,7 +226,7 @@ public class CurrentOrderModel {
             PGComms.get_id_edibles_for_drink(drink_id);
 
         for (int edible_id : edible_ids) {
-            if (!PGComms.modify_topping_quantity_in_edible_inventory(
+            if (!PGComms.modify_quantity_in_edible_inventory(
                     edible_id,
                     -1)) {
                 throw new IllegalStateException(
@@ -293,7 +293,7 @@ public class CurrentOrderModel {
                 }
                 topping1_id = topping1.id_topping();
                 if (!discard) {
-                    PGComms.modify_topping_quantity_in_edible_inventory(topping1_id, -1);
+                    PGComms.modify_quantity_in_edible_inventory(topping1_id, -1);
                 }
             }
 
@@ -307,7 +307,7 @@ public class CurrentOrderModel {
                 }
                 topping2_id = topping2.id_topping();
                 if (!discard) {
-                    PGComms.modify_topping_quantity_in_edible_inventory(topping2_id, -1);
+                    PGComms.modify_quantity_in_edible_inventory(topping2_id, -1);
                 }
             }
 
@@ -333,10 +333,10 @@ public class CurrentOrderModel {
 
             if (!discard) {
                 // Decrement the inventory quantities for the non edible items used in the order.
-                if (!PGComms.modify_topping_quantity_in_nonedible_inventory(1,-1)
-                        || !PGComms.modify_topping_quantity_in_nonedible_inventory(2,-1)
-                        || !PGComms.modify_topping_quantity_in_nonedible_inventory(3,-1)
-                        || !PGComms.modify_topping_quantity_in_nonedible_inventory(4,-1)) {
+                if (!PGComms.modify_quantity_in_nonedible_inventory(1,-1)
+                        || !PGComms.modify_quantity_in_nonedible_inventory(2,-1)
+                        || !PGComms.modify_quantity_in_nonedible_inventory(3,-1)
+                        || !PGComms.modify_quantity_in_nonedible_inventory(4,-1)) {
                     throw new IllegalStateException(
                         "Could not update required non-edible inventory.");
                 }
