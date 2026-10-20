@@ -36,9 +36,15 @@ public class ManagerController {
     @FXML private Label TodaysSalesAmount;
     @FXML private Label TotalSalesAmount;
 
+    /**
+     * Models used to retrieve data for the manager interface.
+     */
     private SalesModel sales_model = new SalesModel();
     private InventoryModel inventory_model = new InventoryModel();
 
+    /**
+     * Initializes the manager controller by refreshing the displayed data.
+     */
     @FXML public void initialize() {
         refresh();
     }

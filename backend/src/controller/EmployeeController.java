@@ -31,6 +31,10 @@ public class EmployeeController {
     @FXML private TableColumn<EmployeesRowDTO, BigDecimal> emp_pay;
     @FXML private TableColumn<EmployeesRowDTO, Integer>    emp_hours;
 
+    /**
+     * Constructor for the EmployeeController class.
+     * @param model the EmployeeModel instance used to interact with the employee data
+     */
     public EmployeeController(EmployeeModel model) {
         this.model = model;
     }
