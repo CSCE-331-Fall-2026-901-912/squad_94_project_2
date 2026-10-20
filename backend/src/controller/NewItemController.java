@@ -13,6 +13,11 @@ import dto.InvNonEdibleRowDTO;
 import model.InventoryModel;
 import java.util.List;
 
+/**
+ * Controller for user to add new items to the inventory database
+ *
+ * @author Squad 94 - Mairead Finnerty
+ */
 public class NewItemController {
     private final InventoryModel model;
     private final Runnable on_saved;
@@ -21,13 +26,23 @@ public class NewItemController {
     @FXML private TextField input_new_item_quantity;
     @FXML private TextField input_new_item_type;
 
+    /**
+     * Creates controller constructor for syncing the model with this controller.
+     *
+     * @param model the inventory model used to display the new item pop up
+     * @param on_saved method that allows page to be automatically refreshed so changes show up when items are added.
+     */
     public NewItemController(InventoryModel model, Runnable on_saved) {
         this.model = model;
         this.on_saved = on_saved;
     }
 
-    // Handle visual warnings displayed if submit new item button is pressed and some user input is invalid and adds new nonedible and edible items to inventory.
-    // Otherwise, simply close the add item (newitempopup) page to indicate success to the user.
+    /**
+     *  Validates the user's input and adds the new item to the edible or nonedible inventory.
+     *  Displays a warning if the user input is invalid.
+     *
+     * @param event the event generated when clicking the submit new item button.
+     */
     @FXML public void submit_new_item_button(ActionEvent event) {
         String name = input_new_item_name.getText().trim();
         String text = input_new_item_quantity.getText().trim();
@@ -40,7 +55,7 @@ public class NewItemController {
 
        
 
-        if (type.toLowerCase().equals("edible") && type.toLowerCase().equals("nonedible")) {
+        if (!(type.toLowerCase().equals("edible")) && !(type.toLowerCase().equals("nonedible"))) {
             show_warning("Type is incorrect. Try Edible or Nonedible.");
             return;
         }
@@ -86,6 +101,11 @@ public class NewItemController {
         on_saved.run();
     }
 
+    /**
+     * Displays a warning message to the user 
+     *
+     * @param message warning message specific to the instance that changes based on where the warning was thrown.
+     */
     private void show_warning(String message) {
         new Alert(
             Alert.AlertType.WARNING,

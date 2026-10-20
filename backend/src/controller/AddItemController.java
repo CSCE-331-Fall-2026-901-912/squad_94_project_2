@@ -14,6 +14,11 @@ import dto.InvNonEdibleRowDTO;
 import model.InventoryModel;
 import java.util.List;
 
+/**
+ * Controller for user to change quantities of items
+ *
+ * @author Squad 94 - Mairead Finnerty, Asher Blevins
+ */
 public class AddItemController {
     private final InventoryModel model;
     private final Runnable on_saved;
@@ -23,13 +28,24 @@ public class AddItemController {
     @FXML
     private TextField input_quantity;
 
+    /**
+     * Creates controller constructor for syncing the model with this controller.
+     *
+     * @param model the inventory model used to look up the items and update their quantities
+     * @param on_saved method that allows page to be automatically refreshed so changes show up when items are changed.
+     */
     public AddItemController(InventoryModel model, Runnable on_saved) {
         this.model = model;
         this.on_saved = on_saved;
     }
 
-    // Handle visual warnings displayed if submit changes button is pressed and some user input is invalid.
-    // Otherwise, simply close the add item page to indicate success to the user.
+    
+    /**
+     * Handle visual warnings displayed if submit changes button is pressed and some user input is invalid.
+     * Otherwise, simply close the change item pop up page to indicate success to the user.
+     *
+     * @param event the event generated when clicking the submit changes button.
+     */
     @FXML
     public void submit_changes_button(ActionEvent event) {
         String name = input_name.getText().trim();
@@ -85,6 +101,11 @@ public class AddItemController {
         on_saved.run();
     }
 
+    /**
+     * Displays a warning message to the user 
+     *
+     * @param message warning message specific to the instance that changes based on where the warning was thrown.
+     */
     private void show_warning(String message) {
         new Alert(
             Alert.AlertType.WARNING,
