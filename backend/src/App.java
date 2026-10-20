@@ -6,14 +6,21 @@ import javafx.stage.Stage;
 import model.CurrentOrderModel;
 import model.MenuModel;
 import controller.BaseMenuController;
-import controller.OrderHistoryController;
-import controller.ProdSalesScreenController;
 import database.PGComms;
-import java.time.LocalDate;
 
-
+/**
+ * This is the main application class for the JavaFX application. It serves as the entry point for launching the application and initializing the primary stage with the base menu view.
+ * The class is responsible for setting up the initial scene, loading the FXML layout, and establishing the necessary models and controllers for managing the current order and menu data.
+ * 
+ * @author Squad 94 - Asher Blevins
+ */
 public class App extends Application {
 
+    /**    
+     * The start method is the main entry point for the JavaFX application. It initializes the primary stage with the base menu view, sets up the necessary models and controllers, and displays the application window.
+     * @param stage The primary stage for this application, onto which the application scene can be set.
+     * @throws Exception if an error occurs during the loading of the FXML layout or the initialization of the scene.
+     */
     public void start(Stage stage) throws Exception {
         CurrentOrderModel order_model = new CurrentOrderModel();
         MenuModel menu_model = new MenuModel();
@@ -32,6 +39,10 @@ public class App extends Application {
         stage.show();
     }
 
+    /**
+     * The main method serves as the entry point for the Java application. It initializes the database connection, tests the connection, and launches the JavaFX application.
+     * @param args Command-line arguments, where the first argument is expected to be the database password for establishing a connection to the PostgreSQL database.
+     */
     public static void main(String[] args) {
         if (args.length != 1) {
             return;
