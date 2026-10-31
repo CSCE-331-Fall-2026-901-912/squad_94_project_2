@@ -27,9 +27,9 @@ class CsvData:
         # This is the number of seconds between 11:00 am and 11:00 pm, CST.
         self.day_timespan_open = 43200
 
-        # 52 weeks of sales history (starting September 30, 2025, then ending September 30, 2026)
+        #Sales history (starting September 30, 2025, then ending December 10, 2026 to account for demos)
         self.start_date = datetime.date(year = 2025, month = 9, day = 30)
-        self.end_date = datetime.date(year = 2026, month = 9, day = 30)
+        self.end_date = datetime.date(year = 2026, month = 12, day = 10)
         self.day_delta = datetime.timedelta(days=1)
 
         # --We must have 3 peak days.--
@@ -71,7 +71,7 @@ class CsvData:
         orders_df.to_csv("orders.csv", index=False)
 
     def gen_entries_today(self, curr_date):
-
+        ticket_num = 0
         # Adjust the number of orders made today to be of a "higher" range if the current date is a peak date.
         if curr_date == self.peak1_date or curr_date == self.peak2_date or curr_date == self.peak3_date:
             num_orders = random.randint(600, 700)
@@ -94,9 +94,13 @@ class CsvData:
         random_today_times = [(today_time_open + datetime.timedelta(seconds=i)).time() for i in random_seconds]
         for time in random_today_times:
             full_time = datetime.datetime.combine(curr_date, time)
-            self.gen_entry(full_time)
+            ticket_num += 1
+            number_of_drinks = random.randint(1, 4)
 
-    def gen_entry(self, time):
+            for i in range(number_of_drinks):
+                self.gen_entry(full_time, ticket_num)
+
+    def gen_entry(self, time, ticket_num):
         self.order_num += 1
         id_order = self.order_num
         status = "completed"
@@ -109,33 +113,11 @@ class CsvData:
         # Add price of drink to the total spent regarding the order
         drink_price = decimal.Decimal(str(self.df_menu_drinks.loc[self.df_menu_drinks["id_drink"] == id_drink, "price"].iloc[0]))
         total_spent += drink_price
-        id_topping1 = None
-        id_topping2 = None
 
-        # Choose between no, one, or two toppings.
-        top_choice = random.randint(0, 2)
-        if top_choice == 2:
-
-            # Retrieve two random toppings as a list (replace=False means they cannot be the same topping).
-            list_toppings = self.df_menu_toppings["id_topping"].sample(n=2, replace=False).to_list()
-            id_topping1 = int(list_toppings[0])
-            id_topping2 = int(list_toppings[1])
-
-            # Add price of both toppings to the total spent on the order
-            topping1_price = decimal.Decimal(str(self.df_menu_toppings.loc[self.df_menu_toppings["id_topping"] == id_topping1, "price"].iloc[0]))
-            topping2_price = decimal.Decimal(str(self.df_menu_toppings.loc[self.df_menu_toppings["id_topping"] == id_topping2, "price"].iloc[0]))
-            total_spent += topping1_price + topping2_price
-
-        elif top_choice == 1:
-            # Randomly retrieve one topping
-            id_topping1 = self.df_menu_toppings["id_topping"].sample().iloc[0]
-            id_topping2 = ""
-            topping1_price = decimal.Decimal(str(self.df_menu_toppings.loc[self.df_menu_toppings["id_topping"] == id_topping1, "price"].iloc[0]))
-            total_spent += topping1_price
-
-        else:
-            id_topping1 = ""
-            id_topping2 = ""
+        # Choose any number of toppings
+        top_choice = random.randint(0, 5)
+        toppings = self.df_menu_toppings["id_topping"].sample(n=top_choice, replace=False).to_list()
+        toppings_array = "{" + ",".join(str(id_topping) for id_topping in toppings) + "}"
 
         # Calculate tip
         order_tip = decimal.Decimal('0.00')
@@ -187,11 +169,10 @@ class CsvData:
             self.sales_total += total_spent
 
 
-        self.list_of_dict_orders.append({"id_order": id_order, "status": status,
+        self.list_of_dict_orders.append({"id_order": id_order, "ticket_number": ticket_num, "status": status,
                                          "time_created_at": time_created_at,
                                          "total_spent": total_spent, "id_employee": id_employee,
-                                         "tip": order_tip_percent, "id_drink": id_drink, "id_topping1": id_topping1,
-                                         "id_topping2": id_topping2, "ice_level": ice_level, "sugar_level": sugar_level,
+                                         "tip": order_tip_percent, "id_drink": id_drink, "id_toppings": toppings_array, "ice_level": ice_level, "sugar_level": sugar_level,
                                          "hot_chosen": hot_chosen})
 
 def main():

@@ -26,15 +26,17 @@ CREATE TABLE menu_drinks(
     id_drink int PRIMARY KEY,
     name text,
     price numeric,
-    type text,
     hot_available boolean,
-    is_non_caffeinated boolean
+    is_non_caffeinated boolean,
+    category text,
+    image_url text
 );
 
 CREATE TABLE menu_toppings(
     id_topping int PRIMARY KEY,
     name text,
-    price numeric
+    price numeric,
+    image_url text
 );
 
 
@@ -62,18 +64,17 @@ CREATE TABLE employees(
 
 CREATE TABLE orders(
     id_order int PRIMARY KEY,
+    ticket_number int NOT NULL,
     status text,
     time_created_at timestamptz,
     total_spent numeric,
 	id_employee int,
     tip numeric,
     id_drink int,
-    id_topping1 int,
-    id_topping2 int,
+    id_toppings int[],
     ice_level int,
     sugar_level int,
     hot_chosen boolean
-    
 );
 
 \copy employees from '../csv_data/employees.csv' CSV HEADER

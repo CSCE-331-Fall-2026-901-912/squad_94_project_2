@@ -3,5 +3,7 @@
     "java.project.outputPath": "backend/bin",
     "java.project.referencedLibraries": [
         "backend/lib/**/*.jar"
-    ]
+    ],
+    "python-envs.defaultEnvManager": "ms-python.python:conda",
+    "python-envs.defaultPackageManager": "ms-python.python:conda"
 }
